@@ -7,8 +7,30 @@ use Illuminate\Support\Facades\DB;
 
 class MultiStepForm extends Component
 {
-    public $currentStep = 1;
-    public $totalSteps = 3;
+   public $currentStep = 1;
+  
+    public $totalSteps = 10;
+
+    public function nextStep()
+    {
+        if ( $this->currentStep < $this->totalSteps ) {
+            $this->currentStep++;
+        }
+    }
+
+    public function previousStep()
+    {
+        $this->currentStep--;
+    }
+
+    public function validateStep()
+    {
+        if ( $this->currentStep == 1 ) {
+            // $rules = [
+            //     ''
+            // ]
+        }
+    }
 
     public function render()
     {

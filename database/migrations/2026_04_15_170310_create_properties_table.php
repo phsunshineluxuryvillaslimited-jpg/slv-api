@@ -30,7 +30,11 @@ return new class extends Migration
             $table->text('description')
                 ->comment('The full description of the property');
             $table->enum('title_deeds', ['available','not-available'])
+                ->default('available')
                 ->comment('Whether the title deeds for the property are available');
+            $table->enum('leasehold_property', ['yes','no'])
+                ->default('yes')
+                ->comment('Leasehold Property');
             $table->integer('bedrooms')
                 ->default(0)
                 ->comment('Number of bedrooms');
@@ -43,7 +47,7 @@ return new class extends Migration
             $table->decimal('terrace', 8, 2)
                 ->default(0)
                 ->comment('Terrace area in square meters');
-            $table->decimal('plot_area', 8,2)
+            $table->decimal('plot', 8,2)
                 ->comment('Plot area in square meters')
                 ->nullable();
             $table->string('plot_description', 255)
@@ -58,21 +62,22 @@ return new class extends Migration
                 ->comment('Year of construction')
                 ->nullable();
             $table->enum('pool', ['yes', 'no'])
+                ->default('yes')
                 ->comment('Whether the property has a pool');
             $table->string('pool_description', 255)
                 ->comment('Description of the pool')
                 ->nullable();
-            $table->enum('listing_type', ['Resale', 'New'])
-                ->default('New')
+            $table->enum('listing_type', ['resale', 'new'])
+                ->default('Resale')
                 ->comment('Property listing type: "Resale" for sale, "New" for new');
             $table->enum('plan_zone',['A','B','C'])
                 ->default('A')
                 ->comment('Plan zone for the property');
-            $table->enum('sea_view', ['Yes','No'])
-                ->default('No')
+            $table->enum('sea_view', ['yes','no'])
+                ->default('yes')
                 ->comment('Whether the property has a sea view');
-            $table->enum('for_sale_board', ['Yes','No'])
-                ->default('No')
+            $table->enum('for_sale_board', ['yes','no'])
+                ->default('yes')
                 ->comment('Whether the property is on the for sale board');
 
             $table->timestamps();

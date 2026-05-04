@@ -19,7 +19,8 @@ class PropertiesController extends Controller
      */
     public function create()
     {
-        return view("properties.create");
+        $page = 1;
+        return view("properties.create" , compact('page'));
     }
 
     /**
@@ -27,7 +28,7 @@ class PropertiesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return view("step", ['sample' =>'test']);
     }
 
     /**

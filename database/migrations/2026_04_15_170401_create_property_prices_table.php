@@ -18,13 +18,15 @@ return new class extends Migration
                 ->references('id')
                 ->on('properties')
                 ->onDelete('cascade');
+            $table->boolean('poa')->default(false);
             $table->string('reference')
                 ->comment('Unique reference for this price entry');
-            $table->decimal('price',8,2)->default(0);
+            $table->decimal('basic_price',8,2)->default(0);
+            $table->decimal('original_price', 8,2)->default(0);
             $table->decimal('total_reduction_percentage',8,2)->default(0);
             $table->decimal('total_reduction_price',8,2)->default(0);
             $table->decimal('commission',8,2)->default(0);
-            $table->decimal('commnul_charges',8,2)->default(0);
+            $table->decimal('communal_charges',8,2)->default(0);
             $table->timestamp('created_at')->useCurrent();
         });
     }

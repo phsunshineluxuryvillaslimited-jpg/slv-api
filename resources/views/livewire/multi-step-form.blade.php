@@ -1,3 +1,13 @@
-<div>
-    {{-- If your happiness depends on money, you will never be happy with yourself. --}}
-</div>
+<section>
+    {{ $currentStep }}
+    <livewire:property.dotted-steps :step="Hello World" />
+   
+    @if ( $currentStep == 1 )
+        <livewire:property.reference-form />
+    @endif
+
+    @if ( $currentStep == 2 )
+        <livewire:property.location-form />
+    @endif
+
+</section>

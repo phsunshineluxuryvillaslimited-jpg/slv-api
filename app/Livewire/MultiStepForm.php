@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class MultiStepForm extends Component
 {
-    public $currentStep = 1;
+    public $currentStep = 5;
   
     public $totalSteps = 10;
 

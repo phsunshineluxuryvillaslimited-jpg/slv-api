@@ -24,6 +24,7 @@ return new class extends Migration
             $table->foreign('property_type_id')
                 ->references('id')
                 ->on('property_types');
+            $table->enum('published', ['yes','no'])->default('no');
             $table->string('title')
                 ->unique()
                 ->comment('Property title');

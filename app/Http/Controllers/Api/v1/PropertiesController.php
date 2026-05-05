@@ -17,9 +17,12 @@ class PropertiesController extends Controller
     {
 
         $query = Property::query();
+        
         if ($request->has('include')) {
             $query->with(explode(',', $request->include));
         }
+        
+        $query->where('published', 'yes');
 
         return PropertyResource::collection($query->paginate(10));
     }

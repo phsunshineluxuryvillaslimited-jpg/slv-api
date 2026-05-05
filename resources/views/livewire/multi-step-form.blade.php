@@ -1,67 +1,89 @@
 <section>
-
+    <!-- Step 1 -->
     @if ( $currentStep == 1 )
         <livewire:dotted-steps :step="$currentStep" />
         <livewire:property.reference-form />
     @endif
 
+     <!-- Step 2 -->
     @if ( $currentStep == 2 )
         <livewire:dotted-steps :step="$currentStep" />
         <livewire:property.location-form />
     @endif
 
+     <!-- Step 3 -->
     @if ( $currentStep == 3 )
         <livewire:dotted-steps :step="$currentStep" />
-        <livewire:property.photos-form />
+        <livewire:property.photos-form /> 
     @endif
 
+     <!-- Step 4 -->
     @if ( $currentStep == 4 )
         <livewire:dotted-steps :step="$currentStep" />
         <livewire:property.floor-plan-form />
     @endif
 
+     <!-- Step 5 -->
     @if ( $currentStep == 5 )
         <livewire:dotted-steps :step="$currentStep" />
         <livewire:property.distances-form />
     @endif
 
+     <!-- Step 6 -->
     @if ( $currentStep == 6 )
         <livewire:dotted-steps :step="$currentStep" />
         <livewire:property.channel-manager-form  />
     @endif 
 
+     <!-- Step 7 -->
     @if ( $currentStep == 7 )
         <livewire:dotted-steps :step="$currentStep" />
         <livewire:property.contact-details-form />
     @endif
 
+     <!-- Step 8 -->
     @if ( $currentStep == 8 )
         <livewire:dotted-steps :step="$currentStep" />
         <livewire:property.custom-fields />
     @endif
 
+
+     <!-- Step 9 -->
     @if ( $currentStep == 9 )
         <livewire:dotted-steps :step="$currentStep" />
         <livewire:property.videos-virtual-tour-form />
     @endif
 
+     <!-- Step 10 -->
     @if ( $currentStep == 10 )
         <livewire:dotted-steps :step="$currentStep" />
         <livewire:property.title-description-form />
     @endif
 
     <div class="py-3">
-        @if ( $currentStep > 1 )
-            <button wire:click="previousStep" class="px-4 py-2 bg-gray-300 text-white rounded">Back</button>
-            <button wire:click="saveAsDraft" class="px-4 py-2 bg-gray-500 text-white rounded">Save as Draft</button>
-        @endif
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6 flex">
-            <button wire:click="nextStep" wire:loading.class="opacity-50" class="ml-auto px-4 py-2 bg-orange-400 text-white rounded-md hover:bg-orange-500 px-7">
-                <span wire:loading.remove>{{ __('Save and Next') }} </span>
-                <span wire:loading>
-                    Loading..
-                </span>
-            </button>
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6 flex justify-end">
+            <div>
+                @if ( $currentStep > 1 )
+                    <button wire:click="previousStep" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded mr-1">Back</button>
+                    <button wire:click="saveAsDraft" class="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded mr-1">Save as Draft</button>
+                @endif
+
+                @if ( $currentStep != 10 )
+                    <button wire:click="nextStep" wire:loading.class="opacity-50" class="px-7 py-2 bg-orange-400 text-white rounded-md hover:bg-orange-500">
+                        <span wire:loading.remove>{{ __('Save and Next') }} &rarr;</span>
+                        <span wire:loading>
+                            Loading..
+                        </span>
+                    </button>
+                @else
+                    <button wire:click="nextStep" wire:loading.class="opacity-50" class="px-7 py-2 bg-orange-400 text-white rounded-md hover:bg-orange-500">
+                        <span wire:loading.remove>{{ __('Save and Publish') }} &rarr;</span>
+                        <span wire:loading>
+                            Loading..
+                        </span>
+                    </button>
+                @endif
+            </div>
         </div>
     </div>
 </section>

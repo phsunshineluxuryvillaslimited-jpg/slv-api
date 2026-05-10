@@ -18,15 +18,12 @@ return new class extends Migration
                 ->references('id')
                 ->on('properties')
                 ->onDelete('cascade');
-            $table->json('external_feed')
-                ->nullable()
+            $table->enum('external_feeds', ['right_move', 'zoopla', 'barazaki', 'apits', 'zoopla', 'slv', 'slv_website', 'directs'])
+                ->default('slv')
                 ->comment('Network for third party e.g. slv, zoopla, barzaki, apits');
-            $table->json('website_banner')
+            $table->enum('website_banner', ['reduced', 'reserved', 'sold', 'exclusive', 'new_listing', null])
                 ->nullable()
                 ->comment('Website banner e.g. reduced, sold, reseved, exclusive and new listing');
-            $table->boolean('published')
-                ->default(0)
-                ->comment('published status of the property on the third party network');
             $table->timestamp('created_at')->useCurrent();
         });
     }

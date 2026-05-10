@@ -17,30 +17,30 @@ Add your form or content for adding a property here
                     </h3>
                     <div class="grid grid-cols-3 md:grid-cols-3 gap-5 mb-4">
                          <div>
-                            <label for="bedrooms" class="block text-black text-sm mb-1">{{ __('Amenities (km)') }}</label>
-                            <input type="number" name="bedrooms" id="bedrooms" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
+                            <label for="amenities" class="block text-black text-sm mb-1">{{ __('Amenities (km)') }}</label>
+                            <input type="number" name="amenities" id="amenities" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
                         </div>
                         <div>
-                            <label for="bathrooms" class="block text-black text-sm mb-1">{{ __('Airport (km)') }}</label>
-                            <input type="number" name="bathrooms" id="bathrooms" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
+                            <label for="airport" class="block text-black text-sm mb-1">{{ __('Airport (km)') }}</label>
+                            <input type="number" name="airport" id="airport" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
                         </div>
                         <div>
-                            <label for="bathrooms" class="block text-black text-sm mb-1">{{ __('Sea (km)') }}</label>
-                            <input type="number" name="bathrooms" id="bathrooms" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
+                            <label for="sea" class="block text-black text-sm mb-1">{{ __('Sea (km)') }}</label>
+                            <input type="number" name="sea" id="sea" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
                         </div>
                     </div>
                     <div class="grid grid-cols-3 md:grid-cols-3 gap-5 mb-4">
                          <div>
-                            <label for="bedrooms" class="block text-black text-sm mb-1">{{ __('Schools (km)') }}</label>
-                            <input type="number" name="bedrooms" id="bedrooms" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
+                            <label for="public_transport" class="block text-black text-sm mb-1">{{ __('Public Transaport (km)') }}</label>
+                            <input type="number" name="public_transport" id="public_transport" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
                         </div>
                         <div>
-                            <label for="bathrooms" class="block text-black text-sm mb-1">{{ __('Schools (km)') }}</label>
-                            <input type="number" name="bathrooms" id="bathrooms" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
+                            <label for="schools" class="block text-black text-sm mb-1">{{ __('Schools (km)') }}</label>
+                            <input type="number" name="schools" id="schools" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
                         </div>
                         <div>
-                            <label for="bathrooms" class="block text-black text-sm mb-1">{{ __('Resort (km)') }}</label>
-                            <input type="number" name="bathrooms" id="bathrooms" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
+                            <label for="resort" class="block text-black text-sm mb-1">{{ __('Resort (km)') }}</label>
+                            <input type="number" name="resort" id="resort" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
                         </div>
                     </div>
                 </div>  
@@ -60,48 +60,48 @@ Add your form or content for adding a property here
                     </h3>
                     <div class="grid grid-cols-5 md:grid-cols-5 gap-5 mb-4">
                          <div>
-                            <label for="bedrooms" class="block text-black text-sm mb-1">{{ __('Covered m²') }}</label>
-                            <input type="number" name="bedrooms" id="bedrooms" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
+                            <label for="covered" class="block text-black text-sm mb-1">{{ __('Covered m²') }}</label>
+                            <input type="number" name="covered" id="covered" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
                         </div>
                         <div>
-                            <label for="bathrooms" class="block text-black text-sm mb-1">{{ __('Plot m²') }}</label>
-                            <input type="number" name="bathrooms" id="bathrooms" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
+                            <label for="plot" class="block text-black text-sm mb-1">{{ __('Plot m²') }}</label>
+                            <input type="number" name="plot" id="plot" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
                         </div>
                         <div>
-                            <label for="bathrooms" class="block text-black text-sm mb-1">{{ __('Attic m²') }}</label>
-                            <input type="number" name="bathrooms" id="bathrooms" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
+                            <label for="attic" class="block text-black text-sm mb-1">{{ __('Attic m²') }}</label>
+                            <input type="number" name="attic" id="attic" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
                         </div>
                         <div>
-                            <label for="bathrooms" class="block text-black text-sm mb-1">{{ __('Roof Garden m²') }}</label>
-                            <input type="number" name="bathrooms" id="bathrooms" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
+                            <label for="roof_garden" class="block text-black text-sm mb-1">{{ __('Roof Garden m²') }}</label>
+                            <input type="number" name="roof_garden" id="roof_garden" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
                         </div>
                         <div>
-                            <label for="bathrooms" class="block text-black text-sm mb-1">{{ __('Covered Veranda m²') }}</label>
-                            <input type="number" name="bathrooms" id="bathrooms" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
+                            <label for="covered_veranda" class="block text-black text-sm mb-1">{{ __('Covered Veranda m²') }}</label>
+                            <input type="number" name="covered_veranda" id="covered_veranda" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
                         </div>
                     </div>
 
 
                     <div class="grid grid-cols-5 md:grid-cols-5 gap-5 mb-4">
                          <div>
-                            <label for="bedrooms" class="block text-black text-sm mb-1">{{ __(' Uncovered Veranda m²') }}</label>
-                            <input type="number" name="bedrooms" id="bedrooms" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
+                            <label for="uncovered_veranda" class="block text-black text-sm mb-1">{{ __('Uncovered Veranda m²') }}</label>
+                            <input type="number" name="uncovered_veranda" id="uncovered_veranda" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
                         </div>
                         <div>
-                            <label for="bathrooms" class="block text-black text-sm mb-1">{{ __('Covered Parking m²') }}</label>
-                            <input type="number" name="bathrooms" id="bathrooms" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
+                            <label for="covered_parking" class="block text-black text-sm mb-1">{{ __('Covered Parking m²') }}</label>
+                            <input type="number" name="covered_parking" id="covered_parking" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
                         </div>
                         <div>
-                            <label for="bathrooms" class="block text-black text-sm mb-1">{{ __('Basement m²') }}</label>
-                            <input type="number" name="bathrooms" id="bathrooms" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
+                            <label for="basement" class="block text-black text-sm mb-1">{{ __('Basement m²') }}</label>
+                            <input type="number" name="basement" id="basement" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
                         </div>
                         <div>
-                            <label for="bathrooms" class="block text-black text-sm mb-1">{{ __(' Courtyard m²') }}</label>
-                            <input type="number" name="bathrooms" id="bathrooms" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
+                            <label for="courtyard" class="block text-black text-sm mb-1">{{ __('Courtyard m²') }}</label>
+                            <input type="number" name="courtyard" id="courtyard" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
                         </div>
                         <div>
-                            <label for="bathrooms" class="block text-black text-sm mb-1">{{ __('Garden m²') }}</label>
-                            <input type="number" name="bathrooms" id="bathrooms" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
+                            <label for="garden" class="block text-black text-sm mb-1">{{ __('Garden m²') }}</label>
+                            <input type="number" name="garden" id="garden" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
                         </div>
                     </div>
                 </div>  

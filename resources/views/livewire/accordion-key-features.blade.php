@@ -1,5 +1,5 @@
 <div class="space-y-2">
-    {{ $testVarable }}
+
     @foreach($items as $item)
         <div wire:ignore.self class="border rounded">
 

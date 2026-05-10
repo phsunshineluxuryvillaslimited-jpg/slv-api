@@ -70,8 +70,24 @@ Add your form or content for adding a property here
                             </select>
                         </div>
                     </div>
+                    <div>
+                        <label class="text-sm">Map Address</label>
+                        <input type="text" name="address" class="w-full border-gray-300 rounded-md text-sm  shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                    </div>
+                    <div class="gmap border h-96 mt-4">
+                        <div id="gmap" class="h-full">
+                            
+                        </div>
+                    </div>
                 </div>  
             </div>
         </div>
     </div>
 </form>
+@push('scripts')
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDA2bC2oWiv5g9sPg799qjYor6xbcHXrSk&callback=initMap"
+    defer
+  ></script>
+<script src="{{ url('/js/google.map.js') }}"></script>
+@endpush

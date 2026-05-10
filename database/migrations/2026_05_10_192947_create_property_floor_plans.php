@@ -11,18 +11,23 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('property_contact_documents', function (Blueprint $table) {
+        Schema::create('property_floor_plans', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('contact_detail_id');
-            $table->foreign('contact_detail_id')
+            $table->unsignedBigInteger('property_id');
+            $table->foreign('property_id')
                 ->references('id')
-                ->on('property_contact_detials')
+                ->on('properties')
                 ->onDelete('cascade');
-            $table->string('filename')->nullable();
-            $table->string('file_path')->nullable();
+            $table->string('filename')
+                ->nullable();
+            // $table->string('file_owned')
+            //     ->nullable();
+            $table->string('path')
+                ->nullable();
             $table->string('file_type')
                 ->nullable();
             $table->timestamp('created_at')->useCurrent();
+
         });
     }
 
@@ -31,6 +36,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('property_contact_documents');
+        Schema::dropIfExists('property_files');
     }
 };

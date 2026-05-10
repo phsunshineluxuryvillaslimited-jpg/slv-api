@@ -44,7 +44,7 @@ Add your form or content for adding a property here
                         <h4 class="text-lg">Website Banner</h4>
                         <div class="flex py-2">
                             <label class="border-2 border-gray-300 text-slate-600 px-3 py-2 rounded text-sm tracking-wider has-[:checked]:border-blue-800 mr-3">
-                                <input type="checkbox" name="webisite_banner[]" value="reduced" class="border rounded text-blue-800 h-5 w-5 mr-2" /> Raduced
+                                <input type="checkbox" name="webisite_banner[]" value="reduced" class="border rounded text-blue-800 h-5 w-5 mr-2" /> Reduced
                             </label>
                             <label class="border-2 border-gray-300 text-slate-600 px-3 py-2 rounded text-sm tracking-wider has-[:checked]:border-blue-800 mr-3">
                                 <input type="checkbox" name="webisite_banner[]" value="reserved" class="border rounded text-blue-800 h-5 w-5 mr-2" /> Reserved

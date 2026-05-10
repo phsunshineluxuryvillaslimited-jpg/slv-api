@@ -11,7 +11,7 @@ new class extends Component
      */
     public function mount(): void
     {
-        $this->testVariable = 
+        // $this->testVariable = 
     }
 }
 
@@ -31,9 +31,8 @@ Add your form or content for adding a property here
                 <div class="w-full">
                     <h3 class="font-semibold text-xl text-blue-900 leading-tight mb-5">
                         {{ __('Key Features')  }}
-                        {{ $testVariable }}
                     </h3>
-                     <livewire:accordion-key-features :testVariable="$testVariable"/>
+                     <livewire:accordion-key-features />
                 </div>  
             </div>
         </div>

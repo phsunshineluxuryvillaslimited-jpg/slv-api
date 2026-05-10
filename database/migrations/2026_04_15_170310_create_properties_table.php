@@ -24,7 +24,6 @@ return new class extends Migration
             $table->foreign('property_type_id')
                 ->references('id')
                 ->on('property_types');
-            $table->enum('published', ['yes','no'])->default('no');
             $table->string('title')
                 ->unique()
                 ->comment('Property title');
@@ -80,7 +79,8 @@ return new class extends Migration
             $table->enum('for_sale_board', ['yes','no'])
                 ->default('no')
                 ->comment('Whether the property is on the for sale board');
-
+            $table->enum('save_type', ['draft','finished'])
+                ->default('draft');
             $table->timestamps();
         });
 

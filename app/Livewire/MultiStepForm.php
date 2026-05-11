@@ -7,11 +7,9 @@ use Illuminate\Support\Facades\DB;
 
 class MultiStepForm extends Component
 {
-    public $currentStep = 2;
+    // public $photo;
+    public $currentStep = 3;
     public $totalSteps = 10;
-
-    public $testVarable = 3;
-
 
     public function nextStep()
     {
@@ -27,13 +25,16 @@ class MultiStepForm extends Component
 
     public function validateStep()
     {
-        if ( $this->currentStep == 1 ) {
+        if ( $this->currentStep == 3 ) {
+
+            dd('test');
+
             // $rules = [
             //     ''
             // ]
         }
     }
-
+    
     public function saveAsDraft()
     {
         

@@ -24,6 +24,8 @@ return new class extends Migration
             $table->foreign('property_type_id')
                 ->references('id')
                 ->on('property_types');
+            $table->string('reference', 15)
+                ->comment('Unique reference for this price entry');
             $table->string('title')
                 ->unique()
                 ->comment('Property title');

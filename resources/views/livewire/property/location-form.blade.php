@@ -1,8 +1,30 @@
+<?php
+use Livewire\Component;
+
+new class extends Component
+{
+   /**
+     * Mount the component.
+     */
+    public function mount(): void
+    {
+        $this->js('alert("test")');
+    }
+
+    public function render()
+    {
+        $this->js('alert("test")');
+    }
+
+}
+
+?>
+
 
 <!-----------------------------------------------------
 Add your form or content for adding a property here
 ------------------------------------------------------->
-<form method="POST" action="{{ route('properties.store') }}">
+<form method="POST" action="{{ route('properties.store') }}" onLoad="javascript: alert('test')">
 @csrf
 
     <!-----------------------------------------
@@ -75,8 +97,20 @@ Add your form or content for adding a property here
                         <input type="text" name="address" class="w-full border-gray-300 rounded-md text-sm  shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
                     </div>
                     <div class="gmap border h-96 mt-4">
-                        <div id="gmap" class="h-full">
-                            
+                        <script async defer>
+                document.addEventListener('DOMContentLoaded', () => {
+                    console.log('The DOM is fully loaded and parsed');
+                    // Your code here
+                });
+                document.getElementById('nextBtn').addEventListener('click', () => {
+                    console.log(document.getElementById('gmap'));
+                    document.addEventListener('DOMContentLoaded', () => {
+                    console.log('The DOM is fully loaded and parsed');
+                    // Your code here
+                });
+                })
+            </script>
+                        <div id="gmap" wire:ignore class="h-full">
                         </div>
                     </div>
                 </div>  
@@ -84,11 +118,3 @@ Add your form or content for adding a property here
         </div>
     </div>
 </form>
-@push('scripts')
-  <script
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAjtQlPL0rirZ70g8Xew5Ol3mqhqmAju08&callback=initMap"
-    defer
-  ></script>
-<script src="{{ url('/js/google.map.js') }}"></script>
-<script>alert('test')</script>
-@endpush

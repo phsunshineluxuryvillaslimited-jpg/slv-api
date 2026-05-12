@@ -40,9 +40,4 @@
     
     <!-- Placeholder for page-specific scripts -->
     @stack('scripts')
-      <script
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAjtQlPL0rirZ70g8Xew5Ol3mqhqmAju08&callback=initMap"
-    defer
-  ></script>
-<script src="{{ url('/js/google.map.js') }}"></script>
 </html>

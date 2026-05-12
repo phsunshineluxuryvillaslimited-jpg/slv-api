@@ -1,4 +1,5 @@
-  function initMap() {
+
+function initMap() {
     map = new google.maps.Map(document.getElementById("gmap"), {
         center: {
             lat: 51.505,
@@ -10,73 +11,74 @@
     map.addListener("click", function(event) {
         mapClicked(event);
     });
-    // initMarkers();
+
+    initMarkers();
 }
 
 
- /* --------------------------- Initialize Markers --------------------------- */
-  function initMarkers() {
-      const initialMarkers = {};
+/* --------------------------- Initialize Markers --------------------------- */
+function initMarkers() {
+    const initialMarkers = {};
 
-      for (let index = 0; index < initialMarkers.length; index++) {
-          const markerData = initialMarkers[index];
-          const marker = new google.maps.Marker({
-              position: markerData.position,
-              label: markerData.label,
-              draggable: markerData.draggable,
-              map
-          });
-          markers.push(marker);
+    for (let index = 0; index < initialMarkers.length; index++) {
+        const markerData = initialMarkers[index];
+        const marker = new google.maps.Marker({
+            position: markerData.position,
+            label: markerData.label,
+            draggable: markerData.draggable,
+            map
+        });
+        markers.push(marker);
 
-          const infowindow = new google.maps.InfoWindow({
-              content: `<b>${markerData.position.lat}, ${markerData.position.lng}</b>`,
-          });
-          marker.addListener("click", (event) => {
-              if(activeInfoWindow) {
-                  activeInfoWindow.close();
-              }
-              infowindow.open({
-                  anchor: marker,
-                  shouldFocus: false,
-                  map
-              });
-              activeInfoWindow = infowindow;
-              markerClicked(marker, index);
-          });
+        const infowindow = new google.maps.InfoWindow({
+            content: `<b>${markerData.position.lat}, ${markerData.position.lng}</b>`,
+        });
+        marker.addListener("click", (event) => {
+            if(activeInfoWindow) {
+                activeInfoWindow.close();
+            }
+            infowindow.open({
+                anchor: marker,
+                shouldFocus: false,
+                map
+            });
+            activeInfoWindow = infowindow;
+            markerClicked(marker, index);
+        });
 
-          marker.addListener("dragend", (event) => {
-              markerDragEnd(event, index);
-          });
-      }
-  }
+        marker.addListener("dragend", (event) => {
+            markerDragEnd(event, index);
+        });
+    }
+}
 
-  /* ------------------------- Handle Map Click Event ------------------------- */
-  function mapClicked(event) {
-      document.getElementById('latitude').value=event.latLng.lat();
-      document.getElementById('longtitude').value=event.latLng.lng();
+/* ------------------------- Handle Map Click Event ------------------------- */
+function mapClicked(event) {
+    document.getElementById('latitude').value=event.latLng.lat();
+    document.getElementById('longtitude').value=event.latLng.lng();
 
-      const geocoder = new google.maps.Geocoder();
-      const latlng = { lat: event.latLng.lat(), lng: event.latLng.lng() };
-      geocoder.geocode({ location: latlng }, (results, status) => {
-        if (status === "OK") {
-          console.log(results[0].formatted_address);
-        }
-      });
-  }
+    const geocoder = new google.maps.Geocoder();
+    const latlng = { lat: event.latLng.lat(), lng: event.latLng.lng() };
+    geocoder.geocode({ location: latlng }, (results, status) => {
+    if (status === "OK") {
+        console.log(results[0].formatted_address);
+    }
+    });
+}
 
-  /* ------------------------ Handle Marker Click Event ----------------------- */
-  function markerClicked(marker, index) {
-      console.log(map);
-      console.log(marker.position.lat());
-      console.log(marker.position.lng());
-  }
+/* ------------------------ Handle Marker Click Event ----------------------- */
+function markerClicked(marker, index) {
+    console.log(map);
+    console.log(marker.position.lat());
+    console.log(marker.position.lng());
+}
 
-  /* ----------------------- Handle Marker DragEnd Event ---------------------- */
-  function markerDragEnd(event, index) {
-      console.log(map);
-      console.log(event.latLng.lat());
-      console.log(event.latLng.lng());
-  }
+/* ----------------------- Handle Marker DragEnd Event ---------------------- */
+function markerDragEnd(event, index) {
+    console.log(map);
+    console.log(event.latLng.lat());
+    console.log(event.latLng.lng());
+}
 
 
 // async function init() {

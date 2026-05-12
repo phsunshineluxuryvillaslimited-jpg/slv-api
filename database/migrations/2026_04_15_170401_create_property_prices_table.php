@@ -19,8 +19,6 @@ return new class extends Migration
                 ->on('properties')
                 ->onDelete('cascade');
             $table->boolean('poa')->default(false);
-            $table->string('reference')
-                ->comment('Unique reference for this price entry');
             $table->decimal('basic_price',8,2)->default(0);
             $table->decimal('original_price', 8,2)->default(0);
             $table->decimal('total_reduction_percentage',8,2)->default(0);

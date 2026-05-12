@@ -76,7 +76,7 @@ Add your form or content for adding a property here
                     </h3>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
                         <div>
-                            <label for="reference" class="block text-black text-sm mb-1">{{ __('property Type') }}</label>
+                            <label for="reference" class="block text-black text-sm mb-1">{{ __('Property Type') }}</label>
                             <select name="property_type_id" id="property_type" class="w-full border-gray-300 text-sm rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
                                 @foreach ($propertyTypes as $propertyType)
                                 <option value="{{ $propertyType->id }}" wire:key="{{ $propertyType->id }}">{{ $propertyType->name }}</option>

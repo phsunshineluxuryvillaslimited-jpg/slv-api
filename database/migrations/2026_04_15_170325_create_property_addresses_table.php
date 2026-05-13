@@ -43,7 +43,7 @@ return new class extends Migration
                 ->nullable();
             $table->decimal('map_accuracy')
                 ->default(0);
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
         });
     }
 

@@ -24,9 +24,9 @@ class PropertiesController extends Controller
         
         $query->where('status', 'published');
         
-        $propertyList = $query->paginate(13);
+        $propertyList = $query->paginate(12);
 
-        $propertyList->getCollection()->each->makeHidden(['description','plot_description']);
+        $propertyList->getCollection()->each->makeHidden(['description','plot_description', 'pool_description']);
         
         return PropertyResource::collection($propertyList);
     }

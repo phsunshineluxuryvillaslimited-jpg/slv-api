@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -19,6 +20,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
     'listing_type', 'plan_zone', 'sea_view', 'for_sale_board',
     'status', 'save_type'
 ])]
+
+#[Hidden(['created_at', 'updated_at', 'author_id', 'property_type_id'])]
 class Property extends Model
 {
     public function author(): BelongsTo
@@ -69,5 +72,10 @@ class Property extends Model
     public function networks(): HasMany
     {
         return $this->hasMany(PropertyNetworks::class);
+    }
+
+    public function getPropertyTypeAttribute(): string
+    {
+        return $this->attribute($this->property_type);
     }
 }

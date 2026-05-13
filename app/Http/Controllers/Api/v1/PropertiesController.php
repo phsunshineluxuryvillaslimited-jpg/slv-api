@@ -23,8 +23,12 @@ class PropertiesController extends Controller
         }
         
         $query->where('status', 'published');
+        
+        $propertyList = $query->paginate(13);
 
-        return PropertyResource::collection($query->paginate(10));
+        $propertyList->getCollection()->each->makeHidden(['description','plot_description']);
+        
+        return PropertyResource::collection($propertyList);
     }
 
     /**
@@ -85,7 +89,6 @@ class PropertiesController extends Controller
         if ($request->has('include')) {
            $property = $property->with(explode(',', $request->include));
         }
-        
         return PropertyResource::make($property->find($id));
     }
 

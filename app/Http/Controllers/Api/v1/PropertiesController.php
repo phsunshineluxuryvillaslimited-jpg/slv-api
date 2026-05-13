@@ -22,7 +22,7 @@ class PropertiesController extends Controller
             $query->with(explode(',', $request->include));
         }
         
-        $query->where('published', 'yes');
+        $query->where('status', 'published');
 
         return PropertyResource::collection($query->paginate(10));
     }

@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 class MultiStepForm extends Component
 {
     // public $photo;
-    public $currentStep = 2;
+    public $currentStep = 1;
     public $totalSteps = 10;
 
     public function nextStep()

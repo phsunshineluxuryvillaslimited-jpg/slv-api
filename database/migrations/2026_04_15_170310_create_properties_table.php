@@ -24,7 +24,7 @@ return new class extends Migration
             $table->foreign('property_type_id')
                 ->references('id')
                 ->on('property_types');
-            $table->string('reference', 45)
+            $table->string('reference', 45)->index()
                 ->comment('Unique reference for this price entry');
             $table->text('description')
                 ->comment('The full description of the property')
@@ -35,10 +35,10 @@ return new class extends Migration
             $table->enum('leasehold', ['yes','no'])
                 ->default('no')
                 ->comment('Leasehold Property');
-            $table->integer('bedrooms')
+            $table->integer('bedrooms')->index()
                 ->default(0)
                 ->comment('Number of bedrooms');
-            $table->integer('bathrooms')
+            $table->integer('bathrooms')->index()
                 ->default(0)
                 ->comment('Number of bathrooms');
             $table->decimal('build', 10, 2)
@@ -47,7 +47,7 @@ return new class extends Migration
             $table->decimal('terrace', 10, 2)
                 ->default(0)
                 ->comment('Terrace area in square meters');
-            $table->decimal('plot', 10,2)
+            $table->decimal('plot', 10,2)->index()
                 ->default(0)
                 ->comment('Plot area in square meters');
             $table->string('plot_description', 255)
@@ -81,7 +81,9 @@ return new class extends Migration
                 ->comment('Whether the property is on the for sale board');
             $table->enum('save_type', ['draft','finished'])
                 ->nullable();
-            $table->enum('status', ['published', 'active', 'inactive'])
+            $table->enum('status', ['published', 'active', 'inactive'])->index()
+                ->nullable();
+            $table->datetime('published_at')->index()
                 ->nullable();
             $table->timestamps();
         });

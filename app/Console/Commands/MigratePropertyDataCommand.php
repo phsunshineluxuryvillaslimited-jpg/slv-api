@@ -28,6 +28,8 @@ class MigratePropertyDataCommand extends Command
         $propertiesPricesData = [];
         $ctr = 0;
 
+         $this->line('Total Records to migrate: '.count($oldProperties));
+
         foreach ($oldProperties as $oldProperty) {
 
             if (strtolower($oldProperty->property_type) == 'town house') {

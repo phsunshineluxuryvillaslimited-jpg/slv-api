@@ -22,7 +22,7 @@ class StorePropertyRequest extends FormRequest
      */
     public function rules(): array
     {
-        $id = $this->route('property.id');
+        $id = optional($this->route('property'))->id;
 
         return [
             'title' => 'required|string|max:255|unique:properties,title,' . $id . ',id',

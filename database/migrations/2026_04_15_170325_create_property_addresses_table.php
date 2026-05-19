@@ -19,10 +19,12 @@ return new class extends Migration
                 ->on('properties')
                 ->onDelete('cascade');
             $table->string('region')
+                ->index()
                 ->nullable()
                 ->comment('Property region, e.g. "South East", "North West", etc. 
                     This is a required field for properties in the UK, but optional for properties in other countries.');
             $table->string('town_city')
+                ->index()
                 ->comment('Town or city in which the property is located')
                 ->nullable();
             $table->string('locality')

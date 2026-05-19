@@ -59,6 +59,11 @@ class Property extends Model
         return $this->hasMany(PropertyPhotos::class);
     }
 
+    public function media(): HasMany
+    {
+        return $this->hasMany(PropertyPhotos::class);
+    }
+
     public function keyFeature(): HasMany
     {
         return $this->HasMany(PropertyKeyFeature::class);
@@ -77,5 +82,10 @@ class Property extends Model
     public function getPropertyTypeAttribute(): string
     {
         return $this->attribute($this->property_type);
+    }
+
+    public function getBasicPriceAttribute(): ?float
+    {
+        return $this->price ? $this->price->basic_price : null;
     }
 }

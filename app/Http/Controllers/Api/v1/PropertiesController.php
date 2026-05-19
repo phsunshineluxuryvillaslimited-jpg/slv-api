@@ -23,56 +23,60 @@ class PropertiesController extends Controller
             $query->with($this->parseIncludes($request->input('include')));
         }
 
-        if ($request->filled('order_by')) {
-            $this->applyOrderBy($query, $request->input('order_by'));
-        }
-
         if ($request->filled('reference')) {
             $query->where('properties.reference', trim($request->input('reference')));
-        }
+        } else {
 
-        if ($request->filled('region')) {
-            $query->whereHas('address', fn ($query) => $query->where('region', trim($request->input('region'))));
-        }
+            if ($request->filled('order_by')) {
+                $this->applyOrderBy($query, $request->input('order_by'));
+            }
 
-        if ($request->filled('town')) {
-            $towns = array_map('trim', explode(',', $request->input('town')));
-            $query->whereHas('address', fn ($query) => $query->whereIn('town_city', $towns));
-        }
+            if ($request->filled('region')) {
+                $query->whereHas('address', fn ($query) => $query->where('region', trim($request->input('region'))));
+            }
 
-        if ($request->filled('property_types')) {
-            $types = array_map('trim', explode(',', $request->input('property_types')));
-            $query->whereHas('property_type', fn ($query) => $query->whereIn('name', $types));
-        }
+            if ($request->filled('town')) {
+                $towns = array_map('trim', explode(',', $request->input('town')));
+                $query->whereHas('address', fn ($query) => $query->whereIn('town_city', $towns));
+            }
 
-        if ($request->filled('bedrooms')) {
-            $query->where('properties.bedrooms', $request->input('bedrooms'));
-        }
+            if ($request->filled('property_types')) {
+                $types = array_map('trim', explode(',', $request->input('property_types')));
+                $query->whereHas('property_type', fn ($query) => $query->whereIn('name', $types));
+            }
 
-        if ($request->filled('bathrooms')) {
-            $query->where('properties.bathrooms', $request->input('bathrooms'));
-        }
+            if ($request->filled('bedrooms')) {
+                $query->where('properties.bedrooms', $request->input('bedrooms'));
+            }
 
-        if ($request->filled('min_price') || $request->filled('max_price')) {
-            $query->whereHas('price', function ($query) use ($request) {
-                if ($request->filled('min_price')) {
-                    $query->where('basic_price', '>=', $request->input('min_price'));
-                }
-                if ($request->filled('max_price')) {
-                    $query->where('basic_price', '<=', $request->input('max_price'));
-                }
-            });
-        }
+            if ($request->filled('bathrooms')) {
+                $query->where('properties.bathrooms', $request->input('bathrooms'));
+            }
+            
 
-        if ($request->filled('plot')) {
-            $query->where('properties.plot', '>=', $request->input('plot'));
-        }
+            if ($request->filled('min_price') || $request->filled('max_price')) {
+                $query->whereHas('price', function ($query) use ($request) {
+                    if ($request->filled('min_price')) {
+                        $query->where('basic_price', '>=', $request->input('min_price'));
+                    }
+                    if ($request->filled('max_price')) {
+                        $query->where('basic_price', '<=', $request->input('max_price'));
+                    }
+                });
+            }
 
-        if ($request->filled('covered')) {
-            $query->whereHas('amenities', fn ($query) => $query->where('covered', '=', $request->input('covered')));
+            if ($request->filled('plot')) {
+                $query->where('properties.plot', '>=', $request->input('plot'));
+            }
+
+            if ($request->filled('covered')) {
+                $query->whereHas('amenities', fn ($query) => $query->where('covered', '=', $request->input('covered')));
+            }
         }
 
         $propertyList = $query->paginate(12);
+
+        $propertyList->getCollection()->each->makeHidden(['description','plot_description', 'pool_description']);
 
         return PropertyResource::collection($propertyList);
     }

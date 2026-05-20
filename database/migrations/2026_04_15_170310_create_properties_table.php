@@ -67,7 +67,7 @@ return new class extends Migration
             $table->string('pool_description', 255)
                 ->comment('Description of the pool')
                 ->nullable();
-            $table->enum('listing_type', ['resale', 'new'])
+            $table->enum('listing_type', ['resale', 'new', 'sale', 'rental'])
                 ->nullable()
                 ->comment('Property listing type: "Resale" for sale, "New" for new');
             $table->enum('plan_zone',['A','B','C'])

@@ -40,17 +40,17 @@ class PropertiesController extends Controller
                 $query->whereHas('address', fn ($query) => $query->where('region', trim($request->input('region'))));
             }
 
-            if ($request->filled('town')
-                && $request->input('town') != 'all'
+            if ($request->filled('towns')
+                && $request->input('towns') != 'all'
             ) {
-                $towns = array_map('trim', explode(',', $request->input('town')));
+                $towns = array_map('trim', explode(',', urldecode($request->input('towns'))));
                 $query->whereHas('address', fn ($query) => $query->whereIn('town_city', $towns));
             }
 
             if ($request->filled('property_types') 
                 && $request->input('property_types') != 'all'
             ) {
-                $types = array_map('trim', explode(',', $request->input('property_types')));
+                $types = array_map('trim', explode(',', urldecode($request->input('property_types'))));
                 $query->whereHas('property_type', fn ($query) => $query->whereIn('name', $types));
             }
 

@@ -84,13 +84,13 @@ class PropertiesController extends Controller
             if ($request->filled('plot_size') 
                 && $request->input('plot_size') != 'any'
             ) {
-                $query->where('properties.plot', '>=', $request->input('plot'));
+                $query->where('properties.plot', '>=', $request->input('plot_size'));
             }
 
             if ($request->filled('area_size')
                 && $request->input('area_size') != 'any'
             ) {
-                $query->whereHas('amenities', fn ($query) => $query->where('covered', '>=', $request->input('covered')));
+                $query->whereHas('amenities', fn ($query) => $query->where('covered', '>=', $request->input('area_size')));
             }
         }
 

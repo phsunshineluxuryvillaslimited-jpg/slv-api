@@ -90,7 +90,7 @@ class PropertiesController extends Controller
             if ($request->filled('area_size')
                 && $request->input('area_size') != 'any'
             ) {
-                $query->whereHas('amenities', fn ($query) => $query->where('covered', '=', $request->input('covered')));
+                $query->whereHas('amenities', fn ($query) => $query->where('covered', '>=', $request->input('covered')));
             }
         }
 

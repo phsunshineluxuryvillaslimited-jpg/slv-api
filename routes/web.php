@@ -15,7 +15,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         ->name('profile');
     
     Route::resource('properties', PropertiesController::class)->names([
-        'index' => 'web_index',
+        'index' => 'properties',
         'create' => 'web_create',
         'store' => 'web_store',
         'show' => 'web_show',

@@ -10,6 +10,13 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use App\Models\User;
 use App\Models\PropertyType;
 use App\Models\PropertyAddress;
+use App\Models\PropertyPrice;
+use App\Models\PropertyAmenities;
+use App\Models\PropertyContactDetail;
+use App\Models\PropertyPhotos;
+use App\Models\PropertyKeyFeature;
+use App\Models\PropertyVideo;
+use App\Models\PropertyExternalFeed;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable([
@@ -49,9 +56,9 @@ class Property extends Model
         return $this->hasOne(PropertyAmenities::class);
     }
 
-    public function constact(): HasOne
+    public function contact(): HasOne
     {
-        return $this->hasOne(PropertyAddress::class);
+        return $this->hasOne(PropertyContactDetail::class);
     }
 
     public function photos(): HasMany
@@ -64,7 +71,7 @@ class Property extends Model
         return $this->hasMany(PropertyPhotos::class);
     }
 
-    public function keyFeature(): HasMany
+    public function key_features(): HasMany
     {
         return $this->HasMany(PropertyKeyFeature::class);
     }

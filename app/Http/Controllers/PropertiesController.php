@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Property;
 
 class PropertiesController extends Controller
 {
@@ -11,7 +12,8 @@ class PropertiesController extends Controller
      */
     public function index()
     {
-        return view("properties.index");
+        $properties = Property::paginate(10);
+        return view("properties.index", compact('properties'));
     }
 
     /**
@@ -36,7 +38,8 @@ class PropertiesController extends Controller
      */
     public function show(string $id)
     {
-        return view("properties.show");
+        $property = Property::findOrFail($id);
+        return view("properties.show", compact('property'));
     }
 
     /**

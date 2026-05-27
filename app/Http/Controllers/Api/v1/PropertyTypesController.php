@@ -13,7 +13,7 @@ class PropertyTypesController extends Controller
      */
     public function index()
     {
-        return PropertyTypeResource::collection(PropertyType::all());
+        return PropertyTypeResource::collection(PropertyType::all()->sortBy('name'));
     }
 
     /**

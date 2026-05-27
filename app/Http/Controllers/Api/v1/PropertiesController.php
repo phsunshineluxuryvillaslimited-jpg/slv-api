@@ -134,8 +134,43 @@ class PropertiesController extends Controller
      */
     public function show(Request $request, Property $property)
     {
+
+        if ($property->status !== 'published' 
+            || !$property->networks()->where('external_feeds', 'slv')->exists()
+        ) {
+            $property = null;
+        } else {
+            if ($request->filled('include')) {
+                $property->load($this->parseIncludes($request->input('include')));
+            }
+        }
+
+        return PropertyResource::make($property);
+    }
+
+    public function showByReference(Request $request, string $reference)
+    {
+        $property = Property::where('reference', trim($reference))
+                        ->with(['networks'])
+                        ->where('status', 'published')
+                        ->whereHas('networks', fn ($query) => $query->where('external_feeds', 'slv'))
+                        ->firstOrFail();
+
         if ($request->filled('include')) {
-            $property->load($this->parseIncludes($request->input('include')));
+            if ($request->input('include') == 'all') {
+                $property->load([
+                    'property_type',
+                    'address',
+                    'price',
+                    'contact',
+                    'photos',
+                    'amenities',
+                    'key_features',
+                    'media'
+                ]);
+            } else {
+                $property->load($this->parseIncludes($request->input('include')));
+            }
         }
 
         return PropertyResource::make($property);

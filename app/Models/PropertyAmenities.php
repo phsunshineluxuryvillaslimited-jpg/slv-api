@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 #[Fillable([
     'property_id', 'amenities', 'airport', 'sea', 'public_transport', 'schools', 'resorts',
     'covered', 'attic', 'roof_garden', 'covered_veranda', 'uncovered_veranda',
-    'covered_parking', 'basement', 'countyard', 'garden'
+    'covered_parking', 'basement', 'courtyard', 'garden'
 ])]
 class PropertyAmenities extends Model
 {

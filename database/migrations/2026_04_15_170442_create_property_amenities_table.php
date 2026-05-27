@@ -31,7 +31,7 @@ return new class extends Migration
             $table->decimal('uncovered_veranda',8,2)->default(0);
             $table->decimal('covered_parking',8,2)->default(0);
             $table->decimal('basement',8,2)->default(0);
-            $table->decimal('countyard',8,2)->default(0);
+            $table->decimal('courtyard',8,2)->default(0);
             $table->decimal('garden',8,2)->default(0);
             $table->timestamps();
         });
@@ -42,6 +42,6 @@ return new class extends Migration
      */
     public function down(): void 
     {
-        Schema::dropIfExists('property_detail_sizings');
+        Schema::dropIfExists('property_amenities');
     }
 };

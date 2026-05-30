@@ -4,7 +4,7 @@
  * It fetches the XML data, parses it, and then inserts the relevant information into the properties, 
  * addresses, amenities, prices, photos, and networks tables. 
  * 
- * The command also logs the progress and any errors encountered during the migration process.
+ * The command also logs the progress and any errors en1ered during the migration process.
  * 
  * Date: 2026-04-15
  * Author: Glenn Quinto

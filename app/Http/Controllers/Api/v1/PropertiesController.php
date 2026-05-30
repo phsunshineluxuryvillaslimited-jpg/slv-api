@@ -148,6 +148,13 @@ class PropertiesController extends Controller
         return PropertyResource::make($property);
     }
 
+    /**
+     * Display the specified resource using reference
+     * 
+     * @param Request $request
+     * @param string $reference
+     * @return PropertyResource
+     */
     public function showByReference(Request $request, string $reference)
     {
         $property = Property::where('reference', trim($reference))

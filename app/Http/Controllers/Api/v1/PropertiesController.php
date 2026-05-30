@@ -94,7 +94,7 @@ class PropertiesController extends Controller
             }
         }
 
-        $propertyList = $query->paginate(12);
+        $propertyList = $query->paginate(1);
 
         $propertyList->getCollection()->each->makeHidden(['description','plot_description', 'pool_description']);
 

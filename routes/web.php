@@ -19,13 +19,16 @@ Route::middleware(['auth:sanctum'])->group(function () {
         ->name('profile');
     
     Route::resource('properties', PropertiesController::class)->names([
-        'index' => 'properties',
-        'create' => 'web_create',
-        'store' => 'web_store',
-        'show' => 'web_show',
-        'update' => 'web_update',
-        'destroy' => 'web_destroy'
+        'index' => 'properties.list',
+        'create' => 'properties.create',
+        'store' => 'properties.store',
+        'show' => 'properties.show',
+        'update' => 'properties.update',
+        'destroy' => 'properties.destroy'
     ]);
+
+    Route::view('properties', 'properties.index')->name('properties');
+
     Route::get('/properties-xml/feed', [PropertiesXmlController::class, 'feed'])->name('property.xml-feed');
 });
 

@@ -90,7 +90,7 @@
         <header class="header">
             <div class="page-title">
                 <h3 class="font-semibold leading-tight text-gray-800 text-l">
-                    {{Route::current()->getName()}}
+                    {{ str_replace('.', ' > ', Route::currentRouteName() ?? '') }}
                 </h3>
             </div>
             <div class="header-right">
@@ -126,6 +126,9 @@
         </main>
     </div>
 </div>
+<footer class="py-6 text-center text-sm text-gray-500">
+    SLV Admin v{{ config('app.APP_VERSION') }} &copy; 2026. All rights reserved.
+</footer>
 <script src="{{ asset('js/app.js') }}" defer></script>
 @stack('scripts')
 </body>

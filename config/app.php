@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'LSCAPI'),
+    'name' => env('APP_NAME', 'SLVAPI'),
 
     /*
     |--------------------------------------------------------------------------
@@ -127,5 +127,7 @@ return [
     | Lead default email from env file
     */
     'lead_email'=> env('LEAD_EMAIL', 'sample@emmail.com'),
+
+    'APP_VERSION' => env('APP_VERSION', '1.0.0'),
 
 ];

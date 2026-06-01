@@ -12,6 +12,7 @@
             </h2>
         </div>
     </div>
+
     <livewire:multi-step-form />
 
     <br /><br /><br />

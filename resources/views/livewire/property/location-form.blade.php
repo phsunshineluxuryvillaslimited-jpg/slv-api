@@ -1,32 +1,9 @@
-<?php
-use Livewire\Component;
-
-new class extends Component
-{
-   /**
-     * Mount the component.
-     */
-    public function mount(): void
-    {
-        $this->js('alert("test")');
-    }
-
-    public function render()
-    {
-        $this->js('alert("test")');
-    }
-
-}
-
-?>
-
-
 <!-----------------------------------------------------
 Add your form or content for adding a property here
 ------------------------------------------------------->
-<form method="POST" action="{{ route('properties.store') }}" onLoad="javascript: alert('test')">
-@csrf
-
+<!-- <form method="POST" action="{{ route('properties.store') }}" onLoad="javascript: alert('test')"> -->
+<!-- @csrf -->
+<div>
     <!-----------------------------------------
     Basic location info
     ----------------------------------------->
@@ -94,27 +71,15 @@ Add your form or content for adding a property here
                     </div>
                     <div>
                         <label class="text-sm">Map Address</label>
-                        <input type="text" name="address" class="w-full border-gray-300 rounded-md text-sm  shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                        <input type="text" name="map_address" id="mapAddress" class="w-full border-gray-300 rounded-md text-sm  shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
                     </div>
-                    <div class="gmap border h-96 mt-4">
-                        <script async defer>
-                document.addEventListener('DOMContentLoaded', () => {
-                    console.log('The DOM is fully loaded and parsed');
-                    // Your code here
-                });
-                document.getElementById('nextBtn').addEventListener('click', () => {
-                    console.log(document.getElementById('gmap'));
-                    document.addEventListener('DOMContentLoaded', () => {
-                    console.log('The DOM is fully loaded and parsed');
-                    // Your code here
-                });
-                })
-            </script>
-                        <div id="gmap" wire:ignore class="h-full">
+                    <div wire:ignore class="gmap border h-96 mt-4">
+                        <div id="gmap" class="h-full">
                         </div>
                     </div>
                 </div>  
             </div>
         </div>
     </div>
-</form>
+</div>
+<!-- </form> -->

@@ -36,9 +36,9 @@ class Property extends Model
         return $this->belongsTo(User::class, 'author_id');
     }
 
-    public function property_type(): BelongsTo
+    public function propertyType(): BelongsTo
     {
-        return $this->belongsTo(PropertyType::class);
+        return $this->belongsTo(PropertyType::class, 'property_type_id');
     }
 
     public function address(): HasOne
@@ -91,15 +91,15 @@ class Property extends Model
         return $this->hasOne(PropertyExternalFeed::class);
     }
 
-    public function getPropertyTypeAttribute(): string
-    {
-        return $this->attribute($this->property_type);
-    }
+    // public function getPropertyTypeAttribute(): string
+    // {
+    //     // return $this->attribute($this->propertyType?->name);
+    //     return $this->propertyType?->name ?? '';
+    // }
 
     public function getBasicPriceAttribute(): ?float
     {
         return $this->price ? $this->price->basic_price : null;
-
-        }
+    }
 
 }

@@ -10,7 +10,7 @@ new class extends Component
 
     public function mount(PropertyType $propertyTypes)
     {
-        $this->propertyTypes = $propertyTypes->all();
+        $this->propertyTypes = $propertyTypes->orderBy('name', 'asc')->get();
     }
 }
 
@@ -36,8 +36,14 @@ Add your form or content for adding a property here
                     <!-- Form fields for property details -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-4">
                         <div>
-                            <label for="reference" class="block text-black text-sm mb-1">{{ __('Reference') }}</label>
-                            <input type="text" name="reference" id="reference" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                            <label for="reference" class="block text-black text-sm mb-1 uppercase">{{ __('Reference') }}</label>
+                            <input type="text" 
+                                name="reference" 
+                                id="reference" 
+                                class="uppercase placeholder:normal-case w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" 
+                                placeholder="SLV-1234"
+                                required
+                                />
                         </div>
                         <div>
                             <label for="basicPrice" class="block text-black text-sm mb-1">{{ __('Price') }}</label>
@@ -45,7 +51,9 @@ Add your form or content for adding a property here
                                 <div class="absolute ml-0 text-gray-500 pr-3 h-full left-3 flex items-center">
                                     &euro;
                                 </div>
-                                <input type="number" name="basic_price" id="basicPrice" class="w-full pl-7 text-sm  border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 [&::-webkit-inner-spin-button]:mr-8" required>
+                                <input type="number" name="basic_price" id="basicPrice" 
+                                    placeholder="e.g. 250000"
+                                    class="w-full pl-7 text-sm  border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 [&::-webkit-inner-spin-button]:mr-8" required>
                                 <div class="absolute ml-0 text-gray-500 pr-3 border-r-1 border-gray-300 rounded-r-md h-full right-0 flex items-center">
                                     {{ __('GBP') }}
                                 </div>
@@ -78,8 +86,10 @@ Add your form or content for adding a property here
                         <div>
                             <label for="reference" class="block text-black text-sm mb-1">{{ __('Property Type') }}</label>
                             <select name="property_type_id" id="property_type" class="w-full border-gray-300 text-sm rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
-                                @foreach ($propertyTypes as $propertyType)
-                                <option value="{{ $propertyType->id }}" wire:key="{{ $propertyType->id }}">{{ $propertyType->name }}</option>
+                                <option value="1" wire:key="1">None</option>
+                                @foreach ($propertyTypes as $propertyType) 
+                                    @continue( $propertyType->id === 1 )
+                                    <option value="{{ $propertyType->id }}" wire:key="{{ $propertyType->id }}">{{ $propertyType->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -115,16 +125,16 @@ Add your form or content for adding a property here
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
                         <div>
                             <label for="bedrooms" class="block text-black text-sm mb-1">{{ __('Bedrooms') }}</label>
-                            <input type="number" name="bedrooms" id="bedrooms" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
+                            <input type="number" name="bedrooms" id="bedrooms" value="0" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
                         </div>
                         <div>
                             <label for="bathrooms" class="block text-black text-sm mb-1">{{ __('Bathrooms') }}</label>
-                            <input type="number" name="bathrooms" id="bathrooms" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
+                            <input type="number" name="bathrooms" id="bathrooms" value="0" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
                         </div>
                         <div>
                             <label for="build" class="block text-black text-sm mb-1">{{ __('Build') }}</label>
                             <div class="relative rounded-md shadow-sm max-w-sm">
-                                <input type="number" name="build" id="build" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 [&::-webkit-inner-spin-button]:mr-9 placeholder="" />
+                                <input type="number" name="build" id="build" value="0" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 [&::-webkit-inner-spin-button]:mr-9 placeholder="" />
                                 <div class="absolute inset-y-0 right-0 flex items-center h-full pl-3 pr-3 bg-gray-50 text-center text-gray-500 border border-gray-300 rounded-r-md text-sm">
                                     {{ __('m') }}<span class="text-[0.65rem] align-super mb-2">{{ __('2') }}</span>
                                 </div>
@@ -135,7 +145,7 @@ Add your form or content for adding a property here
                         <div>
                             <label for="terrace" class="block text-black text-sm mb-1">{{ __('Terrace') }}</label>
                             <div class="relative rounded-md shadow-sm max-w-sm">
-                                <input type="number" name="terrace" id="terrace" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 [&::-webkit-inner-spin-button]:mr-9" placeholder="" />
+                                <input type="number" name="terrace" id="terrace" value="0" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 [&::-webkit-inner-spin-button]:mr-9" placeholder="" />
                                 <div class="absolute inset-y-0 right-0 flex items-center h-full pl-3 pr-3 bg-gray-50 text-center text-gray-500 border border-gray-300 rounded-r-md text-sm">
                                     {{ __('m') }}<span class="text-[0.65rem] align-super mb-2">{{ __('2') }}</span>
                                 </div>
@@ -144,7 +154,7 @@ Add your form or content for adding a property here
                         <div>
                             <label for="plot" class="block text-black text-sm mb-1 mb-1">{{ __('Plot') }}</label>
                             <div class="relative rounded-md shadow-sm max-w-sm">
-                                <input type="number" name="plot" id="plot" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 [&::-webkit-inner-spin-button]:mr-9" placeholder="" />
+                                <input type="number" name="plot" id="plot" value="0" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 [&::-webkit-inner-spin-button]:mr-9" placeholder="" />
                                 <div class="absolute inset-y-0 right-0 flex items-center h-full pl-3 pr-3 bg-gray-50 text-center text-gray-500 border border-gray-300 rounded-r-md text-sm">
                                     {{ __('m') }}<span class="text-[0.65rem] align-super mb-2">{{ __('2') }}</span>
                                 </div>
@@ -211,7 +221,7 @@ Add your form or content for adding a property here
                     <div class="grid grid-cols-5 md:grid-cols-5 gap-5 mb-4">
                         <div>
                             <label for="original_price" class="font-md block text-black text-sm mb-1">{{ __('Original Price') }}</label>
-                            <input type="number" name="original_price" id="original_price" class="w-full border-gray-300 rounded-md text-sm  shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
+                            <input type="number" name="original_price" id="original_price" placeholder="e.g: 2500000 " class="w-full border-gray-300 rounded-md text-sm  shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
                         </div>
                         <div>
                             <label for="total_reduction_percentage" class="block text-black text-sm mb-1">{{ __('Total Reduction %') }}</label>

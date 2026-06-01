@@ -11,16 +11,29 @@ class MultiStepForm extends Component
     public $currentStep = 1;
     public $totalSteps = 10;
 
+    public $updatedStep;
+
+    public function updatedStep(int $value)
+    {
+        $this->updatedStep = $value;
+        if ($value == 2) {
+            $this->dispatch('load-map');
+        }
+    }
+
     public function nextStep()
     {
         if ( $this->currentStep < $this->totalSteps ) {
             $this->currentStep++;
         }
+        
+        $this->updatedStep($this->currentStep);
     }
 
     public function previousStep()
     {
         $this->currentStep--;
+        $this->updatedStep($this->currentStep);
     }
 
     public function validateStep()

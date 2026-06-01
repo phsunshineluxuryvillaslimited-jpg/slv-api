@@ -47,11 +47,11 @@ class PropertiesController extends Controller
                 $query->whereHas('address', fn ($query) => $query->whereIn('town_city', $towns));
             }
 
-            if ($request->filled('property_types') 
-                && $request->input('property_types') != 'all'
+            if ($request->filled('propertyType') 
+                && $request->input('propertyType') != 'all'
             ) {
-                $types = array_map('trim', explode(',', urldecode($request->input('property_types'))));
-                $query->whereHas('property_type', fn ($query) => $query->whereIn('name', $types));
+                $types = array_map('trim', explode(',', urldecode($request->input('propertyType'))));
+                $query->whereHas('propertyType', fn ($query) => $query->whereIn('name', $types));
             }
 
             if ($request->filled('bedrooms') 
@@ -166,7 +166,7 @@ class PropertiesController extends Controller
         if ($request->filled('include')) {
             if ($request->input('include') == 'all') {
                 $property->load([
-                    'property_type',
+                    'propertyType',
                     'address',
                     'price',
                     'contact',

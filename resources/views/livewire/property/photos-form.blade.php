@@ -16,10 +16,7 @@ new class extends Component
 }
 
 ?>
-
-<form method="POST" wire:submit="uploadPhotos">
-@csrf
-
+<div>
     <!-----------------------------------------
     Basic location info
     ----------------------------------------->
@@ -49,5 +46,4 @@ new class extends Component
     @if ($photos)
         <img src="{{ $photos->temporaryUrl() }}" width="100">
     @endif
-    <button type="submit">Submit</button>
-</form>
+</div>

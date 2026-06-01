@@ -8,22 +8,6 @@
      <!-- Step 2 -->
     @if ( $currentStep == 2 )
         <livewire:dotted-steps :step="$currentStep" />
-        
-        @push('scripts')
-            <script async defer>
-                document.addEventListener('DOMContentLoaded', () => {
-                    console.log('The DOM is fully loaded and parsed');
-                    // Your code here
-                });
-                document.getElementById('nextBtn').addEventListener('click', () => {
-                    console.log(document.getElementById('gmap'));
-                    document.addEventListener('DOMContentLoaded', () => {
-                    console.log('The DOM is fully loaded and parsed');
-                    // Your code here
-                });
-                })
-            </script>
-        @endpush
         <livewire:property.location-form />
     @endif
 
@@ -81,7 +65,6 @@
             <div>
                 @if ( $currentStep > 1 )
                     <button wire:click="previousStep" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded mr-1">Back</button>
-                    <button wire:click="saveAsDraft" class="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded mr-1">Save as Draft</button>
                 @endif
 
                 @if ( $currentStep != 10 )
@@ -103,9 +86,20 @@
         </div>
     </div>
 </section>
+@script
+    <script>
+    let mapInitialized = false;
+
+    Livewire.on('load-map', () => {
+        // if (!mapInitialized) {
+            initMap();
+            // mapInitialized = true;
+        // }
+    });
+
+    </script>
+@endscript
 @push('scripts')
-     <script
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAjtQlPL0rirZ70g8Xew5Ol3mqhqmAju08&callback=initMap&loading=async" async defer
-    ></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAjtQlPL0rirZ70g8Xew5Ol3mqhqmAju08&&callback=initMap&loading=async&libraries=places"></script>
     <script src="{{ asset('/js/google.map.js') }}" defer></script>
 @endpush

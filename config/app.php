@@ -130,4 +130,6 @@ return [
 
     'APP_VERSION' => env('APP_VERSION', '1.0.0'),
 
+    'WEBSITE_URL' => env('WEBSITE_URL', 'https://slv2.sunshineluxuryvillas.co.uk'),
+
 ];

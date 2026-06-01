@@ -12,7 +12,25 @@ class PropertiesController extends Controller
      */
     public function index()
     {
-        $properties = Property::paginate(10);
+        $properties = Property::with([
+            'propertyType',
+            'address' => function($query) {
+                $query->select('id', 'property_id', 'region', 'town_city');
+            },
+            'price' => function($query) {
+                $query->select('id', 'property_id', 'basic_price');
+            },
+            'photos' => function($query) {
+                $query->select('id', 'property_id', 'url');
+            },
+            'amenities' => function($query) {
+                $query->select('id', 'property_id', 'covered');
+            },
+            'networks'
+        ])
+        ->select('id', 'property_type_id', 'reference', 'bedrooms', 'plot', 'status')
+        ->paginate(10);
+
         return view("properties.index", compact('properties'));
     }
 
@@ -28,10 +46,10 @@ class PropertiesController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        return view("step", ['sample' =>'test']);
-    }
+    // public function store(Request $request)
+    // {
+    //     return view("step", ['sample' =>'test']);
+    // }
 
     /**
      * Display the specified resource.

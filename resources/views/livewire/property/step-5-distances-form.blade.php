@@ -58,14 +58,10 @@ Add your form or content for adding a property here
                     <h3 class="font-semibold text-xl text-blue-900 leading-tight mb-5">
                         {{ __('Additional Areas')  }}
                     </h3>
-                    <div class="grid grid-cols-5 md:grid-cols-5 gap-5 mb-4">
+                    <div class="grid grid-cols-4 md:grid-cols-4 gap-5 mb-4">
                          <div>
-                            <label for="covered" class="block text-black text-sm mb-1">{{ __('Covered m²') }}</label>
+                            <label for="covered" class="block text-black text-sm mb-1">{{ __('Reference m²') }}</label>
                             <input type="number" name="covered" id="covered" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
-                        </div>
-                        <div>
-                            <label for="plot" class="block text-black text-sm mb-1">{{ __('Plot m²') }}</label>
-                            <input type="number" name="plot" id="plot" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
                         </div>
                         <div>
                             <label for="attic" class="block text-black text-sm mb-1">{{ __('Attic m²') }}</label>

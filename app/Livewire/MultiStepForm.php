@@ -11,7 +11,7 @@ class MultiStepForm extends Component
     public $currentStep = 1;
     public $totalSteps = 10;
 
-    public $updatedStep;
+    public string $updatedStep;
 
     public function updatedStep(int $value)
     {

@@ -44,7 +44,7 @@ class MigrateUltraXmlFeedCommand extends Command
 
     private $ultraXMLFeedFileName = 'ultra-feed.xml';
 
-    /**
+    /**4
      * Execute the console command.
      */
     public function handle()

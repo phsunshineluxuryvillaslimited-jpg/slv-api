@@ -11,17 +11,24 @@ Route::middleware(['auth:sanctum'])->group(function () {
         ->middleware(['verified'])
         ->name('dashboard');
 
+    Route::view('diaries', 'diaries')
+        ->middleware(['verified'])
+        ->name('diaries');
+
     Route::view('profile', 'profile')
         ->name('profile');
     
     Route::resource('properties', PropertiesController::class)->names([
         'index' => 'properties',
-        'create' => 'web_create',
-        'store' => 'web_store',
-        'show' => 'web_show',
-        'update' => 'web_update',
-        'destroy' => 'web_destroy'
+        'create' => 'properties.create',
+        'store' => 'properties.store',
+        'show' => 'properties.show',
+        'update' => 'properties.edit',
+        'destroy' => 'properties.destroy'
     ]);
+
+    // Route::view('properties', 'properties.index')->name('properties');
+
     Route::get('/properties-xml/feed', [PropertiesXmlController::class, 'feed'])->name('property.xml-feed');
 });
 

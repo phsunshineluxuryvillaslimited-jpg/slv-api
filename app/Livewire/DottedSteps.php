@@ -14,7 +14,7 @@ class DottedSteps extends Component
         'Photos',
         'Floor Plan',
         'Amenities',
-        'Options',
+        'CH Manager',
         'Vendor',
         'Key Features',
         'V-tour Video',

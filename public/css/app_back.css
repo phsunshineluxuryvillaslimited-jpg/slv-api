@@ -26,9 +26,4 @@
 
 /* WIDTH AND HEIGHT*/
 .w-16 {width: 64px;}
-.h-16 {height: 64px;} 
-
-.required-field::after {
-  content: " *";
-  color: red;
-}
+.h-16 {height: 64px;}

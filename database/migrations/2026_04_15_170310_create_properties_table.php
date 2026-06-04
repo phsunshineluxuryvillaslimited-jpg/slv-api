@@ -15,11 +15,7 @@ return new class extends Migration
         Schema::dropIfExists('properties');
         Schema::create('properties', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('author_id');
-            $table->foreign('author_id')
-                ->references('id')
-                ->on('users')
-                ->onDelete('cascade');
+            $table->foreign('agent_id')->references('id')->on('users');
             $table->unsignedBigInteger('property_type_id');
             $table->foreign('property_type_id')
                 ->references('id')
@@ -33,7 +29,7 @@ return new class extends Migration
                 ->nullable()
                 ->comment('Whether the title deeds for the property are available');
             $table->enum('leasehold', ['yes','no'])
-                ->default('no')
+                ->default('yes')
                 ->comment('Leasehold Property');
             $table->integer('bedrooms')->index()
                 ->default(0)
@@ -41,13 +37,10 @@ return new class extends Migration
             $table->integer('bathrooms')->index()
                 ->default(0)
                 ->comment('Number of bathrooms');
-            $table->decimal('build', 10, 2)
+            $table->decimal('area_size', 10)
                 ->default(0)
-                ->comment('Build area in square meters');
-            $table->decimal('terrace', 10, 2)
-                ->default(0)
-                ->comment('Terrace area in square meters');
-            $table->decimal('plot', 10,2)->index()
+                ->comment('Area area in square meters');
+            $table->decimal('plot', 10)->index()
                 ->default(0)
                 ->comment('Plot area in square meters');
             $table->string('plot_description', 255)
@@ -55,19 +48,16 @@ return new class extends Migration
                 ->nullable();
             $table->unsignedBigInteger('agent_id')
                 ->comment('ID of the agent responsible for the property');
-            $table->foreign('agent_id')
-                ->references('id')
-                ->on('users');
             $table->string('year_of_construction', 5)
                 ->comment('Year of construction')
                 ->nullable();
-            $table->decimal('pool', 10,2)
-                ->default(0)
+            $table->enum('pool', ['yes', 'no'])
+                ->default('yes')
                 ->comment('Whether the property has a pool');
             $table->string('pool_description', 255)
                 ->comment('Description of the pool')
                 ->nullable();
-            $table->enum('listing_type', ['resale', 'new', 'sale', 'rental'])
+            $table->enum('listing_type', ['resale', 'new_build', 'sale', 'rental'])
                 ->nullable()
                 ->comment('Property listing type: "Resale" for sale, "New" for new');
             $table->enum('plan_zone',['A','B','C'])
@@ -80,11 +70,17 @@ return new class extends Migration
                 ->nullable()
                 ->comment('Whether the property is on the for sale board');
             $table->enum('save_type', ['draft','finished','feed'])->index()
-                ->nullable();
+                ->default('draft');
             $table->enum('status', ['published', 'active', 'inactive'])->index()
                 ->nullable();
             $table->datetime('published_at')->index()
                 ->nullable();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
+            $table->unsignedBigInteger('deleted_by')->nullable();
+            $table->foreign('created_by')->references('id')->on('users');
+            $table->foreign('updated_by')->references('id')->on('users');
+            $table->foreign('deleted_by')->references('id')->on('users');
             $table->timestamps();
         });
 

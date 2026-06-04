@@ -18,14 +18,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::view('profile', 'profile')
         ->name('profile');
     
-    Route::resource('properties', PropertiesController::class)->names([
-        'index' => 'properties',
-        'create' => 'properties.create',
-        'store' => 'properties.store',
-        'show' => 'properties.show',
-        'update' => 'properties.edit',
-        'destroy' => 'properties.destroy'
-    ]);
+    Route::resource('properties', PropertiesController::class);
 
     // Route::view('properties', 'properties.index')->name('properties');
 

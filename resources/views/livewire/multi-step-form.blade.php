@@ -1,4 +1,5 @@
 <section>
+    {{ $newPropertyId }}
     <!-- Step 1 -->
     @if ( $currentStep == 1 )
         <livewire:dotted-steps :step="$currentStep" />
@@ -8,56 +9,56 @@
      <!-- Step 2 -->
     @if ( $currentStep == 2 )
         <livewire:dotted-steps :step="$currentStep" />
-        <livewire:property.step-2-location-form />
+        <livewire:property.step-2-location-form :propertyId="$newPropertyId" />
     @endif
 
      <!-- Step 3 -->
     @if ( $currentStep == 3 )
         <livewire:dotted-steps :step="$currentStep" />
-        <livewire:property.step-3-photos-form />
+        <livewire:property.step-3-photos-form :propertyId="$newPropertyId" />
     @endif
 
      <!-- Step 4 -->
     @if ( $currentStep == 4 )
         <livewire:dotted-steps :step="$currentStep" />
-        <livewire:property.step-4-floor-plan-form />
+        <livewire:property.step-4-floor-plan-form :propertyId="$newPropertyId" />
     @endif
 
      <!-- Step 5 -->
     @if ( $currentStep == 5 )
         <livewire:dotted-steps :step="$currentStep" />
-        <livewire:property.step-5-distances-form />
+        <livewire:property.step-5-distances-form :propertyId="$newPropertyId" />
     @endif
 
      <!-- Step 6 -->
     @if ( $currentStep == 6 )
         <livewire:dotted-steps :step="$currentStep" />
-        <livewire:property.step-6-channel-manager-form  />
+        <livewire:property.step-6-channel-manager-form :propertyId="$newPropertyId" />
     @endif 
 
      <!-- Step 7 -->
     
     @if ( $currentStep == 7 )
         <livewire:dotted-steps :step="$currentStep" />
-        <livewire:property.step-7-vendor-details-form />
+        <livewire:property.step-7-vendor-details-form :propertyId="$newPropertyId" />
     @endif
 
      <!-- Step 8 -->
     @if ( $currentStep == 8 )
         <livewire:dotted-steps :step="$currentStep" />
-        <livewire:property.step-8-key-features-form />
+        <livewire:property.step-8-key-features-form :propertyId="$newPropertyId" />
     @endif
 
      <!-- Step 9 -->
     @if ( $currentStep == 9 )
         <livewire:dotted-steps :step="$currentStep" />
-        <livewire:property.step-9-videos-virtual-tour-form />
+        <livewire:property.step-9-videos-virtual-tour-form :propertyId="$newPropertyId" />
     @endif
 
      <!-- Step 10 -->
     @if ( $currentStep == 10 )
         <livewire:dotted-steps :step="$currentStep" />
-        <livewire:property.step-10-title-description-form />
+        <livewire:property.step-10-title-description-form :propertId="$newPropertyId" />
     @endif
 
     <div class="py-3">
@@ -68,12 +69,18 @@
                 @endif
 
                 @if ( $currentStep != 10 )
-                    <button id="nextBtn"  wire:click="nextStep" wire:loading.class="opacity-50" class="px-7 py-2 bg-orange-400 text-white rounded-md hover:bg-orange-500">
+                    <button id="nextBtn"  wire:click="$dispatch('parentNextStepButtonTriggered')" wire:loading.class="opacity-50" class="px-7 py-2 bg-orange-400 text-white rounded-md hover:bg-orange-500">
                         <span wire:loading.remove>{{ __('Save and Next') }} &rarr;</span>
                         <span wire:loading>
                             Loading..
                         </span>
                     </button>
+                    <!-- <button id="nextBtn"  wire:click="nextStep" wire:loading.class="opacity-50" class="px-7 py-2 bg-orange-400 text-white rounded-md hover:bg-orange-500">
+                        <span wire:loading.remove>{{ __('Save and Next') }} &rarr;</span>
+                        <span wire:loading>
+                            Loading..
+                        </span>
+                    </button> -->
                 @else
                     <!-- <button wire:click="nextStep" wire:loading.class="opacity-50" class="px-7 py-2 bg-orange-400 text-white rounded-md hover:bg-orange-500">
                         <span wire:loading.remove>{{ __('Save and Publish') }} &rarr;</span>

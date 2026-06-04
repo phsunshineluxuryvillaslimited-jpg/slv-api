@@ -20,11 +20,11 @@ return new class extends Migration
                 ->onDelete('cascade');
             $table->boolean('is_poa')->default(false);
             $table->decimal('basic_price', 14,2)->default(0);
-            $table->decimal('original_price', 10,2)->default(0);
-            $table->decimal('total_reduction_percentage',10,2)->default(0);
-            $table->decimal('total_reduction_price', 10,2)->default(0);
+            $table->decimal('original_price', 10,2)->default(0)->nullable();
+            $table->decimal('total_reduction_percentage',10,2)->default(0)->nullable();
+            $table->decimal('total_reduction_price', 10,2)->default(0)->nullable();
             $table->decimal('commission', 10,2)->default(0);
-            $table->decimal('communal_charges',10,2)->default(0);
+            $table->decimal('communal_charge',10,2)->default(0)->nullable();
             $table->timestamps();
         });
     }

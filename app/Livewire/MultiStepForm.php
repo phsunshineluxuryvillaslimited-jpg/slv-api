@@ -3,12 +3,15 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use Livewire\Attributes\On;
 use Illuminate\Support\Facades\DB;
 
 class MultiStepForm extends Component
 {
     public $currentStep = 1;
     public $totalSteps = 10;
+
+    public $newPropertyId = 0;
 
     public string $updatedStep;
 
@@ -25,11 +28,10 @@ class MultiStepForm extends Component
         }
     }
 
-    public function nextStep()
-    {
-        if ($this->currentStep == 1) {
-            $this->saveStep1();
-        }
+    #[On('proceed-to-next-step')]
+    public function nextStep($property_id = 0)
+    {   
+        $this->newPropertyId = $property_id;
 
         if ( $this->currentStep < $this->totalSteps ) {
             $this->currentStep++;

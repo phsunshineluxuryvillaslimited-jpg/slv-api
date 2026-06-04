@@ -112,13 +112,13 @@
                                     <p class="text-gray-900 whitespace-no-wrap">{{ $property->bedrooms ?? 'N/A' }}</p>
                                 </td>
                                 <td class="px-5 py-5 text-sm bg-white border-b border-gray-200 text-center">
-                                    <p class="text-gray-900 whitespace-no-wrap">&euro; {{ number_format($property->price->basic_price) }}</p>
+                                    <p class="text-gray-900 whitespace-no-wrap">&euro; {{ $property->price->basic_price ?? 0 }}</p>
                                 </td>
                                 <td class="px-5 py-5 text-sm bg-white border-b border-gray-200 text-center">
-                                    <p class="text-gray-900 whitespace-no-wrap">{{ $property->plot ?? 'N/A' }}</p>
+                                    <p class="text-gray-900 whitespace-no-wrap">{{ number_format($property->plot, 0) ?? 'N/A' }}</p>
                                 </td>
-                                <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                    <p class="text-gray-900 whitespace-no-wrap">{{ $property->amenities->covered ?? 'N/A' }}</p>
+                                <td class="px-5 py-5 text-sm bg-white border-b border-gray-200 text-center">
+                                    <p class="text-gray-900 whitespace-no-wrap">{{ number_format($property->area_size, 0)?? 'N/A' }}</p>
                                 </td>
                                 <td class="px-5 py-5 text-sm bg-white border-b border-gray-200 text-center">
                                     <p class="text-gray-900 whitespace-no-wrap">BANK</p>

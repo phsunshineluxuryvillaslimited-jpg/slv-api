@@ -18,7 +18,7 @@ return new class extends Migration
                 ->references('id')
                 ->on('properties')
                 ->onDelete('cascade');
-            $table->enum('category', ['Vendor', 'Agent', 'Developer', 'New Build'])
+            $table->enum('category', ['Vendor', 'Agent', 'Developer', 'Bank'])
                 ->comment('The category of the contact detail');
             $table->string('first_name')
                 ->comment('The first name of the contact');

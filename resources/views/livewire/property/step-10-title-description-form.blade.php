@@ -1,4 +1,18 @@
-<!-----------------------------------------
+<?php
+use Livewire\Attributes\Validate;
+use Livewire\Volt\Component;
+
+new class extends Component
+{
+    #[Validate('required|string')]
+    public string $title;
+
+    #[Validate('required|string')]
+    public string $description;
+
+}
+
+?><!-----------------------------------------
 Basic location info
 ----------------------------------------->
 <div>

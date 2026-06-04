@@ -24,7 +24,7 @@ return new class extends Migration
             $table->decimal('public_transport',8,2)->default(0);
             $table->decimal('schools',8,2)->default(0);
             $table->decimal('resorts',8,2)->default(0);
-            $table->decimal('covered',8,2)->default(0)->index();
+            $table->decimal('terrace',8,2)->default(0)->index();
             $table->decimal('attic',8,2)->default(0);
             $table->decimal('roof_garden',8,2)->default(0);
             $table->decimal('covered_veranda',8,2)->default(0);

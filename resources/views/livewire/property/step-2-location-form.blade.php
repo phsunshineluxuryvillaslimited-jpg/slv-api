@@ -1,6 +1,9 @@
 
 <?php
+use Livewire\Attributes\Validate;
+use Livewire\Attributes\On;
 use Livewire\Volt\Component;
+use App\Models\PropertyAddress;
 
 new class extends Component
 {
@@ -66,9 +69,36 @@ new class extends Component
             ]
     ];
 
-    public $selectedRegion = null;
-    public $selectedTown = null;
-    public $selectedLocality = null;
+    public array $selectedRegion;
+    public array $selectedTown;
+    public array $selectedLocality;
+
+    /*******************
+     * Validartion
+     ******************/
+    #[Validate('required|string')]
+    public string $region;
+
+    #[Validate('required|string')]
+    public string $town_city;
+
+    #[Validate('required|string')]
+    public string $localty;
+
+    #[Validate('required|decimal:10.8')]
+    public float $latitude;
+
+    #[Validate('required|decimal:11.8')]
+    public float $longtitue;
+
+    #[Validate('required|string')]
+    public string $map_address;
+
+    #[Validate('required|string')]
+    public string $map_accuracy;
+
+    #[Validate('required|numeric')]
+    public int $property_id;
 
     public function mount(): void
     {
@@ -78,8 +108,15 @@ new class extends Component
     public function updatedSelectedRegion(string $region)
     { 
             $this->towns = $this->regionTownMap[$region] ?? [];
-            $this->selectedTown = null;
-            $this->selectedLocality = null;
+            $this->selectedTown = [];
+            $this->selectedLocality = [];
+    }
+
+    #[On('parentNextStepButtonTriggered')]
+    public function hundleNextStepButtonTriggered(int $currentStep)
+    {
+        dd($currentStep);
+        $this->validate();
     }
 }
 
@@ -98,6 +135,7 @@ Property Location input form
                     <h3 class="font-semibold text-xl text-blue-900 leading-tight mb-5">
                         {{ __('Location')  }}
                     </h3>
+                    <input type="hidden" wire:modal.live="property_id" value="{{ propertyId }}"/>
                     <p class="mb-5 text-sm text-gray-600">{{ __('Select the location of the property. This will help your property show up in the correct location on the map and improve search results for location-based searches.') }}</p>
                     <div class="grid grid-cols-3 md:grid-cols-3 gap-5 mb-4">
                         <div>

@@ -24,11 +24,11 @@ class PropertiesController extends Controller
                 $query->select('id', 'property_id', 'url');
             },
             'amenities' => function($query) {
-                $query->select('id', 'property_id', 'covered');
+                $query->select('id', 'property_id');
             },
             'networks'
         ])
-        ->select('id', 'property_type_id', 'reference', 'bedrooms', 'plot', 'status')
+        ->select('id', 'property_type_id', 'reference', 'bedrooms', 'plot', 'area_size', 'status')
         ->paginate(10);
 
         return view("properties.index", compact('properties'));

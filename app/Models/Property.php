@@ -18,12 +18,12 @@ use App\Models\PropertyKeyFeature;
 use App\Models\PropertyVideo;
 use App\Models\PropertyExternalFeed;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Traits\Blameable;
 
 #[Fillable([
-    'author_id', 'property_type_id', 'reference', 'description', 'title_deeds',
-    'leasehold', 'bedrooms','bathrooms', 'build',
-    'terrace', 'plot', 'plot_description', 'agent_id',
-    'year_of_construction', 'pool', 'pool_description',
+    'property_type_id', 'reference', 'description', 'title_deeds',
+    'leasehold', 'bedrooms','bathrooms', 'area_size', 'plot', 'plot_description', 
+    'agent_id', 'year_of_construction', 'pool', 'pool_description',
     'listing_type', 'plan_zone', 'sea_view', 'for_sale_board',
     'status', 'save_type'
 ])]
@@ -31,9 +31,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 #[Hidden(['created_at', 'updated_at', 'author_id', 'property_type_id'])]
 class Property extends Model
 {
-    public function author(): BelongsTo
+    use Blameable;
+
+    public function creator(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'author_id');
+        return $this->belongsTo(User::class, 'created_by');
     }
 
     public function propertyType(): BelongsTo

@@ -7,14 +7,14 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::prefix('v1')->group( function () {
+    Route::prefix('v1')
+        ->name('api.')
+        ->group( function () {
+            Route::apiResource('properties', Api\V1\PropertiesController::class);
+            Route::get('properties/reference/{reference}', [V1PropertiesController::class, 'showByReference']);
 
-        Route::apiResource('properties', V1PropertiesController::class);
-        Route::get('properties/reference/{reference}', [V1PropertiesController::class, 'showByReference']);
-
-        Route::apiResource('users', V1UsersController::class);
-        Route::apiResource('property-types', V1PropertyTypesController::class);
-        
+            Route::apiResource('users', V1UsersController::class);
+            Route::apiResource('property-types', V1PropertyTypesController::class);
     });
 });
 

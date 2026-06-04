@@ -1,3 +1,42 @@
+<?php
+use Livewire\Attributes\Validate;
+use Livewire\Volt\Component;
+use App\Models\PropertyAddress;
+
+new class extends Component
+{
+    #[Validate('required|string')]
+    public string $contact_details_first_name;
+
+    #[Validate('required|string')]
+    public string $contact_details_last_name;
+
+    #[Validate('required|string')]
+    public string $contact_details_telephone;
+
+    #[Validate('required|string')]
+    public string $contact_details_mobile;
+
+    #[Validate('required|email')]
+    public string $contact_details_email;
+
+    #[Validate('required|string')]
+    public string $lawyer_first_name;
+
+    #[Validate('required|string')]
+    public string $lawyer_last_name;
+    
+    #[Validate('required|string')]
+    public string $lawyer_telephone_mobile;
+
+    #[Validate('required|string')]
+    public string $lawyer_email;
+
+    #[Validate('required|string')]
+    public string $lawyer_address;
+}
+
+?>
 
 <!-----------------------------------------
 Basic location info
@@ -96,19 +135,19 @@ Basic location info
                     <div class="grid grid-cols-4 md:grid-cols-4 gap-5 mb-4">
                         <div>
                             <label for="layerFirstName" class="required-field block text-black text-sm mb-1">{{ __('First Name') }}</label>
-                            <input type="text" name="layer_first_name" id="layerFirstName" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                            <input type="text" name="lawyer_first_name" id="lawyerFirstName" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
                         </div>
                         <div>
                             <label for="layerLastNamew" class="required-field block text-black text-sm mb-1">{{ __('Last Name') }}</label>
-                            <input type="text" name="layer_last_name" id="layerLastNamew" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                            <input type="text" name="lawyer_last_name" id="lawyerLastNamew" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
                         </div>
                         <div>
                             <label for="layerTelephoneDay" class="required-field block text-black text-sm mb-1">{{ __('Telephone / Mobile') }}</label>
-                            <input type="text" name="layer_telephone_day" id="layerTelephoneDay" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                            <input type="text" name="lawyer_telephone_mobile" id="lawyerTelephoneMobile" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
                         </div>
                         <div>
                             <label for="layerEmail" class="required-field block text-black text-sm mb-1">{{ __('Email') }}</label>
-                            <input type="email" name="layer_email" id="layerEmail" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                            <input type="email" name="lawyer_email" id="lawyerEmail" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
                         </div>
                     </div>
                     <div class="">

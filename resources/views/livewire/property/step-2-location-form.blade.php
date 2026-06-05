@@ -69,15 +69,16 @@ new class extends Component
             ]
     ];
 
-    public array $selectedRegion;
+    #[Validate('required|string')]
+    public array $region;
     public array $selectedTown;
     public array $selectedLocality;
 
     /*******************
      * Validartion
      ******************/
-    #[Validate('required|string')]
-    public string $region;
+    // #[Validate('required|string')]
+    // public string $region;
 
     #[Validate('required|string')]
     public string $town_city;
@@ -105,10 +106,10 @@ new class extends Component
         $this->regions = array_keys($this->regionTownMap);
     }
 
-    public function updatedSelectedRegion(string $region)
+    public function updatedRegion(string $region)
     { 
             $this->towns = $this->regionTownMap[$region] ?? [];
-            $this->selectedTown = [];
+            $this->town = '';
             $this->selectedLocality = [];
     }
 
@@ -140,12 +141,13 @@ Property Location input form
                     <div class="grid grid-cols-3 md:grid-cols-3 gap-5 mb-4">
                         <div>
                             <label for="region" class="required-field font-md block text-black text-sm mb-1">{{ __('Region') }}</label>
-                            <select wire:model.live="selectedRegion" name="region" id="region" class="w-full border-gray-300 text-sm rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                            <select wire:model.live="region" id="region" class="w-full border-gray-300 text-sm rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
                                 <option value="" selected class="text-gray-500">Select Region</option>
                                 @foreach ($regions as $item)
                                     <option value="{{ $item }}">{{ $item }}</option>
                                 @endforeach
                             </select>
+                            @error('region') <span class="text-red">{{ $message }}</span> @enderror
                         </div>
                         <div>
                             <label for="town_city" class="required-field font-md block text-black text-sm mb-1">{{ __('Town / City') }}</label>
@@ -157,13 +159,15 @@ Property Location input form
                                     </option>
                                 @endforeach
                             </select>
+                            @error('town') <span class="text-red">{{ $message }}</span> @enderror
                         </div>
                         <div>
                             <label for="locality" class="required-field font-md block text-black text-sm mb-1">{{ __('Locality') }}</label>
-                            <select wire:model="selectedLocality" name="locality" id="locality" @disabled(!$selectedTown) class="w-full border-gray-300 text-sm rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                            <select wire:model.live="locality" id="locality" @disabled(!$selectedTown) class="w-full border-gray-300 text-sm rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                 <option value="" selected class="text-gray-500">Select Locality</option>
                                
                             </select>
+                            @error('locality') <span class="text-red">{{ $message }}</span> @enderror
                         </div>
                     </div>
                 </div>  
@@ -188,11 +192,13 @@ Property Location input form
                     <div class="grid grid-cols-3 md:grid-cols-3 gap-5 mb-4">
                         <div>
                             <label for="latitude" class="required-field font-md block text-black text-sm mb-1">{{ __('Latitude') }}</label>
-                            <input type="number" name="latitude" id="latitude" class="w-full border-gray-300 rounded-md text-sm  shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
+                            <input type="number" wire:model.live="latitude" id="latitude" class="w-full border-gray-300 rounded-md text-sm  shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
+                            @error('latitude') <span class="text-red">{{ $message }}</span> @enderror
                         </div>
                         <div>
                             <label for="longtitude" class="required-field font-md block text-black text-sm mb-1">{{ __('Longtitude') }}</label>
-                            <input type="number" name="longtitude" id="longtitude" class="w-full border-gray-300 rounded-md text-sm  shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
+                            <input type="number" wire:model.live="longtitude" id="longtitude" class="w-full border-gray-300 rounded-md text-sm  shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
+                            @error('latitude') <span class="text-red">{{ $message }}</span> @enderror
                         </div>
                         <div>
                             <label for="locality" class="font-md block text-black text-sm mb-1">{{ __('Accuracy') }}</label>
@@ -204,7 +210,8 @@ Property Location input form
                     </div>
                     <div>
                         <label class="required-field text-sm">Map Address</label>
-                        <input type="text" name="map_address" id="mapAddress" class="w-full border-gray-300 rounded-md text-sm  shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                        <input type="text" wire:model.live="map_address" id="mapAddress" class="required-fields  w-full border-gray-300 rounded-md text-sm  shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                        @error('map_address') <span class="text-red">{{ $message }}</span> @enderror
                     </div>
                     <div wire:ignore class="gmap border h-96 mt-4">
                         <div id="gmap" class="h-full">

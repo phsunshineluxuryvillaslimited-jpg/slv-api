@@ -6,19 +6,19 @@ use App\Models\PropertyAddress;
 new class extends Component
 {
     #[Validate('required|string')]
-    public string $contact_details_first_name;
+    public string $first_name;
 
     #[Validate('required|string')]
-    public string $contact_details_last_name;
+    public string $last_name;
 
     #[Validate('required|string')]
-    public string $contact_details_telephone;
+    public string $phone_number;
 
     #[Validate('required|string')]
-    public string $contact_details_mobile;
+    public string $mobile_number;
 
     #[Validate('required|email')]
-    public string $contact_details_email;
+    public string $email;
 
     #[Validate('required|string')]
     public string $lawyer_first_name;
@@ -27,7 +27,7 @@ new class extends Component
     public string $lawyer_last_name;
     
     #[Validate('required|string')]
-    public string $lawyer_telephone_mobile;
+    public string $lawyer_phone_number;
 
     #[Validate('required|string')]
     public string $lawyer_email;
@@ -66,25 +66,31 @@ Basic location info
                     <div class="grid grid-cols-2 md:grid-cols-2 gap-5 mb-4 mt-3">
                        <div>
                             <label for="firstName" class="required-field block text-black text-sm mb-1">{{ __('First Name') }}</label>
-                            <input type="text" name="contact_details_first_name" id="firstName" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                            <input type="text" wire:model.live="first_name" id="firstName" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                            @error('first_name') <span class="text-red">{{ $message }}</span> @enderror
                         </div>
                         <div>
                             <label for="lastName" class="required-field block text-black text-sm mb-1">{{ __('Last Name') }}</label>
-                            <input type="text" name="contact_details_last_name" id="lastName" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                            <input type="text" wire:model.live="last_name" id="lastName" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                            @error('last_name') <span class="text-red">{{ $message }}</span> @enderror
                         </div>
                     </div>
                     <div class="grid grid-cols-3 md:grid-cols-3 gap-5 mb-4">
                         <div>
-                            <label for="firstName" class="block text-black text-sm mb-1">{{ __('Telephone') }}</label>
-                            <input type="text" name="contact_details_telephone" id="telephone" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                            <label for="firstName" class="required-field block text-black text-sm mb-1">{{ __('Telephone') }}</label>
+                            <input type="text" wire:model.live="telephone_number" id="telephone" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                            @error('telephone_number') <span class="text-red">{{ $message }}</span> @enderror
                         </div>
+
                         <div>
                             <label for="lastName" class="required-field block text-black text-sm mb-1">{{ __('Mobile') }}</label>
-                            <input type="text" name="contact_details_mobile" id="mobile" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                            <input type="text"  wire:model.live="mobile_number" id="mobile" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                            @error('mobile_number') <span class="text-red">{{ $message }}</span> @enderror
                         </div>
                         <div>
                             <label for="email" class="required-field block text-black text-sm mb-1">{{ __('Email') }}</label>
-                            <input type="email" name="contact_details_email" id="email" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                            <input type="email" name="email" id="email" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                            @error('email') <span class="text-red">{{ $message }}</span> @enderror
                         </div>
                     </div>
                     <div class="flex">
@@ -95,7 +101,7 @@ Basic location info
                         </div>
                         <div class="w-full">
                             <label for="" class="block text-black text-sm mb-1">{{ __('Source') }}</label>
-                            <select name="contact_details_source" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                            <select wire:model.live="source" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                 <option value="sample1">{{ __('Sample 1') }}</option>
                                 <option value="sample2">{{ __('Sample 2') }}</option>
                             </select>
@@ -103,7 +109,7 @@ Basic location info
                     </div>
                     <div class="py-5">
                         <label class="text-sm">{{ __('Notes') }}</label>
-                        <textarea name="contact_details_notes" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 h-32"></textarea>
+                        <textarea wire:model.live="notes" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 h-32"></textarea>
                     </div>
                     <div class="">
                         <label class="text-sm">{{ __('Vendor Documents') }}</label>
@@ -135,24 +141,29 @@ Basic location info
                     <div class="grid grid-cols-4 md:grid-cols-4 gap-5 mb-4">
                         <div>
                             <label for="layerFirstName" class="required-field block text-black text-sm mb-1">{{ __('First Name') }}</label>
-                            <input type="text" name="lawyer_first_name" id="lawyerFirstName" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                            <input type="text" wire:model.live="lawyer_first_name" id="lawyerFirstName" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                            @error('lawyer_first_name') <span class="text-red">{{ $message }}</span> @enderror        
                         </div>
                         <div>
                             <label for="layerLastNamew" class="required-field block text-black text-sm mb-1">{{ __('Last Name') }}</label>
-                            <input type="text" name="lawyer_last_name" id="lawyerLastNamew" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                            <input type="text" wire:model.live="lawyer_last_name" id="lawyerLastNamew" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                            @error('lawyer_last_name') <span class="text-red">{{ $message }}</span> @enderror
                         </div>
                         <div>
                             <label for="layerTelephoneDay" class="required-field block text-black text-sm mb-1">{{ __('Telephone / Mobile') }}</label>
-                            <input type="text" name="lawyer_telephone_mobile" id="lawyerTelephoneMobile" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                            <input type="text" wire:model.live="lawyer_phone_number" id="lawyerTelephoneMobile" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                            @error('lawyer_phone_number') <span class="text-red">{{ $message }}</span> @enderror
                         </div>
                         <div>
                             <label for="layerEmail" class="required-field block text-black text-sm mb-1">{{ __('Email') }}</label>
-                            <input type="email" name="lawyer_email" id="lawyerEmail" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                            <input type="email" wire:model.live="lawyer_email" id="lawyerEmail" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                            @error('lawyer_email') <span class="text-red">{{ $message }}</span> @enderror
                         </div>
                     </div>
                     <div class="">
                         <label class="required-field block text-black text-sm mb-1">{{ __('Address') }}</label>
-                        <textarea name="contact_details_notes" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 h-32"></textarea>
+                        <textarea wire:model.live="lawyer_address" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 h-32"></textarea>
+                        @error('lawyer_address') <span class="text-red">{{ $message }}</span> @enderror
                     </div>
                 </div>  
             </div>

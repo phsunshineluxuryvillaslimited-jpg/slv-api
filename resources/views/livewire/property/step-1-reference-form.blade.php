@@ -205,6 +205,12 @@ new class extends Component
 Basic information about the property 
 ------------------------------------->
 <div>
+    @if (session()->has('message'))
+        <div class="alert alert-success">
+            {{ session('message') }}
+        </div>
+    @endif
+    
     @if (session()->has('status'))
         <div class="mb-4 p-2 bg-green-100 text-green-700 rounded text-sm max-w-7xl mt-3 mx-auto sm:px-6 lg:px-8">
             {{  session('status') }}

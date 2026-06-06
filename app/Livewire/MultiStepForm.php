@@ -45,7 +45,7 @@ class MultiStepForm extends Component
     public function nextStep(Property $property)
     {   
         $this->property = $property;
-
+        dd($property);
         if ( $this->currentStep < $this->totalSteps ) {
             $this->currentStep++;
         }

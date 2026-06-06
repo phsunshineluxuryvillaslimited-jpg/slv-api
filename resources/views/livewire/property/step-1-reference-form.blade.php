@@ -14,10 +14,10 @@ new class extends Component
     /***********************
      * Validateion 
      ************************/
-    // #[Validate('required|string|unique:reference,id')]
-    // public string $edit_reference;
+    #[Validate('required|string|unique:properties,reference,id')]
+    public string $edit_reference;
     
-    // #[Validate('required|string|unique:properties')] //create only
+    #[Validate('required|string|unique:properties')] //create only
     // #[Validate('required|string|unique:properties,id')] //edit only
     public string $reference;
 
@@ -42,7 +42,7 @@ new class extends Component
     #[Validate('required|string')]
     public string $agent_id;
 
-    #[Validate("required|numeric|min:1900|max:9999")]
+    // #[Validate('required|integer|digits:4|min:1900|max:3050')]
     public int $year_of_construction;
 
     #[Validate('required|string')]
@@ -97,21 +97,21 @@ new class extends Component
 
     protected function rules()
     {   
-        // dd($this->property);
-
         return [
-            'reference' => [
-                'required',
-                'string',
-                Rule::unique('properties', 'reference')
-                    ->ignore($this->property?->id)
-            ]
+            // 'reference' => [
+            //     'required',
+            //     'string',
+            //     Rule::unique('properties', 'reference')
+            //         ->ignore($this->property?->id)
+            // ],
+            'year_of_construction' => 'required|integer|digits:4|min:1900|max:' . date('Y')
         ];
     }
 
     protected function validationAttributes()
     {
         return [
+            'edit_reference' => 'Reference',
             'property_type_id' => 'Property Type',
             'agent_id' => 'Agent'
         ];
@@ -122,6 +122,7 @@ new class extends Component
     {
         if ($property && $property->exists) {
             $this->property             = $property;
+            $this->edit_reference       = $property->reference;
             $this->reference            = $property->reference;
             $this->basic_price          = $property->price->basic_price ?? 0;
             $this->area_size            = $property->area_size;
@@ -168,12 +169,11 @@ new class extends Component
             $newProperty = Property::create($validatedData);
             $newProperty->price()->create($price);
 
-            $this->dispatch( 'proceed-to-next-step', property_id: $this->property->id );
+            $this->dispatch( 'proceed-to-next-step', property: $newProperty);
                 
 
         } catch (ValidationException $e) {
             Log::info('User failed form validation.');
-            // dd($e);
             throw $e;
         }
     }
@@ -204,7 +204,12 @@ new class extends Component
 <!------------------------------------
 Basic information about the property 
 ------------------------------------->
-<div>
+<div>{{ var_dump($edit_reference) }}
+    @if ($edit_reference)
+        <div class="alert alert-success">
+            {{ session('message') }}
+        </div>
+    @endif
     @if (session()->has('message'))
         <div class="alert alert-success">
             {{ session('message') }}
@@ -235,10 +240,14 @@ Basic information about the property
                                 id="reference" 
                                 class="uppercase placeholder:normal-case w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" 
                                 placeholder="SLV-1234"
-                                wire:model.live="reference"
+                                @if ( $edit_reference != null)
+                                    wire:model.live="edit_reference"
+                                @else
+                                    wire:model.live="reference"
+                                @endif
                                 required
                                 />
-                            @error('reference') <span class="text-red">{{ $message }}</span> @enderror
+                            @error('edit_reference') <span class="text-red">{{ $message }}</span> @enderror
                         </div>
                         <div>
                             <label for="basicPrice" class="required-field block text-black text-sm mb-1">{{ __('Price') }}</label>

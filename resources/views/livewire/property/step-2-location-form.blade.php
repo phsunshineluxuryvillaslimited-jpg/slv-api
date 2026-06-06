@@ -102,7 +102,7 @@ new class extends Component
 
     public function mount(Property $property): void
     {
-        dd($property);
+        dd($property->id);
         $this->property =  $property;
         $this->regions = array_keys($this->regionTownMap);
     }

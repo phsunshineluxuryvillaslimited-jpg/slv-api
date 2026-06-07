@@ -2,29 +2,65 @@
 use Livewire\Volt\Component;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\Validate;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use App\Models\Property;
 
 new class extends Component
 {
     use WithFileUploads;
 
-    #[Validate('required|string')]
-    public $photos = [];
+    public ?UploadedFile $image = null;
 
+    public bool $isEdit = false;
 
+    public ?Property $property;
 
-    // public function uploadPhotos()  
-    // {
-    //     dd($this->photo);
-        
-    // }
+    public function mount(Property $property, $isEdit = false): void
+    {
+        $this->property =  $property;
+        $this->isEdit   = $isEdit;
+    }
+
+    public function save()
+    {
+        $this->validate([
+            'image' => 'required|image|max:2048', // 2MB
+        ]);
+
+        // upload to S3
+        $path = $this->image->store('properties', 's3');
+
+        // get uploaded
+        /** @var \Illuminate\Filesystem\FilesystemAdapter $disk */
+        $disk = Storage::disk('s3');
+        $url = $disk->url($path);
+
+        // save to DB
+        $this->property->photos()->create([
+            'image_url' => $url,
+        ]);
+    }
 }
 
 ?>
 <div>
+    <form wire:submit.prevent="save">
+    
+    <input type="file" wire:model="image">
+
+    @error('image') 
+        <span class="text-red-500">{{ $message }}</span> 
+    @enderror
+
+    <button type="submit">Upload</button>
+
+</form>
     <!-----------------------------------------
     Basic location info
     ----------------------------------------->
-    <div class="py-3">
+   
+   <?php /* <div class="py-3">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="p-4 sm:p-8 bg-white shadow-md sm:rounded-lg">
                 <div class="w-full">
@@ -80,7 +116,7 @@ new class extends Component
             </div>
         </div>
     @endif
-    @if (session()->has('status'))
+    @if (session()->has('success'))
         <div x-data="{ show: true }"
             x-show="show"
             x-init="setTimeout(() => show = false, 2000)"
@@ -109,4 +145,5 @@ new class extends Component
             </div>
         </div>
     @endif
+    */?>
 </div>

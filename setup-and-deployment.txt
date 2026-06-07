@@ -53,3 +53,6 @@ Deployment Workflow
     php artisan queue:restart 
 8. Go Live: 
     php artisan up
+
+CLEAN TEXMP ON AWS S3 BUCKET
+php artisan livewire:configure-s3-upload-cleanup

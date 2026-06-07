@@ -66,7 +66,7 @@ Add your form or content for adding a property here
             </div> 
         </div>
     </div>
-    @if (session()->has('status'))
+    @if (session()->has('success'))
         <div x-data="{ show: true }"
             x-show="show"
             x-init="setTimeout(() => show = false, 2000)"

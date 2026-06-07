@@ -121,6 +121,9 @@ new class extends Component
         }
     }
 
+    /**
+     * feature when region select will filter town for the selected region
+     */
     public function updatedRegion(string $region)
     {   
             $this->selectedRegion = $region;
@@ -128,6 +131,7 @@ new class extends Component
             $this->town_city = '';
     }
 
+    // for creating action
     #[On('parentNextStepButtonTriggered')]
     public function hundleNextStepButtonTriggered(int $currentStep)
     {
@@ -142,6 +146,7 @@ new class extends Component
         }
     }
 
+    // for edit action
     #[On('parentUpdateButtonTriggered')]
     public function handleUpdateProperty()
     {   
@@ -154,7 +159,7 @@ new class extends Component
                 $validatedData
             );
 
-            session()->flash('status', 'Property updated successfully');
+            session()->flash('success', 'Property updated successfully');
          } catch (ValidationException $e) {
             Log::info('Property validation error. Please double check.');
             throw $e;
@@ -314,7 +319,7 @@ Property Location input form
             </div>
         </div>
     @endif
-    @if (session()->has('status'))
+    @if (session()->has('success'))
         <div x-data="{ show: true }"
             x-show="show"
             x-init="setTimeout(() => show = false, 2000)"

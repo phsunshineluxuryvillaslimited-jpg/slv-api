@@ -4,8 +4,8 @@ use Livewire\Attributes\Validate;
 use Livewire\Attributes\On;
 use Livewire\Volt\Component;
 use App\Models\Property;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Log;
 
 new class extends Component
 {
@@ -133,11 +133,15 @@ new class extends Component
 
     // for creating action
     #[On('parentNextStepButtonTriggered')]
-    public function hundleNextStepButtonTriggered(int $currentStep)
+    public function hundleNextStepButtonTriggered()
     {
         try {
             $validatedData = $this->validate();
-            $this->property->create($validatedData);
+            $this->property->address()->updateOrCreate([
+                    'property_id' => $this->property->id,
+                ],
+                $validatedData
+            );
 
             $this->dispatch( 'proceed-to-next-step', property_id: $this->property->id);
          } catch (ValidationException $e) {

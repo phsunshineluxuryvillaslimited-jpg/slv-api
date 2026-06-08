@@ -38,6 +38,11 @@ class Property extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
+    public function agent(): BelongsTo
+    {
+        return $this->belongsTo(Agent::class);
+    }
+
     public function propertyType(): BelongsTo
     {
         return $this->belongsTo(PropertyType::class, 'property_type_id');
@@ -73,12 +78,12 @@ class Property extends Model
         return $this->hasMany(PropertyPhotos::class);
     }
 
-    public function key_features(): HasMany
+    public function keyFeature(): HasMany
     {
         return $this->HasMany(PropertyKeyFeature::class);
     }
 
-    public function video(): HasMany
+    public function videos(): HasMany
     {
         return $this->hasMany(PropertyVideo::class);
     }

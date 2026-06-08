@@ -1,4 +1,64 @@
+<?php
+use Livewire\Attributes\Validate;
+use Livewire\Attributes\On;
+use Livewire\Volt\Component;
+use App\Models\Property;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Log;
 
+new class extends Component
+{
+    public ?Property $prooperty;
+
+    public bool $isEdit = false;
+
+    public function mount(Property $property, $isEdit = false): void
+    {
+        $this->property =  $property;
+        $this->regions  = array_keys($this->regionTownMap);
+        $this->isEdit   = $isEdit;
+    }
+
+    #[On('parentNextStepButtonTriggered')]
+    public function hundleNextStepButtonTriggered()
+    {
+        try {
+            $validatedData = $this->validate();
+            $this->property->address()->updateOrCreate([
+                    'property_id' => $this->property->id,
+                ],
+                $validatedData
+            );
+
+            $this->dispatch( 'proceed-to-next-step', property_id: $this->property->id);
+         } catch (ValidationException $e) {
+            Log::info('Property validation error. Please double check.');
+            throw $e;
+        }
+    }
+
+    // for edit action
+    #[On('parentUpdateButtonTriggered')]
+    public function handleUpdateProperty()
+    {   
+        try {
+            $validatedData = $this->validate();
+
+            $this->property->address()->updateOrCreate([
+                    'property_id' => $this->property->id,
+                ],
+                $validatedData
+            );
+
+            session()->flash('success', 'Property updated successfully');
+         } catch (ValidationException $e) {
+            Log::info('Property validation error. Please double check.');
+            throw $e;
+        }
+        
+    }
+}
+?>
 <!-----------------------------------------------------
 Add your form or content for adding a property here
 ------------------------------------------------------->

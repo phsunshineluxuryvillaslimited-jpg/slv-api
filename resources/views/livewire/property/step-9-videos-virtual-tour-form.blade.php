@@ -1,3 +1,65 @@
+<?php
+use Livewire\Attributes\Validate;
+use Livewire\Attributes\On;
+use Livewire\Volt\Component;
+use App\Models\Property;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Log;
+
+new class extends Component
+{
+    public ?Property $prooperty;
+
+    public bool $isEdit = false;
+
+    public function mount(Property $property, $isEdit = false): void
+    {
+        $this->property =  $property;
+        $this->isEdit   = $isEdit;
+    }
+
+    #[On('parentNextStepButtonTriggered')]
+    public function hundleNextStepButtonTriggered()
+    {
+        try {
+            $validatedData = $this->validate();
+            $this->property->address()->updateOrCreate([
+                    'property_id' => $this->property->id,
+                ],
+                $validatedData
+            );
+
+            $this->dispatch( 'proceed-to-next-step', property_id: $this->property->id);
+         } catch (ValidationException $e) {
+            Log::info('Property validation error. Please double check.');
+            throw $e;
+        }
+    }
+
+    // for edit action
+    #[On('parentUpdateButtonTriggered')]
+    public function handleUpdateProperty()
+    {   
+        try {
+            $validatedData = $this->validate();
+
+            $this->property->address()->updateOrCreate([
+                    'property_id' => $this->property->id,
+                ],
+                $validatedData
+            );
+
+            session()->flash('success', 'Property updated successfully');
+         } catch (ValidationException $e) {
+            Log::info('Property validation error. Please double check.');
+            throw $e;
+        }
+        
+    }
+}    
+
+?>
+
 <!-----------------------------------------
 Basic location info
 ----------------------------------------->
@@ -18,21 +80,21 @@ Basic location info
                         <div class="p-4 sm:p-8 bg-gray-50 border-t border-gray-200">
                             <label for="embed_url_1" class="block text-black text-sm mb-1">{{ __('YouTube Embedded Link 1:') }}</label>
                             <input type="text" 
-                                    name="embed_url_1" 
+                                    wire:model.live="property.vidos.embed_url_1" 
                                     id="embed_url_1" 
                                     class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="" required />
                         </div>
                         <div class="p-4 sm:p-8 bg-gray-50 border-t border-gray-200">
                             <label for="embed_url_2" class="block text-black text-sm mb-1">{{ __('YouTube Embedded Link 2:') }}</label>
                             <input type="text" 
-                                    name="embed_url_2" 
+                                    wire:model.live="property.vidos.embed_url_1" 
                                     id="embed_url_2" 
                                     class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="" required />
                         </div>
                         <div class="p-4 sm:p-8 bg-gray-50 border-t border-gray-200">
                             <label for="virtual_tour_link" class="block text-black text-sm mb-1 ">{{ __('Virtual Tour Link (Kuula etc.):') }}</label>
                             <input type="text" 
-                                    name="virtual_tour_link" 
+                                    wire:model.live="property.vidos.virtual_tour_link" 
                                     id="virtual_tour_link" 
                                     class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="" required />
                         </div>

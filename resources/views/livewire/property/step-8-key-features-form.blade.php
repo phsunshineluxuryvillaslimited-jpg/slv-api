@@ -1,19 +1,62 @@
 <?php
+use Livewire\Attributes\Validate;
+use Livewire\Attributes\On;
 use Livewire\Volt\Component;
+use App\Models\Property;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Log;
 
 new class extends Component
 {
+    public ?Property $prooperty;
 
-    public string $testVariable;
+    public bool $isEdit = false;
 
-    /**
-     * Mount the component.
-     */
-    public function mount(): void
+    public function mount(Property $property, $isEdit = false): void
     {
-        // $this->testVariable = 
+        $this->property =  $property;
+        $this->isEdit   = $isEdit;
     }
-}
+
+    #[On('parentNextStepButtonTriggered')]
+    public function hundleNextStepButtonTriggered()
+    {
+        try {
+            $validatedData = $this->validate();
+            $this->property->keyFeature()->updateOrCreate([
+                    'property_id' => $this->property->id,
+                ],
+                $validatedData
+            );
+
+            $this->dispatch( 'proceed-to-next-step', property_id: $this->property->id);
+         } catch (ValidationException $e) {
+            Log::info('Property validation error. Please double check.');
+            throw $e;
+        }
+    }
+
+    // for edit action
+    #[On('parentUpdateButtonTriggered')]
+    public function handleUpdateProperty()
+    {   
+        try {
+            $validatedData = $this->validate();
+
+            $this->property->keyFeature()->updateOrCreate([
+                    'property_id' => $this->property->id,
+                ],
+                $validatedData
+            );
+
+            session()->flash('success', 'Property updated successfully');
+         } catch (ValidationException $e) {
+            Log::info('Property validation error. Please double check.');
+            throw $e;
+        }
+        
+    }
+}    
 
 ?>
 <!-----------------------------------------------------
@@ -31,7 +74,7 @@ Add your form or content for adding a property here
                         {{ __('Key Features')  }}
                     </h3>
                     <p class="mb-5 text-sm text-gray-600">{{ __('Tick the key features of the property. This will help your property show up in more search results and attract more potential buyers.') }}</p>
-                     <livewire:accordion-key-features />
+                     <livewire:accordion-key-features :property="$property"/>
                 </div>  
             </div>
         </div>

@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::dropIfExists('properties');
         Schema::create('properties', function (Blueprint $table) {
             $table->id();
-            $table->foreign('agent_id')->references('id')->on('users');
+            $table->foreign('agent_id')->references('id')->on('agents');
             $table->unsignedBigInteger('property_type_id');
             $table->foreign('property_type_id')
                 ->references('id')

@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use App\Models\Property;
 use Illuminate\Validation\Rule;
+use App\Models\Agent;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
 new class extends Component
@@ -58,7 +60,7 @@ new class extends Component
     public string $listing_type = 'resale';
 
     #[Validate('nullable')]
-    public int $communal_charges;
+    public int $communal_charge;
 
     #[Validate('nullable')]
     public string $plan_zone = 'A';
@@ -88,6 +90,9 @@ new class extends Component
 
     // list of property type
     public $propertyTypes = [];
+
+    // list of agents
+    public $agents = [];
 
     //for property edit
     public ?Property $property = null;
@@ -141,7 +146,7 @@ new class extends Component
             $this->property_type_id     = $property->property_type_id;
             $this->commission           = $property->price->commission ?? 0;
             $this->listing_type         = $property->listing_type;
-            $this->communal_charges     = $property->price->communal_charges ?? 0;
+            $this->communal_charge      = $property->price->communal_charge ?? 0;
             $this->plan_zone            = $property->plan_zone;
             $this->sea_view             = $property->sea_view;
             $this->for_sale_board       = $property->for_sale_board;
@@ -152,7 +157,8 @@ new class extends Component
         }
         
         $this->propertyTypes = $propertyTypes->orderBy('name', 'asc')->get();
-    }   
+        $this->agents = Agent::all();
+    }
 
     //Create
     #[On('parentNextStepButtonTriggered')]
@@ -167,7 +173,7 @@ new class extends Component
                 'is_poa' => $validatedData['is_poa'],
                 'basic_price' => $validatedData['basic_price'],
                 'commission' => $validatedData['commission'],
-                'communal_charges' => $validatedData['communal_charges']
+                'communal_charge' => $validatedData['communal_charge']
             ];
 
             $validatedData['reference'] = strtoupper($validatedData['reference']);
@@ -195,7 +201,7 @@ new class extends Component
                 'is_poa' => $validatedData['is_poa'],
                 'basic_price' => $validatedData['basic_price'],
                 'commission' => $validatedData['commission'],
-                'communal_charges' => $validatedData['communal_charges']
+                'communal_charge' => $validatedData['communal_charge']
             ];
 
             $this->property->update($validatedData);
@@ -204,6 +210,7 @@ new class extends Component
             session()->flash('success', 'Property has been successfully updated!');
         }
     }
+
 }
 
 ?>
@@ -272,7 +279,7 @@ Basic information about the property
                                     {{ __('GBP') }}
                                 </div>
                             </div>
-                             @error('basic_price') <span class="text-red-500 text-shadow-sm">{{ $message }}</span> @enderror
+                            @error('basic_price') <span class="text-red-500 text-shadow-sm">{{ $message }}</span> @enderror
                         </div>
                         <div>
                             <label for="poa" class="block text-black text-sm mb-1">&nbsp;</label>
@@ -391,10 +398,9 @@ Basic information about the property
                             <label for="agent" class="required-field block text-black text-sm mb-1 mb-1">{{ __('Managing Agent') }}</label>
                             <select wire:model.live="agent_id" id="agent" class="w-full border-gray-300 py-3 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm" required />
                                 <option value="">None</option>
-                                <option value="1">SLV (General)</option>
-                                <option value="2">Andriy Stanislavchuk</option>
-                                <option value="3">Cheryl Hann</option>
-                                <option value="4">Gabbie Simpson</option>
+                                @foreach( $agents as  $id => $agent )
+                                <option value="{{ $agent->id }}"  wire:key="{{ $agent->id }}">{{ $agent->first_name . ' ' . $agent->last_name }}</option>
+                                @endforeach
                             </select>
                             @error('agent_id') <span class="text-red-500 text-shadow-sm">{{ $message }}</span> @enderror
                         </div>
@@ -516,9 +522,9 @@ Basic information about the property
                             </div>
                         </div>
                         <div>
-                            <label for="communal_charges" class="block text-black text-sm mb-1">{{ __('Communal Charge') }} (&euro;)</label>
+                            <label for="communal_charge" class="block text-black text-sm mb-1">{{ __('Communal Charge') }} (&euro;)</label>
                             <div class="relative rounded-md shadow-sm max-w-sm">
-                                <input type="number" wire:model.live="communal_charges" id="communal_charges" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 [&::-webkit-inner-spin-button]:mr-[55px]" placeholder="" />
+                                <input type="number" wire:model.live="communal_charge" id="communal_charge" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 [&::-webkit-inner-spin-button]:mr-[55px]" placeholder="" />
                                 <div class="absolute inset-y-0 right-0 flex items-center">
                                     <select id="currency" name="currency" class="h-full pl-2 rounded-r-md border-gray-300 pr-3 bg-gray-100 text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm">
                                         <option value="yearly" default>{{ __('p/yr') }}</option>

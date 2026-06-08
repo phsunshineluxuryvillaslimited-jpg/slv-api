@@ -1,10 +1,13 @@
 <?php
+use Livewire\Attributes\Validate;
+use Livewire\Attributes\On;
 use Livewire\Volt\Component;
 use Livewire\WithFileUploads;
-use Livewire\Attributes\Validate;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Property;
+use Illuminate\Validation\ValidationException;
+
 
 new class extends Component
 {
@@ -41,6 +44,47 @@ new class extends Component
             'image_url' => $url,
         ]);
     }
+
+    // for creating action
+    #[On('parentNextStepButtonTriggered')]
+    public function hundleNextStepButtonTriggered()
+    {
+        try {
+            $validatedData = $this->validate();
+            $this->property->photos()->updateOrCreate([
+                    'property_id' => $this->property->id,
+                ],
+                $validatedData
+            );
+
+            $this->dispatch( 'proceed-to-next-step', property_id: $this->property->id);
+         } catch (ValidationException $e) {
+            Log::info('Property validation error. Please double check.');
+            throw $e;
+        }
+    }
+
+    // for edit action
+    #[On('parentUpdateButtonTriggered')]
+    public function handleUpdateProperty()
+    {   
+        try {
+            $validatedData = $this->validate();
+
+            $this->property->photos()->updateOrCreate([
+                    'property_id' => $this->property->id,
+                ],
+                $validatedData
+            );
+
+            session()->flash('success', 'Property updated successfully');
+         } catch (ValidationException $e) {
+            Log::info('Property validation error. Please double check.');
+            throw $e;
+        }
+        
+    }
+    
 }
 
 ?>

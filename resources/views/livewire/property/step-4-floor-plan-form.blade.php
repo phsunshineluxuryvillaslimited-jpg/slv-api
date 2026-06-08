@@ -1,4 +1,15 @@
-<div>
+<?php
+use Livewire\Attributes\Validate;
+use Livewire\Attributes\On;
+use Livewire\Volt\Component;
+use Livewire\WithFileUploads;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use App\Models\Property;
+use Illuminate\Validation\ValidationException;
+
+
+?><div>
     <!-----------------------------------------
     Basic location info
     ----------------------------------------->

@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Log;
 
 new class extends Component
 {
-    public ?Property $prooperty;
+    public ?Property $property;
 
     public bool $isEdit = false;
 

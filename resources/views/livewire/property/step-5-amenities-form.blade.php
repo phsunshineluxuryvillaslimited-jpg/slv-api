@@ -14,8 +14,7 @@ new class extends Component
 
     public function mount(Property $property, $isEdit = false): void
     {
-        $this->property =  $property;
-        $this->regions  = array_keys($this->regionTownMap);
+        $this->property = $property;
         $this->isEdit   = $isEdit;
     }
 
@@ -43,7 +42,7 @@ new class extends Component
     {   
         try {
             $validatedData = $this->validate();
-
+            
             $this->property->address()->updateOrCreate([
                     'property_id' => $this->property->id,
                 ],
@@ -78,25 +77,42 @@ Add your form or content for adding a property here
                     <div class="grid grid-cols-3 md:grid-cols-3 gap-5 mb-4">
                          <div>
                             <label for="amenities" class="block text-black text-sm mb-1">{{ __('Amenities (km)') }}</label>
-                            <input type="number" name="amenities" id="amenities" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
+                            <input type="number"
+                                    wire:model="property.amenities.amenities" 
+                                    id="amenities" 
+                                    class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
                         </div>
                         <div>
                             <label for="airport" class="block text-black text-sm mb-1">{{ __('Airport (km)') }}</label>
-                            <input type="number" name="airport" id="airport" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
+                            <input 
+                                    type="number" 
+                                    wire:model="property.amenities.airport" 
+                                    id="airport" 
+                                    class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
                         </div>
                         <div>
                             <label for="sea" class="block text-black text-sm mb-1">{{ __('Sea (km)') }}</label>
-                            <input type="number" name="sea" id="sea" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
+                            <input type="number" 
+                                wire:model="property.amenities.sea" 
+                                id="sea" 
+                                class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
                         </div>
                     </div>
                     <div class="grid grid-cols-3 md:grid-cols-3 gap-5 mb-4">
                          <div>
                             <label for="public_transport" class="block text-black text-sm mb-1">{{ __('Public Transaport (km)') }}</label>
-                            <input type="number" name="public_transport" id="public_transport" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
+                            <input type="number" 
+                                    wire:model="property.amenities.public_transport" 
+                                    id="public_transport" 
+                                    class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
                         </div>
                         <div>
                             <label for="schools" class="block text-black text-sm mb-1">{{ __('Schools (km)') }}</label>
-                            <input type="number" name="schools" id="schools" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
+                            <input type="number"
+                                    wire:model="property.amenities.schools" 
+                                    name="schools" 
+                                    id="schools" 
+                                    class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
                         </div>
                         <div>
                             <label for="resort" class="block text-black text-sm mb-1">{{ __('Resort (km)') }}</label>

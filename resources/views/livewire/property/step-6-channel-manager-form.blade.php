@@ -15,7 +15,6 @@ new class extends Component
     public function mount(Property $property, $isEdit = false): void
     {
         $this->property =  $property;
-        $this->regions  = array_keys($this->regionTownMap);
         $this->isEdit   = $isEdit;
     }
 

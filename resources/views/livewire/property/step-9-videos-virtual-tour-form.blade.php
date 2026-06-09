@@ -8,14 +8,26 @@ use Illuminate\Support\Facades\Log;
 
 new class extends Component
 {
-    public ?Property $prooperty;
+    #[Validate('nullable')]
+    public string $embed_url_1;
+
+    #[Validate('nullable')]
+    public string $embed_url_2;
+
+    #[Validate('nullable')]
+    public string $virtual_tour_link;
+
+    public ?Property $property;
 
     public bool $isEdit = false;
 
     public function mount(Property $property, $isEdit = false): void
     {
-        $this->property =  $property;
-        $this->isEdit   = $isEdit;
+        $this->property          = $property;
+        $this->isEdit            = $isEdit;
+        $this->embed_url_1       = ($property->video->embed_url_1) ? $property->video->embed_url_1 : '';
+        $this->embed_url_2       = ($property->video->embed_url_2) ? $property->video->embed_url_2 : '';
+        $this->virtual_tour_link = ($property->video->virtual_tour_link) ? $property->video->virtual_tour_link : '';
     }
 
     #[On('parentNextStepButtonTriggered')]
@@ -23,14 +35,14 @@ new class extends Component
     {
         try {
             $validatedData = $this->validate();
-            $this->property->address()->updateOrCreate([
+            $this->property->videos()->updateOrCreate([
                     'property_id' => $this->property->id,
                 ],
                 $validatedData
             );
 
             $this->dispatch( 'proceed-to-next-step', property_id: $this->property->id);
-         } catch (ValidationException $e) {
+        } catch (ValidationException $e) {
             Log::info('Property validation error. Please double check.');
             throw $e;
         }
@@ -43,18 +55,17 @@ new class extends Component
         try {
             $validatedData = $this->validate();
 
-            $this->property->address()->updateOrCreate([
+            $this->property->videos()->updateOrCreate([
                     'property_id' => $this->property->id,
                 ],
                 $validatedData
             );
 
             session()->flash('success', 'Property updated successfully');
-         } catch (ValidationException $e) {
+        } catch (ValidationException $e) {
             Log::info('Property validation error. Please double check.');
             throw $e;
         }
-        
     }
 }    
 
@@ -80,21 +91,21 @@ Basic location info
                         <div class="p-4 sm:p-8 bg-gray-50 border-t border-gray-200">
                             <label for="embed_url_1" class="block text-black text-sm mb-1">{{ __('YouTube Embedded Link 1:') }}</label>
                             <input type="text" 
-                                    wire:model.live="property.vidos.embed_url_1" 
+                                    wire:model.live="embed_url_1" 
                                     id="embed_url_1" 
                                     class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="" required />
                         </div>
                         <div class="p-4 sm:p-8 bg-gray-50 border-t border-gray-200">
                             <label for="embed_url_2" class="block text-black text-sm mb-1">{{ __('YouTube Embedded Link 2:') }}</label>
                             <input type="text" 
-                                    wire:model.live="property.vidos.embed_url_1" 
+                                    wire:model.live="embed_url_2" 
                                     id="embed_url_2" 
                                     class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="" required />
                         </div>
                         <div class="p-4 sm:p-8 bg-gray-50 border-t border-gray-200">
                             <label for="virtual_tour_link" class="block text-black text-sm mb-1 ">{{ __('Virtual Tour Link (Kuula etc.):') }}</label>
                             <input type="text" 
-                                    wire:model.live="property.vidos.virtual_tour_link" 
+                                    wire:model.live="virtual_tour_link" 
                                     id="virtual_tour_link" 
                                     class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="" required />
                         </div>
@@ -125,7 +136,7 @@ Basic location info
                     </svg>
                 </div>
                 
-                <h3 class="text-lg leading-6 font-medium text-gray-900">{{ session('status') }}</h3>
+                <h3 class="text-lg leading-6 font-medium text-gray-900">{{ session('success') }}</h3>
                 <div class="mt-2 px-7 py-3">
                     <p class="text-sm text-gray-500"></p>
                 </div>

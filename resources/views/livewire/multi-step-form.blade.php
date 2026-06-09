@@ -27,7 +27,7 @@
      <!-- Step 5 -->
     @if ( $currentStep == 5 )
         <livewire:dotted-steps :step="$currentStep" :isEdit="$isEdit" />
-        <livewire:property.step-5-distances-form :property="$property" :isEdit="$isEdit" />
+        <livewire:property.step-5-amenities-form :property="$property" :isEdit="$isEdit" />
     @endif
 
      <!-- Step 6 -->

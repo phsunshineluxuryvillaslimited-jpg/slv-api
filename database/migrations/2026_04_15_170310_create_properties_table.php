@@ -15,7 +15,6 @@ return new class extends Migration
         Schema::dropIfExists('properties');
         Schema::create('properties', function (Blueprint $table) {
             $table->id();
-            $table->foreign('agent_id')->references('id')->on('agents');
             $table->unsignedBigInteger('property_type_id');
             $table->foreign('property_type_id')
                 ->references('id')
@@ -48,8 +47,6 @@ return new class extends Migration
             $table->string('plot_description', 255)
                 ->comment('Description of the plot area')
                 ->nullable();
-            $table->unsignedBigInteger('agent_id')
-                ->comment('ID of the agent responsible for the property');
             $table->string('year_of_construction', 5)
                 ->comment('Year of construction')
                 ->nullable();
@@ -77,6 +74,10 @@ return new class extends Migration
                 ->nullable();
             $table->datetime('published_at')->index()
                 ->nullable();
+            $table->unsignedBigInteger('agent_id')
+                ->foreign('agent_id')
+                ->references('id')
+                ->on('agents');
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->unsignedBigInteger('deleted_by')->nullable();

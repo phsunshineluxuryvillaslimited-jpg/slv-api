@@ -83,9 +83,9 @@ class Property extends Model
         return $this->HasMany(PropertyKeyFeature::class);
     }
 
-    public function videos(): HasMany
+    public function video(): HasOne
     {
-        return $this->hasMany(PropertyVideo::class);
+        return $this->HasOne(PropertyVideo::class);
     }
 
     public function networks(): HasMany

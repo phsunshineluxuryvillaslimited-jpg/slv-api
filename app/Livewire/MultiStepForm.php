@@ -9,7 +9,7 @@ use App\Models\Property;
 
 class MultiStepForm extends Component
 {
-    public $currentStep = 2;
+    public $currentStep = 1;
     public $totalSteps = 10;
 
     public ?Property $property = null;
@@ -24,8 +24,6 @@ class MultiStepForm extends Component
         if ($editMode == 'editMode') {
             $this->isEdit = true;
         } 
-
-        $this->property = Property::find(2); //testing only
     }
 
     public function updatedStep(int $value)

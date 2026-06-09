@@ -98,6 +98,12 @@ class Property extends Model
         return $this->hasOne(PropertyExternalFeed::class);
     }
 
+    
+    public function bank(): HasOne
+    {
+        return $this->hasOne(Bank::class);
+    }
+
     // public function getPropertyTypeAttribute(): string
     // {
     //     // return $this->attribute($this->propertyType?->name);

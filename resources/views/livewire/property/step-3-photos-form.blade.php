@@ -13,6 +13,9 @@ new class extends Component
 {
     use WithFileUploads;
 
+    #[Validate('required|image|max:2048')]
+    public string $photo;
+
     public ?UploadedFile $image = null;
 
     public bool $isEdit = false;
@@ -27,13 +30,13 @@ new class extends Component
 
     public function save()
     {
-        $this->validate([
-            'image' => 'required|image|max:2048', // 2MB
-        ]);
-
+        // $this->validate([
+        //     'photo' => 'required|image|max:2048', // 2MB
+        // ]);
+        $this->validate();
         // upload to S3
         $path = $this->image->store('properties', 's3');
-
+        dd($path);
         // get uploaded
         /** @var \Illuminate\Filesystem\FilesystemAdapter $disk */
         $disk = Storage::disk('s3');
@@ -91,7 +94,7 @@ new class extends Component
 <div>
     <form wire:submit.prevent="save">
     
-    <input type="file" wire:model="image">
+    <input type="file" wire:model="photo">
 
     @error('image') 
         <span class="text-red-500">{{ $message }}</span> 

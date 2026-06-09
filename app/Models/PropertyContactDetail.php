@@ -23,4 +23,5 @@ class PropertyContactDetail extends Model
     {
         return $this->hasMany(PropertyContactDocument::class, 'property_contact_detail_id');
     }
+
 }

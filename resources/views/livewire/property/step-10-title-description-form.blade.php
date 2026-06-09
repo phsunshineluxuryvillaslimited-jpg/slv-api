@@ -56,7 +56,7 @@ new class extends Component
         $validatedData = $this->validate();
 
         if ($this->property && $this->property->exists) {
-            
+
             $this->property->update($validatedData);
 
             session()->flash('success', 'Property has been successfully updated!');
@@ -91,6 +91,7 @@ Basic location info
                                 <textarea wire:model.live="description" id="description" class="w-full h-64 text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="" required></textarea> 
                                 <span class="text-sm text-gray-400">2000 characters</span>
                             </div>
+
                             <div>
                                 <button class="flex px-4 py-1 bg-gray-300 hover:bg-gray-400 rounded">
                                     <span class="pr-2">Generate</span>

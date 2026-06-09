@@ -55,7 +55,7 @@ new class extends Component
         try {
             $validatedData = $this->validate();
 
-            $this->property->videos()->updateOrCreate([
+            $this->property->video()->updateOrCreate([
                     'property_id' => $this->property->id,
                 ],
                 $validatedData

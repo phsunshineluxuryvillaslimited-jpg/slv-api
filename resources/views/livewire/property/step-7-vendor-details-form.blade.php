@@ -23,6 +23,38 @@ new class extends Component
     #[Validate('required|email')]
     public string $email;
 
+    /********* Bank *************/
+    #[Validate('required|email')]
+    public string $bank_name;
+    
+    #[Validate('required|email')]
+    public string $branch;
+
+    #[Validate('required|email')]
+    public string $account_ref;
+
+    #[Validate('required|email')]
+    public string $sort_code;
+
+    #[Validate('required|email')]
+    public string $account_name;
+
+    #[Validate('required|email')]
+    public string $account_number;
+
+    #[Validate('required|email')]
+    public string $address;
+
+    #[Validate('required|email')]
+    public string $contact_name;
+
+    #[Validate('required|email')]
+    public string $contact_phone;
+
+     #[Validate('required|email')]
+    public string $contact_email;
+
+    /********* Lawyer ************/
     #[Validate('required|string')]
     public string $lawyer_first_name;
 
@@ -190,6 +222,73 @@ Basic location info
             <div class="p-4 sm:p-8 bg-white shadow-md sm:rounded-lg">
                 <div class="w-full">
                     <h3 class="font-semibold text-xl text-blue-900 leading-tight mb-5">
+                        {{ __('Bank Details')  }}
+                    </h3>
+                    <p class="mb-5 text-sm text-gray-600">
+                        {{ __('Add bank details for the property vendor. This will help potential buyers get in touch with you.') }}
+                    </p>
+                    <div class="grid grid-cols-3 md:grid-cols-3 gap-5 mb-4">
+                        <div>
+                            <label for="bank_name" class="required-field block text-black text-sm mb-1">{{ __('Bank Name') }}</label>
+                            <input type="text" wire:model.live="bank_name" id="bank_name" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                            @error('bank_name') <span class="text-red">{{ $message }}</span> @enderror        
+                        </div>
+                        <div>
+                            <label for="branch" class="required-field block text-black text-sm mb-1">{{ __('Bank Branch') }}</label>
+                            <input type="text" wire:model.live="branch" id="branch" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                            @error('branch') <span class="text-red">{{ $message }}</span> @enderror
+                        </div>
+                        <div>
+                            <label for="account_ref" class="required-field block text-black text-sm mb-1">{{ __('Account Reference') }}</label>
+                            <input type="text" wire:model.live="account_ref" id="account_ref" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                            @error('account_ref') <span class="text-red">{{ $message }}</span> @enderror
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-2 gap-5 mb-4">
+                        <div>
+                            <label for="account_name" class="required-field block text-black text-sm mb-1">{{ __('Account Name') }}</label>
+                            <input type="text" wire:model.live="account_name" id="sort_code" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                            @error('account_name') <span class="text-red">{{ $message }}</span> @enderror
+                        </div>
+                        <div>
+                            <label for="account_number" class="required-field block text-black text-sm mb-1">{{ __('Accunt Number') }}</label>
+                            <input type="text" wire:model.live="account_number" id="account_number" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                            @error('account_number') <span class="text-red">{{ $message }}</span> @enderror
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <div>
+                            <label for="address" class="required-field block text-black text-sm mb-1">{{ __('Address') }}</label>
+                            <input type="text" wire:model.live="address" id="address" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                            @error('address') <span class="text-red">{{ $message }}</span> @enderror
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-2 gap-5 mb-4">
+                        <div>
+                            <label for="contact_name" class="required-field block text-black text-sm mb-1">{{ __('Contact Name') }}</label>
+                            <input type="text" wire:model.live="contact_name" id="contact_name" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                            @error('contact_name') <span class="text-red">{{ $message }}</span> @enderror
+                        </div>
+                        <div>
+                            <label for="contact_phone" class="required-field block text-black text-sm mb-1">{{ __('Contact Phone') }}</label>
+                            <input type="text" wire:model.live="contact_phone" id="contact_phone" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                            @error('contact_phone') <span class="text-red">{{ $message }}</span> @enderror
+                        </div>
+                        <div>
+                            <label for="contact_email" class="required-field block text-black text-sm mb-1">{{ __('Contact Email') }}</label>
+                            <input type="email" wire:model.live="contact_email" id="contact_email" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                            @error('contact_email') <span class="text-red">{{ $message }}</span> @enderror
+                        </div>
+                    </div>
+                </div>  
+            </div>
+        </div>
+    </div>
+    <div class="py-3">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+            <div class="p-4 sm:p-8 bg-white shadow-md sm:rounded-lg">
+                <div class="w-full">
+                    <h3 class="font-semibold text-xl text-blue-900 leading-tight mb-5">
                         {{ __('Lawyer Details')  }}
                     </h3>
                     <p class="mb-5 text-sm text-gray-600">
@@ -208,7 +307,7 @@ Basic location info
                         </div>
                         <div>
                             <label for="layerTelephoneDay" class="required-field block text-black text-sm mb-1">{{ __('Telephone / Mobile') }}</label>
-                            <input type="text" wire:model.live="lawyer_phone_number" id="lawyerTelephoneMobile" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                            <input type="text" wire:model.live="lawyer_telephone_day" id="lawyerTelephoneDay" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
                             @error('lawyer_phone_number') <span class="text-red">{{ $message }}</span> @enderror
                         </div>
                         <div>

@@ -49,7 +49,7 @@ return new class extends Migration
             $table->string('lawyer_email')
                 ->comment('The email address of the contact\'s lawyer')
                 ->nullable();
-            $table->string('lawyer_phone_number')
+            $table->string('lawyer_telephone_day')
                 ->comment('The phone number of the contact\'s lawyer')
                 ->nullable();
             $table->text('lawyer_address')

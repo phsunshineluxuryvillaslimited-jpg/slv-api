@@ -78,6 +78,10 @@ return new class extends Migration
                 ->foreign('agent_id')
                 ->references('id')
                 ->on('agents');
+            $table->unsignedBigInteger('developer_id')
+                ->foreign('developer_id')
+                ->references('id')
+                ->on('developers');
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->unsignedBigInteger('deleted_by')->nullable();

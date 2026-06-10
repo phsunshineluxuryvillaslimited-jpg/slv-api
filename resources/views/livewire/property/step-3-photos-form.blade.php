@@ -13,39 +13,23 @@ new class extends Component
 {
     use WithFileUploads;
 
-    #[Validate('required|image|max:2048')]
     public string $photo;
 
-    public ?UploadedFile $image = null;
+    // public ?UploadedFile $image = null;
 
     public bool $isEdit = false;
 
     public ?Property $property;
 
+    public int $propertyId;
+
+    public $gallery = [];
+
     public function mount(Property $property, $isEdit = false): void
     {
-        $this->property =  $property;
+        $this->property = $property;
         $this->isEdit   = $isEdit;
-    }
-
-    public function save()
-    {
-        // $this->validate([
-        //     'photo' => 'required|image|max:2048', // 2MB
-        // ]);
-        $this->validate();
-        // upload to S3
-        $path = $this->image->store('properties', 's3');
-        dd($path);
-        // get uploaded
-        /** @var \Illuminate\Filesystem\FilesystemAdapter $disk */
-        $disk = Storage::disk('s3');
-        $url = $disk->url($path);
-
-        // save to DB
-        $this->property->photos()->create([
-            'image_url' => $url,
-        ]);
+        $this->propertyId = $property->id;
     }
 
     // for creating action
@@ -91,18 +75,162 @@ new class extends Component
 }
 
 ?>
-<div>
-    <form wire:submit.prevent="save">
-    
-    <input type="file" wire:model="photo">
 
-    @error('image') 
-        <span class="text-red-500">{{ $message }}</span> 
-    @enderror
+<div x-data="uploadMultiple('gallery')">
+    <label>Photos</label>
 
-    <button type="submit">Upload</button>
+    <input type="file" multiple @change="upload($event)">
 
-</form>
+    <div class="flex gap-2 mt-2">
+        <template x-for="file in files">
+            <img :src="file.url" width="100">
+        </template>
+    </div>
+</div>
+@script
+<script>
+function uploadSingle(folder) {
+    return {
+        fileUrl: null,
+
+        async upload(event) {
+            const file = event.target.files[0];
+
+            const res = await fetch('/s3/file-upload/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    filename: file.name,
+                    type: file.type,
+                    folder: folder
+                })
+            });
+
+            const data = await res.json();
+
+            await fetch(data.url, {
+                method: 'PUT',
+                headers: { 'Content-Type': file.type },
+                body: file
+    use WithFileUploads;
+
+    public string $photo;
+
+    // public ?UploadedFile $image = null;
+
+    public bool $isEdit = false;
+
+    public ?Property $property;
+
+    public int $propertyId;
+
+    public $gallery = [];
+
+    public function mount(Property $property, $isEdit = false): void
+    {
+        $this->property = $property;
+        $this->isEdit   = $isEdit;
+        $this->propertyId = $property->id;
+    }
+
+    // for creating action
+    #[On('parentNextStepButtonTriggered')]
+    public function hundleNextStepButtonTriggered()
+    {
+        try {
+            $validatedData = $this->validate();
+            $this->property->photos()->updateOrCreate([
+                    'property_id' => $this->property->id,
+                ],
+                $validatedData
+            );
+
+            $this->dispatch( 'proceed-to-next-step', property_id: $this->property->id);
+         } catch (ValidationException $e) {
+            Log::info('Property validation error. Please double check.');
+            throw $e;
+        }
+    }
+
+    // for edit action
+    #[On('parentUpdateButtonTriggered')]
+    public function handleUpdateProperty()
+    {   
+        try {
+            $validatedData = $this->validate();
+
+            $this->property->photos()->updateOrCreate([
+                    'property_id' => $this->property->id,
+                ],
+                $validatedData
+            );
+
+            session()->flash('success', 'Property updated successfully');
+         } catch (ValidationException $e) {
+            Log::info('Property validation error. Please double check.');
+            throw $e;
+        }
+        
+    }
+            });
+
+            this.fileUrl = data.file_url;
+
+            // @this.set(folder, {
+            //     path: data.path,
+            //     url: data.file_url
+            // });
+        }
+    }
+}
+
+
+function uploadMultiple(folder) {
+    return {
+        files: [],
+
+        async upload(event) {
+            for (let file of event.target.files) {
+
+                const res = await fetch('/s3/file-upload/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        filename: file.name,
+                        type: file.type,
+                        folder: folder
+                    })
+                });
+
+                const data = await res.json();
+
+                await fetch(data.url, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': file.type },
+                    body: file
+                });
+
+                this.files.push({
+                    path: data.path,
+                    url: data.file_url
+                });
+
+                window.Livewire.find('{{ $propertyId }}').push(folder, {
+                    path: data.path,
+                    url: data.file_url
+                });
+            }
+        }
+    }
+}
+</script>
+@endscript
     <!-----------------------------------------
     Basic location info
     ----------------------------------------->
@@ -192,5 +320,5 @@ new class extends Component
             </div>
         </div>
     @endif
-    */?>
-</div>
+    </div>
+*/?>

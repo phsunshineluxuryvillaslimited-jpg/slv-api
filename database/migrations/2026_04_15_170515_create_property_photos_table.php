@@ -21,10 +21,13 @@ return new class extends Migration
                 ->onDelete('cascade');
             $table->enum('type', [
                     'gallery', 
-                    'floorplan'
+                    'floorplan',
+                    'document'
                 ])
                 ->nullable()
                 ->comment('The type of media which is being sent');
+            $table->string('path')
+                ->comment('File patch');
             $table->string('url')
                 ->comment('The URL to retrieve this piece of media from');
             $table->string('caption')

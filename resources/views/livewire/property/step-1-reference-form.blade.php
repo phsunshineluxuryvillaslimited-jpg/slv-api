@@ -42,7 +42,7 @@ new class extends Component
     public string $plot_description;
 
     #[Validate('required|numeric')]
-    public string $managing_agent_user_id;
+    public int $managing_agent_user_id;
 
     // #[Validate('required|integer|digits:4|min:1900|max:3050')]
     public int $year_of_construction;
@@ -75,7 +75,7 @@ new class extends Component
     public string $pool = 'yes';
 
     #[Validate('nullable')]
-    public string $is_poa;
+    public bool $is_poa = false;
 
     #[Validate('nullable')]
     public string $title_deeds = 'available';
@@ -161,6 +161,10 @@ new class extends Component
         
         $this->propertyTypes = $propertyTypes->orderBy('name', 'asc')->get();
         $this->users = User::all();
+
+        if (! $this->isEdit) {
+            $this->managing_agent_user_id = 12;
+        }
     }
 
     //Create
@@ -171,6 +175,7 @@ new class extends Component
             
             $this->edit_reference = 'XDIRTY-CREATE1';
             $validatedData = $this->validate();
+            
             unset($validatedData['edit_reference']);
             $price = [
                 'is_poa' => $validatedData['is_poa'],
@@ -190,8 +195,8 @@ new class extends Component
             $this->dispatch( 'proceed-to-next-step', property_id: $newProperty->id);
                 
         } catch (ValidationException $e) {
-            Log::info('Property validation error. Please double check.');
             dd($e);
+            Log::info('Property validation error. Please double check.');
             throw $e;
         }
     }

@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('mobile_number');
             $table->string('phone_number');
             $table->string('source');
-            $table->string('source');
             $table->timestamps();
         });
     }

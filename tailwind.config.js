@@ -7,7 +7,9 @@ export default {
         './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
-        './app/Livewire/**/*Table.php',
+        './app/Livewire/**/*.php',
+        "./resources/**/*.js",
+        "./resources/**/*.vue",
         './vendor/power-components/livewire-powergrid/resources/views/**/*.php',
         './vendor/power-components/livewire-powergrid/src/Themes/Tailwind.php'
     ],
@@ -16,6 +18,7 @@ export default {
         extend: {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                custom: ['Roboto', 'sans-serif'],
             },
         },
     },

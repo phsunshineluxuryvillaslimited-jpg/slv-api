@@ -13,14 +13,14 @@ return new class extends Migration
     {
         Schema::create('property_contact_documents', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('contact_detail_id');
-            $table->foreign('contact_detail_id')
+            $table->unsignedBigInteger('property_contact_detail_id');
+            $table->foreign('property_contact_detail_id')
                 ->references('id')
-                ->on('property_contact_detials')
+                ->on('property_contact_details')
                 ->onDelete('cascade');
             $table->string('filename')->nullable();
             $table->string('file_path')->nullable();
-            $table->string('file_type')
+            $table->string('file_type', 45)
                 ->nullable();
             $table->timestamp('created_at')->useCurrent();
         });

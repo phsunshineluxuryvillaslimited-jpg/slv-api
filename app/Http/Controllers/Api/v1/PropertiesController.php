@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\api\v1;
+namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePropertyRequest;
 use App\Http\Resources\PropertyResource;
 use App\Models\Property;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class PropertiesController extends Controller
 {
@@ -15,26 +17,98 @@ class PropertiesController extends Controller
      */
     public function index(Request $request)
     {
+        $query = Property::query()
+                    ->with(['networks'])
+                    ->where('status', 'published')
+                    ->whereHas('networks', fn ($query) => $query->where('external_feeds', 'slv'));
 
-        $query = Property::query();
-        
-        if ($request->has('include')) {
-            $query->with(explode(',', $request->include));
+        if ($request->filled('include')) {
+            $query->with($this->parseIncludes($request->input('include')));
         }
         
-        $query->where('published', 'yes');
+        if ($request->filled('reference')) {
+            $query->where('properties.reference', trim($request->input('reference')));
+        } else {
 
-        return PropertyResource::collection($query->paginate(10));
+            if ($request->filled('order_by')) {
+                $this->applyOrderBy($query, $request->input('order_by'));
+            }
+
+            if ($request->filled('region')
+                && $request->input('region') != 'all'
+            ) {
+                $query->whereHas('address', fn ($query) => $query->where('region', trim($request->input('region'))));
+            }
+
+            if ($request->filled('towns')
+                && $request->input('towns') != 'all'
+            ) {
+                $towns = array_map('trim', explode(',', urldecode($request->input('towns'))));
+                $query->whereHas('address', fn ($query) => $query->whereIn('town_city', $towns));
+            }
+
+            if ($request->filled('propertyType') 
+                && $request->input('propertyType') != 'all'
+            ) {
+                $types = array_map('trim', explode(',', urldecode($request->input('propertyType'))));
+                $query->whereHas('propertyType', fn ($query) => $query->whereIn('name', $types));
+            }
+
+            if ($request->filled('bedrooms') 
+                && $request->input('bedrooms') != 'any'
+            ) {
+                $query->where('properties.bedrooms', $request->input('bedrooms'));
+            }
+
+            if ($request->filled('bathrooms') 
+                && $request->input('bathrooms') != 'any'
+            ) {
+                $query->where('properties.bathrooms', $request->input('bathrooms'));
+            }
+
+            if ($request->filled('min_price') || $request->filled('max_price')) {
+                $query->whereHas('price', function ($query) use ($request) {
+                    if ($request->filled('min_price')
+                        && $request->input('min_price') != 'any'
+                    ) {
+                        $query->where('basic_price', '>=', $request->input('min_price'));
+                    }
+                    if ($request->filled('max_price')
+                        && $request->input('max_price') != 'any'
+                    ) {
+                        $query->where('basic_price', '<=', $request->input('max_price'));
+                    }
+                });
+            }
+
+            if ($request->filled('plot_size') 
+                && $request->input('plot_size') != 'any'
+            ) {
+                $query->where('properties.plot', '>=', $request->input('plot_size'));
+            }
+
+            if ($request->filled('area_size')
+                && $request->input('area_size') != 'any'
+            ) {
+                $query->whereHas('amenities', fn ($query) => $query->where('covered', '>=', $request->input('area_size')));
+            }
+        }
+
+        $propertyList = $query->paginate(1);
+
+        $propertyList->getCollection()->each->makeHidden(['description','plot_description', 'pool_description']);
+
+        return PropertyResource::collection($propertyList);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StorePropertyRequest $request, Property $property)
+    public function store(StorePropertyRequest $request)
     {
-        $data = $request->validated();
+        $data = array_merge($request->validated(), Arr::only($request->all(), ['address', 'price', 'media', 'networks']));
 
-        $property = Property::create($data);
+        $property = Property::create(Arr::except($data, ['address', 'price', 'media', 'networks']));
 
         if (isset($data['address'])) {
             $property->address()->create($data['address']);
@@ -44,15 +118,6 @@ class PropertiesController extends Controller
             $property->price()->create($data['price']);
         }
 
-        if (isset($data['details'])) {
-            $property->details()->create($data['details']);
-            if (isset($data['details']['size'])) {
-                $property->propertyDetailSize()->create($data['details']['size']);
-            }
-            if (isset($data['details']['rooms'])) {
-                $property->propertyDetailRooms()->create($data['details']['rooms']);
-            }
-        }
         if (isset($data['media'])) {
             $property->media()->createMany($data['media']);
         }
@@ -61,18 +126,7 @@ class PropertiesController extends Controller
             $property->networks()->createMany($data['networks']);
         }
 
-        return PropertyResource::make(
-            $property->with([
-                'address',
-                'price',
-                'details',
-                'details.sizing',
-                'details.rooms',
-                'media',
-                'networks'
-            ])
-            ->find($property->id)
-        );
+        return PropertyResource::make($property->load(['address', 'price', 'media', 'networks']));
     }
 
     /**
@@ -80,70 +134,81 @@ class PropertiesController extends Controller
      */
     public function show(Request $request, Property $property)
     {
-        $id = $property->id;
-        
-        if ($request->has('include')) {
-           $property = $property->with(explode(',', $request->include));
+
+        if ($property->status !== 'published' 
+            || !$property->networks()->where('external_feeds', 'slv')->exists()
+        ) {
+            $property = null;
+        } else {
+            if ($request->filled('include')) {
+                $property->load($this->parseIncludes($request->input('include')));
+            }
         }
-        
-        return PropertyResource::make($property->find($id));
+
+        return PropertyResource::make($property);
+    }
+
+    /**
+     * Display the specified resource using reference
+     * 
+     * @param Request $request
+     * @param string $reference
+     * @return PropertyResource
+     */
+    public function showByReference(Request $request, string $reference)
+    {
+        $property = Property::where('reference', trim($reference))
+                        ->with(['networks'])
+                        ->where('status', 'published')
+                        ->whereHas('networks', fn ($query) => $query->where('external_feeds', 'slv'))
+                        ->firstOrFail();
+
+        if ($request->filled('include')) {
+            if ($request->input('include') == 'all') {
+                $property->load([
+                    'propertyType',
+                    'address',
+                    'price',
+                    'contact',
+                    'photos',
+                    'amenities',
+                    'key_features',
+                    'media'
+                ]);
+            } else {
+                $property->load($this->parseIncludes($request->input('include')));
+            }
+        }
+
+        return PropertyResource::make($property);
     }
 
     /**
      * Update the specified resource in storage.
      */
     public function update(StorePropertyRequest $request, Property $property)
-    {   
-        // $data = $request->validated();
-        // dd($request->all());
-        $data = $request->all();
-        $property->update($data);
+    {
+        $data = array_merge($request->validated(), Arr::only($request->all(), ['address', 'price', 'media', 'networks']));
+
+        $property->update(Arr::except($data, ['address', 'price', 'media', 'networks']));
 
         if (isset($data['address'])) {
-            $property->address()->updateOrCreate($data['address']);
+            $property->address()->updateOrCreate(['property_id' => $property->id], $data['address']);
         }
 
         if (isset($data['price'])) {
-            $property->price()->updateOrCreate($data['price']);
+            $property->price()->updateOrCreate(['property_id' => $property->id], $data['price']);
         }
 
-        if (isset($data['details'])) {
-            $property->details()->updateOrCreate($data['details']);
-            if (isset($data['details']['size'])) {
-                $property->propertyDetailSize()->updateOrCreate($data['details']['size']);
-            }
-            if (isset($data['details']['rooms'])) {
-                $property->propertyDetailRooms()->updateOrCreate($data['details']['rooms']);
-            }
-        }
         if (isset($data['media'])) {
-            $property->media()->upsert([['media' => $data['media']]], [
-                'property_id',
-                'type',
-                'url',
-                'caption',
-                'sort_order',
-                'media_update_date'
-            ]);
+            $property->media()->upsert($data['media'], ['property_id', 'type', 'url'], ['caption', 'sort_order', 'photo_update_date']);
         }
-        
+
         if (isset($data['networks'])) {
-            $property->networks()->upsert($data['networks'], ['property_id', 'network', 'published']);
+            $property->networks()->upsert($data['networks'], ['property_id', 'external_feeds'], ['website_banner']);
         }
 
-
-        return PropertyResource::make(
-            $property->with([
-                'address',
-                'price',
-                'details',
-                'details.sizing',
-                'details.rooms',
-                'media',
-                'networks'
-            ])
-            ->find($property->id)
-        );
+        return PropertyResource::make($property->load(['address', 'price', 'media', 'networks']));
     }
 
     /**
@@ -157,4 +222,30 @@ class PropertiesController extends Controller
         return response()->noContent();
     }
 
+    private function parseIncludes(string $include): array
+    {
+        return array_filter(array_map('trim', explode(',', $include)));
+    }
+
+    private function applyOrderBy(Builder $query, string $orderBy): void
+    {
+        [$column, $direction] = array_pad(explode(',', $orderBy), 2, 'asc');
+        $direction = strtolower($direction) === 'desc' ? 'desc' : 'asc';
+
+        if ($column === 'price') {
+            $query->join('property_prices', 'properties.id', '=', 'property_prices.property_id')
+                ->orderBy('property_prices.basic_price', $direction)
+                ->select('properties.*');
+
+            return;
+        }
+
+        if (in_array($column, ['published_at', 'updated_at', 'created_at'], true)) {
+            $query->orderBy("properties.{$column}", $direction);
+
+            return;
+        }
+
+        $query->orderBy($column, $direction);
+    }
 }

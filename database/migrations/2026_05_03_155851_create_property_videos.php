@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('virtual_tour_link')
                 ->comment('The URL to retrieve the virtual tour from')
                 ->nullable();
-            $table->timestamp('created_at')->useCurrent(); 
+            $table->timestamps();
         });
     }
 

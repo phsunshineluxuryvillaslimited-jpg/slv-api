@@ -146,7 +146,7 @@ class AccordionKeyFeatures extends Component
                 ],
                 [
                     'label'=> 'Kitchenette',
-                    'name' => 'kitchen[fitted_kitchen]',
+                    'name' => 'kitchen[kitchenette]',
                     'value'=> false
                 ],
                 [
@@ -353,7 +353,7 @@ class AccordionKeyFeatures extends Component
                 ],
                 [
                     'label'=> 'Central Oil Heating',
-                    'name'=> 'heating[central_oil_heaing]',
+                    'name'=> 'heating[central_oil_heating]',
                     'value'=> false
                 ],
                 [

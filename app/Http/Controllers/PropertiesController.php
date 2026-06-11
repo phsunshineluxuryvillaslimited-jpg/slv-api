@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Property;
 
 class PropertiesController extends Controller
 {
@@ -11,7 +12,26 @@ class PropertiesController extends Controller
      */
     public function index()
     {
-        return view("properties.index");
+        $properties = Property::with([
+            'propertyType',
+            'address' => function($query) {
+                $query->select('id', 'property_id', 'region', 'town_city');
+            },
+            'price' => function($query) {
+                $query->select('id', 'property_id', 'basic_price');
+            },
+            'photos' => function($query) {
+                $query->select('id', 'property_id', 'url');
+            },
+            'amenities' => function($query) {
+                $query->select('id', 'property_id');
+            },
+            'networks'
+        ])
+        ->select('id', 'property_type_id', 'reference', 'bedrooms', 'plot', 'area_size', 'status')
+        ->paginate(10);
+
+        return view("properties.index", compact('properties'));
     }
 
     /**
@@ -19,32 +39,32 @@ class PropertiesController extends Controller
      */
     public function create()
     {
-        $page = 1;
-        return view("properties.create" , compact('page'));
+        return view("properties.create");
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        return view("step", ['sample' =>'test']);
-    }
+    // public function store(Request $request)
+    // {
+    //     return view("step", ['sample' =>'test']);
+    // }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Property $property, Request $id)
     {
-        return view("properties.show");
+        return view("properties.show", compact('property'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Property $property)
     {
-        return view("properties.edit");
+        $editMode = 'editMode';
+        return view("properties.edit", compact('property', $editMode));
     }
 
     /**

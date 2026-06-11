@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -11,7 +10,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('property_addresses', function (Blueprint $table) {
+        Schema::create('property_addresses', function (\Illuminate\Database\Schema\Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('property_id');
             $table->foreign('property_id')
@@ -19,10 +18,12 @@ return new class extends Migration
                 ->on('properties')
                 ->onDelete('cascade');
             $table->string('region')
+                ->index()
                 ->nullable()
                 ->comment('Property region, e.g. "South East", "North West", etc. 
                     This is a required field for properties in the UK, but optional for properties in other countries.');
             $table->string('town_city')
+                ->index()
                 ->comment('Town or city in which the property is located')
                 ->nullable();
             $table->string('locality')
@@ -34,7 +35,7 @@ return new class extends Migration
             $table->decimal('longitude', 11, 8)
                 ->comment('The exact longitude of the property')
                 ->nullable();
-            $table->decimal('accuracy', 10, 8)
+            $table->integer('accuracy')
                 ->comment('Accuracy of the property location in meters')
                 ->nullable();
             $table->string('map_address', 255)

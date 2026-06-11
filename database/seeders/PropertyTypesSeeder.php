@@ -25,7 +25,12 @@ class PropertyTypesSeeder extends Seeder
             ['name' => 'Plot'],
             ['name' => 'Studio'],
             ['name' => 'Townhouse'],
-            ['name' => 'Villa']
+            ['name' => 'Villa'],
+            ['name' => 'Penthouse Apartment'],
+            ['name' => 'Land'],
+            ['name' => 'Building Plot'],
+            ['name' => 'Office'],
+            ['name' => 'Shop']
         ]);
     }
 }

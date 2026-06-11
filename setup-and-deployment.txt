@@ -1,18 +1,29 @@
-#Database Migration
+-------------------------------------
+DEV SETUP
+-------------------------------------
+---- npm dependencies ---------------
+
+rm -rf node_modules package-lock.json
+npm install
+
+----- DB SETUP ----------------------
+
 php artisan migrate
-
-# Run the seeder for the Property Type
+php artisan db:seed
+php artisan db:seed --class=AgentSeeder 
 php artisan db:seed --class=PropertyTypesSeeder
-
-# Generate App key
 php artisan key:generate --show
-
-# To update tailwind css minify
-npx tailwindcss -i ./resources/css/app.css -o ./public/css/app.css --minify
-
-#Performance Optimization
-#Single Command:
 php artisan optimize
+
+-------- RUN DEV SERVE -------------
+
+--Open new terminal run--
+php artisan serve
+
+--Open another terminal run--
+npm run dev
+
+-------- END OF DEV SETUP -------------
 
 #Granular Commands:
 php artisan config:cache
@@ -20,7 +31,7 @@ php artisan route:cache
 php artisan view:cache
 
 #Composer Optimization:
-composer install --optimize-autoloader --no-dev
+composer install --optimize-autoloader --no-dev, 
 
 --------------------------------
 Server & Security Requirements
@@ -53,3 +64,6 @@ Deployment Workflow
     php artisan queue:restart 
 8. Go Live: 
     php artisan up
+
+CLEAN TEXMP ON AWS S3 BUCKET
+php artisan livewire:configure-s3-upload-cleanup

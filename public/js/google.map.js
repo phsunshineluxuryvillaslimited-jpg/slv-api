@@ -1,10 +1,11 @@
 
 function initMap() {
-    map = new google.maps.Map(document.getElementById("gmap"), {
-        center: {
-            lat: 51.505,
-            lng: -0.09,
-        },
+    const center = { 
+        lat: 51.505, 
+        lng: -0.09 
+    };
+    const map = new google.maps.Map(document.getElementById("gmap"), {
+        center: center,
         zoom: 15
     });
 
@@ -12,108 +13,89 @@ function initMap() {
         mapClicked(event);
     });
 
-    initMarkers();
+    const marker = new google.maps.Marker({
+        position: center,
+        map: map,
+        draggable: true
+    });
+
+    marker.addListener('dragend', function(event) {
+        markerDragEnd(event);
+    });
+
+    map.addListener('click', function(event) {
+
+        marker.setPosition(event.latLng);
+        markerClicked(marker);
+    });
 }
 
-
-/* --------------------------- Initialize Markers --------------------------- */
-function initMarkers() {
-    const initialMarkers = {};
-
-    for (let index = 0; index < initialMarkers.length; index++) {
-        const markerData = initialMarkers[index];
-        const marker = new google.maps.Marker({
-            position: markerData.position,
-            label: markerData.label,
-            draggable: markerData.draggable,
-            map
-        });
-        markers.push(marker);
-
-        const infowindow = new google.maps.InfoWindow({
-            content: `<b>${markerData.position.lat}, ${markerData.position.lng}</b>`,
-        });
-        marker.addListener("click", (event) => {
-            if(activeInfoWindow) {
-                activeInfoWindow.close();
-            }
-            infowindow.open({
-                anchor: marker,
-                shouldFocus: false,
-                map
-            });
-            activeInfoWindow = infowindow;
-            markerClicked(marker, index);
-        });
-
-        marker.addListener("dragend", (event) => {
-            markerDragEnd(event, index);
-        });
-    }
-}
 
 /* ------------------------- Handle Map Click Event ------------------------- */
 function mapClicked(event) {
-    document.getElementById('latitude').value=event.latLng.lat();
-    document.getElementById('longtitude').value=event.latLng.lng();
+    const inputLatitude = document.getElementById('latitude');
+    inputLatitude.value = event.latLng.lat();
+    inputLatitude.dispatchEvent(new Event('input', { bubbles: true }));
+
+    const inputLongitude = document.getElementById('longitude');
+    inputLongitude.value = event.latLng.lng();
+    inputLongitude.dispatchEvent(new Event('input', { bubbles: true }))
 
     const geocoder = new google.maps.Geocoder();
     const latlng = { lat: event.latLng.lat(), lng: event.latLng.lng() };
     geocoder.geocode({ location: latlng }, (results, status) => {
-    if (status === "OK") {
-        console.log(results[0].formatted_address);
-    }
+        if (status === "OK") {
+            const mapAddress = document.getElementById('mapAddress')
+            mapAddress.value = results[0].formatted_address;
+            mapAddress.dispatchEvent(new Event('input', { bubbles: true }));
+        }
     });
 }
 
 /* ------------------------ Handle Marker Click Event ----------------------- */
 function markerClicked(marker, index) {
-    console.log(map);
-    console.log(marker.position.lat());
-    console.log(marker.position.lng());
+    const inputLatitude = document.getElementById('latitude');
+    inputLatitude.value = marker.position.lat();
+    inputLatitude.dispatchEvent(new Event('input', { bubbles: true }));
+
+    const inputLongitude = document.getElementById('longitude');
+    inputLongitude.value = marker.position.lng();
+    inputLongitude.dispatchEvent(new Event('input', { bubbles: true }));
+
+    const geocoder = new google.maps.Geocoder();
+    const latlng = { lat: marker.position.lat(), lng: marker.position.lng() };
+    geocoder.geocode({ location: latlng }, (results, status) => {
+        if (status === "OK") {
+            const mapAddress = document.getElementById('mapAddress')
+            mapAddress.value = results[0].formatted_address;
+            mapAddress.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+    });
 }
 
 /* ----------------------- Handle Marker DragEnd Event ---------------------- */
 function markerDragEnd(event, index) {
-    console.log(map);
-    console.log(event.latLng.lat());
-    console.log(event.latLng.lng());
+    const inputLatitude = document.getElementById('latitude');
+    inputLatitude.value = event.latLng.lat();
+    inputLatitude.dispatchEvent(new Event('input', { bubbles: true }));
+
+    const inputLongitude = document.getElementById('longitude');
+    inputLongitude.value = event.latLng.lng();
+    inputLongitude.dispatchEvent(new Event('input', { bubbles: true }));
+
+    // document.getElementById('latitude').value=event.latLng.lat();
+    // document.getElementById('longtitude').value=event.latLng.lng();
+
+    const geocoder = new google.maps.Geocoder();
+    const latlng = { lat: event.latLng.lat(), lng: event.latLng.lng() };
+    geocoder.geocode({ location: latlng }, (results, status) => {
+        if (status === "OK") {
+            const mapAddress = document.getElementById('mapAddress')
+            mapAddress.value = results[0].formatted_address;
+            mapAddress.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+    });
 }
 
+/* ------------------------ Recognize inputs -------------------------------- */
 
-// async function init() {
-//     // Request needed libraries.
-//     const { InfoWindow } = await google.maps.importLibrary('maps');
-
-//     // Set up the map.
-//     const mapElement = document.querySelector('gmp-map');
-//     const innerMap = mapElement.innerMap;
-
-//     // Get the initial center of the map.
-//     const position = innerMap.getCenter();
-
-//     // Create the initial InfoWindow.
-//     let infoWindow = new InfoWindow({
-//         content: 'Click the map to get Lat/Lng!',
-//         position,
-//     });
-
-//     infoWindow.open(innerMap);
-
-//     // Configure the click listener.
-//     innerMap.addListener('click', (mapsMouseEvent) => {
-//         // Close the current InfoWindow.
-//         infoWindow.close();
-
-//         // Create a new InfoWindow.
-//         infoWindow = new InfoWindow({
-//             position: mapsMouseEvent.latLng,
-//         });
-//         infoWindow.setContent(
-//             JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2)
-//         );
-//         infoWindow.open(innerMap);
-//     });
-// }
-
-// void init();

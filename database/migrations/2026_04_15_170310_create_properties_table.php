@@ -15,74 +15,75 @@ return new class extends Migration
         Schema::dropIfExists('properties');
         Schema::create('properties', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('author_id');
-            $table->foreign('author_id')
-                ->references('id')
-                ->on('users')
-                ->onDelete('cascade');
             $table->unsignedBigInteger('property_type_id');
             $table->foreign('property_type_id')
                 ->references('id')
                 ->on('property_types');
-            $table->string('reference', 15)
-                ->comment('Unique reference for this price entry');
-            $table->string('title')
+            $table->string('reference', 45)
                 ->unique()
-                ->comment('Property title');
-            $table->text('description')
-                ->comment('The full description of the property');
+                ->index()
+                ->comment('Unique reference for this price entry');
+            $table->longText('description')
+                ->comment('The full description of the property')
+                ->nullable();
             $table->enum('title_deeds', ['available','not-available'])
-                ->default('available')
+                ->nullable()
                 ->comment('Whether the title deeds for the property are available');
-            $table->enum('leasehold_property', ['yes','no'])
-                ->default('no')
+            $table->enum('leasehold', ['yes','no'])
+                ->default('yes')
                 ->comment('Leasehold Property');
-            $table->integer('bedrooms')
+            $table->integer('bedrooms')->index()
                 ->default(0)
                 ->comment('Number of bedrooms');
-            $table->integer('bathrooms')
+            $table->integer('bathrooms')->index()
                 ->default(0)
                 ->comment('Number of bathrooms');
-            $table->decimal('build', 8, 2)
+            $table->decimal('area_size', 10)
                 ->default(0)
-                ->comment('Build area in square meters');
-            $table->decimal('terrace', 8, 2)
+                ->comment('Area area in square meters');
+            $table->decimal('plot', 10)->index()
                 ->default(0)
-                ->comment('Terrace area in square meters');
-            $table->decimal('plot', 8,2)
-                ->comment('Plot area in square meters')
-                ->nullable();
+                ->comment('Plot area in square meters');
             $table->string('plot_description', 255)
                 ->comment('Description of the plot area')
                 ->nullable();
-            $table->unsignedBigInteger('agent_id')
-                ->comment('ID of the agent responsible for the property');
-            $table->foreign('agent_id')
-                ->references('id')
-                ->on('users');
             $table->string('year_of_construction', 5)
                 ->comment('Year of construction')
                 ->nullable();
             $table->enum('pool', ['yes', 'no'])
-                ->default('no')
+                ->default('yes')
                 ->comment('Whether the property has a pool');
             $table->string('pool_description', 255)
                 ->comment('Description of the pool')
                 ->nullable();
-            $table->enum('listing_type', ['resale', 'new'])
-                ->default('Resale')
+            $table->enum('listing_type', ['resale', 'new_build', 'sale', 'rental'])
+                ->nullable()
                 ->comment('Property listing type: "Resale" for sale, "New" for new');
             $table->enum('plan_zone',['A','B','C'])
-                ->default('A')
+                ->nullable()
                 ->comment('Plan zone for the property');
             $table->enum('sea_view', ['yes','no'])
-                ->default('no')
+                ->nullable()
                 ->comment('Whether the property has a sea view');
             $table->enum('for_sale_board', ['yes','no'])
-                ->default('no')
+                ->nullable()
                 ->comment('Whether the property is on the for sale board');
-            $table->enum('save_type', ['draft','finished'])
+            $table->enum('save_type', ['draft','finished','feed'])->index()
                 ->default('draft');
+            $table->enum('status', ['published', 'active', 'inactive'])->index()
+                ->nullable();
+            $table->datetime('published_at')->index()
+                ->nullable();
+            $table->unsignedBigInteger('agent_id')
+                ->foreign('agent_id')
+                ->references('id')
+                ->on('agents');
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
+            $table->unsignedBigInteger('deleted_by')->nullable();
+            $table->foreign('created_by')->references('id')->on('users');
+            $table->foreign('updated_by')->references('id')->on('users');
+            $table->foreign('deleted_by')->references('id')->on('users');
             $table->timestamps();
         });
 

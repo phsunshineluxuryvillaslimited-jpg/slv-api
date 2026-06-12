@@ -41,6 +41,10 @@ new class extends Component
         $this->propertyId = $property->id;
         $this->propertyReference = $property->reference;
 
+        if ($isEdit && ($property && $property->photos()->exists())) {
+            $this->photos = $property->photos()->orderBy('sort_order')->get();
+        }
+
         // load tempt Images which is not yet stored in database
         $this->getS3TempPhotos();
     }
@@ -48,13 +52,20 @@ new class extends Component
     /**
      * Populate all temporary images that was not yet stored in database
      * Temporary file images store in AWS s3 bucket
+     * Remove in stored list the existing images from database base on temp photos in AWS S3
      */
     public function getS3TempPhotos()
     {
         if ( $this->property->reference !== '' ) {
 
             $this->tempPhotos = Storage::disk('s3')->files($this->property->reference);
-
+            if (!empty($this->tempPhotos)) {
+                foreach ($this->photos as $photo) {
+                    if ($key = array_search($photo->path, $this->tempPhotos)) {
+                        unset($this->tempPhotos[$key]);
+                    }
+                }
+            }
         }
     }
 
@@ -64,13 +75,14 @@ new class extends Component
     {
         try {
 
-           // Gallery
-            foreach ($this->photos as $item) {
-                dd($item); 
+            foreach ($this->tempPhotos as $key => $item) {
                 PropertyPhotos::create([
                     'property_id' => $this->propertyId,
                     'type' => 'gallery',
-                    ...$item
+                    'path' => $item['path'],
+                    'url' => $item['url'],
+                    'orig_filename' => $item['orig_filename'],
+                    'sort_order' => ++$key
                 ]);
             }
 
@@ -86,14 +98,17 @@ new class extends Component
     public function handleUpdateProperty()
     {   
          try {
-
-           // Gallery
-            foreach ($this->photos as $item) {
-                dd($item); 
-                PropertyPhotos::create([
+            foreach ($this->tempPhotos as $key => $item) {
+                // dd($item['orig_filename']);
+                PropertyPhotos::updateOrCreate([
+                    'orig_filename' => $item['orig_filename']
+                ],[
                     'property_id' => $this->propertyId,
                     'type' => 'gallery',
-                    ...$item
+                    'path' => $item['path'],
+                    'url' => $item['url'],
+                    'orig_filename' => $item['orig_filename'],
+                    'sort_order' => ++$key
                 ]);
             }
 
@@ -102,22 +117,6 @@ new class extends Component
             Log::info('Property validation error. Please double check.');
             throw $e;
         }
-
-        // dd($this->galleries);
-        // try {
-        //     $validatedData = $this->validate();
-
-        //     $this->property->address()->updateOrCreate([
-        //             'property_id' => $this->property->id,
-        //         ],
-        //         $validatedData
-        //     );
-
-        //     session()->flash('success', 'Property updated successfully');
-        //  } catch (ValidationException $e) {
-        //     Log::info('Property validation error. Please double check.');
-        //     throw $e;
-        // }
         
     }
 }
@@ -152,8 +151,42 @@ new class extends Component
                                     </div>
                                 </label>
                             </div>
+                        </div>
+                        <div class="mt-5">
+                            <div class="p-3">
+                                <h3 class="text-lg font-custom">Posted Photos</h3>
+                            </div>
+                            <div class="grid grid-cols-5 gap-3 mt-2 p-3" x-data="{ isExistingLoaded: false }">
+                                @foreach ( $photos as $photo )
+                                    <!-- PROGRESS BAR -->
+                                    <div role="progress" class="uploadStatus absolute inset-0 m-auto z-10" x-show="!isExistingLoaded">
+                                        <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                                            <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+                                        </svg>
+                                        <span class="sr-only">Loading...</span>
+                                    </div>  
+                                    <img src="{{ $photo->url }}" 
+                                        x-show="isExistingLoaded"
+                                            @load="isExistingLoaded = true"
+                                            width="200"
+                                    />
+                                @endforeach 
+                            </div>
 
-                            <div class="flex gap-2 mt-2 p-3">
+                            <div class="p-3">
+                                <h3 class="text-lg font-custom">{{ __('Upload but not saved') }}</h3>
+                            </div>
+                            <div class="grid grid-cols-5 gap-3 mt-2 p-3">
+                               
+                                @foreach ($tempPhotos as $tempPhoto)
+                                    <div class="w-32 relative">
+                                        <img 
+                                            src="{{ Storage::disk('s3')->url($tempPhoto) }}"
+                                            width="300"
+                                        />
+                                    </div>
+                                @endforeach
                                 <template x-for="file in files" :key="file.path" x-data="{ isLoaded: false }">
                                     <div class="w-32 relative">
                                         <!-- PROGRESS BAR -->
@@ -243,62 +276,87 @@ new class extends Component
 
 @script
 <script>
-    const imageType = 'photos';
+    let imageType = 'galleries';
 
     window.isUploading = function() {
         return this.files.some(file => file.progress < 100);
     }
 
     window.uploadMultiple = function (folder) {
-        return {
-            files: [],
-            async upload(event) {
-                showLoading = true;
-                
-                let fileProgress = {
+    return {
+        imageType: 'galleries',
+        files: [],
+        galleries: [], 
+
+        async upload(event) {
+            showLoading = true;
+
+            let uploads = [];
+
+            for (let file of event.target.files) {
+                uploads.push(this.uploadSingle(file, folder));
+            }
+
+            await Promise.all(uploads);
+
+            @this.set('tempPhotos', this[this.imageType]);
+        },
+
+        uploadSingle(file, folder) {
+            return new Promise((resolve, reject) => {
+
+                let fileProgress = { 
                     id: Date.now() + Math.random(),
                     progress: 0
                 };
 
-                for (let file of event.target.files) {
-                    let formData = new FormData();
+                let formData = new FormData();
+                formData.append('file', file);
+                formData.append('folder', folder);
 
-                    formData.append('file', file);
-                    formData.append('folder', folder);
-                    
-                    const xhr = new XMLHttpRequest();
+                const xhr = new XMLHttpRequest();
 
-                    xhr.open('POST', '/s3/file-upload', true);
-                    xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
-                    
-                    xhr.upload.onprogress = (e) => {
-                        if (e.lengthComputable) {
-                            fileProgress.progress = Math.round((e.loaded / e.total) * 100);
-                        }
-                    };
+                xhr.open('POST', '/s3/file-upload', true);
+                xhr.setRequestHeader(
+                    'X-CSRF-TOKEN',
+                    document.querySelector('meta[name="csrf-token"]').content
+                );
 
-                    xhr.onload = () => {
-                        if (xhr.status === 200) {
-                            const res = JSON.parse(xhr.responseText); 
-
-                            this.files.push({
-                                orig_filename: res.org_filename,
-                                path: res.path,
-                                url: res.url,
-                                progress: fileProgress
-                            });
-                        
-                            @this.set(imageType, {
-                                orig_filename: res.org_filename,
-                                path: res.path,
-                                url: res.url
-                            });
-                        }
+                xhr.upload.onprogress = (e) => {
+                    if (e.lengthComputable) {
+                        fileProgress.progress = Math.round((e.loaded / e.total) * 100);
                     }
-                    await xhr.send(formData)
-                }
-             }
+                };
+
+                xhr.onload = () => {
+                    if (xhr.status === 200) {
+                        const res = JSON.parse(xhr.responseText);
+
+                        this.files.push({
+                            orig_filename: res.orig_filename,
+                            path: res.path,
+                            url: res.url,
+                            progress: fileProgress
+                        });
+
+                        this[this.imageType].push({
+                            orig_filename: res.orig_filename,
+                            path: res.path,
+                            url: res.url
+                        });
+
+                        resolve();
+                    } else {
+                        reject();
+                    }
+                };
+
+                xhr.onerror = reject;
+
+                xhr.send(formData);
+            });
         }
     }
+}
 </script>
 @endscript

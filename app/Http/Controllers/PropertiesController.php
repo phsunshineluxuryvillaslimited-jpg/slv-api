@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Property;
+use Illuminate\Http\Request;
 
 class PropertiesController extends Controller
 {
@@ -14,24 +14,24 @@ class PropertiesController extends Controller
     {
         $properties = Property::with([
             'propertyType',
-            'address' => function($query) {
+            'address' => function ($query) {
                 $query->select('id', 'property_id', 'region', 'town_city');
             },
-            'price' => function($query) {
+            'price' => function ($query) {
                 $query->select('id', 'property_id', 'basic_price');
             },
-            'photos' => function($query) {
+            'photos' => function ($query) {
                 $query->select('id', 'property_id', 'url');
             },
-            'amenities' => function($query) {
-                $query->select('id', 'property_id');
-            },
-            'networks'
+            // 'amenities' => function($query) {
+            //     $query->select('id', 'property_id');
+            // },
+            'networks',
         ])
-        ->select('id', 'property_type_id', 'reference', 'bedrooms', 'plot', 'area_size', 'status')
-        ->paginate(10);
+            ->select('id', 'property_type_id', 'reference', 'bedrooms', 'plot', 'area_size', 'status')
+            ->paginate(10);
 
-        return view("properties.index", compact('properties'));
+        return view('properties.index', compact('properties'));
     }
 
     /**
@@ -39,7 +39,7 @@ class PropertiesController extends Controller
      */
     public function create()
     {
-        return view("properties.create");
+        return view('properties.create');
     }
 
     /**
@@ -55,7 +55,7 @@ class PropertiesController extends Controller
      */
     public function show(Property $property, Request $id)
     {
-        return view("properties.show", compact('property'));
+        return view('properties.show', compact('property'));
     }
 
     /**
@@ -64,7 +64,8 @@ class PropertiesController extends Controller
     public function edit(Property $property)
     {
         $editMode = 'editMode';
-        return view("properties.edit", compact('property', $editMode));
+
+        return view('properties.edit', compact('property', $editMode));
     }
 
     /**

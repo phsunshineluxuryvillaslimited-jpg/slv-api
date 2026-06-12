@@ -126,7 +126,7 @@ return [
     /*
     | Lead default email from env file
     */
-    'lead_email'=> env('LEAD_EMAIL', 'sample@emmail.com'),
+    'lead_email' => env('LEAD_EMAIL', 'sample@emmail.com'),
 
     'APP_VERSION' => env('APP_VERSION', '1.0.0'),
 

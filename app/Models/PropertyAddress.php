@@ -8,12 +8,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 #[Fillable([
     'property_id', 'region', 'town_city', 'locality', 'latitude',
-    'longitude', 'accuracy', 'map_address', 'map_accuracy'
+    'longitude', 'accuracy', 'map_address', 'map_accuracy',
 ])]
 class PropertyAddress extends Model
 {
     public function property(): BelongsTo
     {
-        return $this->belongsTo(Property::class, "property_id");
+        return $this->belongsTo(Property::class, 'property_id');
     }
 }

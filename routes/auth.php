@@ -3,10 +3,8 @@
 use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\RegisteredUserController;
 
-Route::middleware('guest')->group(function () { 
+Route::middleware('guest')->group(function () {
     // Volt::route('register', 'pages.auth.register')
     //     ->name('register');
 

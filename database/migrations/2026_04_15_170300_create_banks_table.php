@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-         Schema::create('banks', function (Blueprint $table) {
+        Schema::create('banks', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
-            $table->timestamp('created_at')->useCurrent(); 
+            $table->timestamp('created_at')->useCurrent();
         });
     }
 

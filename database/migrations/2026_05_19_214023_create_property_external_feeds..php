@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('property_id');
             $table->foreign('property_id')
-            ->references('id')
-            ->on('properties')
-            ->onDelete('cascade');
+                ->references('id')
+                ->on('properties')
+                ->onDelete('cascade');
             $table->unsignedBigInteger('external_feed_id')->index()
                 ->comment('The unique identifier for the property in the external feed');
             $table->string('xml_feed_source')->index()
@@ -33,7 +33,7 @@ return new class extends Migration
                 ->nullable()
                 ->comment('The frequency of the price (e.g., "monthly", "yearly") as specified in the external feed');
             $table->integer('part_owner')
-                ->default(0 )
+                ->default(0)
                 ->comment('The percentage of ownership for the property as specified in the external feed');
             $table->datetime('imported_at')->nullable()
                 ->comment('The date and time when the property data was imported from the external feed');

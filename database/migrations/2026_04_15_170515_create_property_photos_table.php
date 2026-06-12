@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     const UPDATED_AT = null;
+
     /**
      * Run the migrations.
      */
@@ -20,10 +21,10 @@ return new class extends Migration
                 ->on('properties')
                 ->onDelete('cascade');
             $table->enum('type', [
-                    'gallery', 
-                    'floorplan',
-                    'document'
-                ])
+                'gallery',
+                'floorplan',
+                'document',
+            ])
                 ->nullable()
                 ->comment('The type of media which is being sent');
             $table->string('path')
@@ -40,7 +41,7 @@ return new class extends Migration
             $table->dateTime('photo_update_date')
                 ->comment('The date the media at this URL was last updated in the format: dd-MM-yyyy HH:mm:ss')
                 ->nullable();
-            $table->timestamp('created_at')->useCurrent(); 
+            $table->timestamp('created_at')->useCurrent();
         });
     }
 

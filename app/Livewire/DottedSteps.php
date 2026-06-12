@@ -2,7 +2,6 @@
 
 namespace App\Livewire;
 
-use Livewire\Attributes\On;
 use Livewire\Component;
 
 class DottedSteps extends Component
@@ -21,7 +20,7 @@ class DottedSteps extends Component
         'Vendor',
         'Key Features',
         'V-tour Video',
-        'Description'
+        'Description',
     ];
 
     public function mount($step = 0, bool $isEdit = false)
@@ -36,7 +35,7 @@ class DottedSteps extends Component
     {
         return view('livewire.dotted-steps', [
             // 'step' => $this->step,
-            'step_names' => $this->stepNames 
+            'step_names' => $this->stepNames,
         ]);
     }
 }

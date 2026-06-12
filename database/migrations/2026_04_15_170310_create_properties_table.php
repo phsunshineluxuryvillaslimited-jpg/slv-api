@@ -26,10 +26,10 @@ return new class extends Migration
             $table->longText('description')
                 ->comment('The full description of the property')
                 ->nullable();
-            $table->enum('title_deeds', ['available','not-available'])
+            $table->enum('title_deeds', ['available', 'not-available'])
                 ->nullable()
                 ->comment('Whether the title deeds for the property are available');
-            $table->enum('leasehold', ['yes','no'])
+            $table->enum('leasehold', ['yes', 'no'])
                 ->default('yes')
                 ->comment('Leasehold Property');
             $table->integer('bedrooms')->index()
@@ -60,16 +60,16 @@ return new class extends Migration
             $table->enum('listing_type', ['resale', 'new_build', 'sale', 'rental'])
                 ->nullable()
                 ->comment('Property listing type: "Resale" for sale, "New" for new');
-            $table->enum('plan_zone',['A','B','C'])
+            $table->enum('plan_zone', ['A', 'B', 'C'])
                 ->nullable()
                 ->comment('Plan zone for the property');
-            $table->enum('sea_view', ['yes','no'])
+            $table->enum('sea_view', ['yes', 'no'])
                 ->nullable()
                 ->comment('Whether the property has a sea view');
-            $table->enum('for_sale_board', ['yes','no'])
+            $table->enum('for_sale_board', ['yes', 'no'])
                 ->nullable()
                 ->comment('Whether the property is on the for sale board');
-            $table->enum('save_type', ['draft','finished','feed'])->index()
+            $table->enum('save_type', ['draft', 'finished', 'feed'])->index()
                 ->default('draft');
             $table->enum('status', ['published', 'active', 'inactive'])->index()
                 ->nullable();

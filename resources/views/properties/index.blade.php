@@ -1,6 +1,6 @@
 <?php 
 // echo "<pre>";
-// print_r($properties[0]->amenities); exit;
+// print_r($properties); exit;
 ?>
 
 <x-app-layout>
@@ -86,7 +86,7 @@
                             <tr>
                                 <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
                                     <img
-                                        class="w-full h-full rounded size-40"
+                                        class="w-full h-full rounded w-[200px]"
                                         src="{{ $property->photos[0]->url ?? 'https://via.placeholder.com/150' }}"
                                         alt=""
                                     />

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('property_types', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->timestamp('created_at')->useCurrent(); 
+            $table->timestamp('created_at')->useCurrent();
         });
     }
 

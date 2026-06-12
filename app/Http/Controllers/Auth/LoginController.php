@@ -4,11 +4,10 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Resources\UserResource;
 
 class LoginController extends Controller
 {
@@ -21,13 +20,13 @@ class LoginController extends Controller
 
         $user = $request->user();
 
-        $token = $user->createToken("main")->plainTextToken;
+        $token = $user->createToken('main')->plainTextToken;
 
         // $request->session()->regenerate();
-        
+
         return [
             'user' => new UserResource($user),
-            'token' => $token
+            'token' => $token,
         ];
 
         $request->authenticate();
@@ -51,7 +50,7 @@ class LoginController extends Controller
         return response()->noContent();
     }
 
-    // public function login(Request $request) 
+    // public function login(Request $request)
     // {
     //     $credentials = $request->only(['email', 'password']);
     //     if (Auth::attempt($credentials)) {

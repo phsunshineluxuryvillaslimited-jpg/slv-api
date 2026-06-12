@@ -117,7 +117,6 @@ class StorePropertyRequest extends FormRequest
             // 'media.*.sort_order' => 'nullable|integer|min:0',
             // 'media.*.media_update_date' => 'nullable|date_format:Y-m-d H:i:s',
 
-
             // //networks
             // 'networks.*.network' => 'required_with:networks|string|max:255',
             // 'networks.*.published' => 'required_with:networks|boolean'

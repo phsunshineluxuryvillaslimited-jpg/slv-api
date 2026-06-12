@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
-use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Http\Request;
 
 class UsersController extends Controller
 {
@@ -32,6 +32,7 @@ class UsersController extends Controller
     {
         return UserResource::make($user);
     }
+
     /**
      * Update the specified resource in storage.
      */

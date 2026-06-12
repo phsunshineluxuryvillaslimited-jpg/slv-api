@@ -2,11 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\PropertyType;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-
 
 class PropertyTypesSeeder extends Seeder
 {
@@ -30,7 +27,7 @@ class PropertyTypesSeeder extends Seeder
             ['name' => 'Land'],
             ['name' => 'Building Plot'],
             ['name' => 'Office'],
-            ['name' => 'Shop']
+            ['name' => 'Shop'],
         ]);
     }
 }

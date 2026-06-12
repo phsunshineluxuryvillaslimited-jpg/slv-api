@@ -6,19 +6,19 @@ namespace App\Models;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Builder;
 
-#[Fillable(['company','name', 'email', 'role_id', 'password'])]
+#[Fillable(['company', 'name', 'email', 'role_id', 'password'])]
 #[Hidden(['password', 'remember_token', 'email_verified_at'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, HasApiTokens;
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * Get the attributes that should be cast.
@@ -35,10 +35,10 @@ class User extends Authenticatable
 
     protected static function booted(): void
     {
-        
+
         // Automatically filter out admin users from general queries
         static::addGlobalScope('exclude_admins', function (Builder $builder) {
-            $exceptRoleIds = [5,6];
+            $exceptRoleIds = [5, 6];
             $builder->whereNotIn('role_id', $exceptRoleIds);
         });
     }
@@ -52,6 +52,4 @@ class User extends Authenticatable
     {
         return $this->hasMany(Property::class, 'managing_agent_user_id');
     }
-
-    
 }

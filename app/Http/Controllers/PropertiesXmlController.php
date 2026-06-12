@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Property;
-use Illuminate\Http\Request;
-use App\Http\Resources\PropertyResource;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class PropertiesXmlController extends Controller
 {
@@ -12,26 +11,26 @@ class PropertiesXmlController extends Controller
     {
 
         $data = Property::with('created_by')
-                            ->with('property_type')
-                            ->with('address')
-                            ->get();
+            ->with('property_type')
+            ->with('address')
+            ->get();
 
         return response()
-                ->view('property-xml.feed', ['properties' => $data])
-                ->header('Content-Type', 'text/xml');
+            ->view('property-xml.feed', ['properties' => $data])
+            ->header('Content-Type', 'text/xml');
     }
-
 
     /**
      * Summary of downloadXml
-     * @param Property $property
-     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     *
+     * @return BinaryFileResponse
      */
     private function downloadXml(Property $property)
     {
         $pathToFile = storage_path('app/public/exports/properties.xml');
+
         return response()->download($pathToFile, 'properties.xml', [
-            'Content-Type' => 'application/xml'
+            'Content-Type' => 'application/xml',
         ]);
     }
 }

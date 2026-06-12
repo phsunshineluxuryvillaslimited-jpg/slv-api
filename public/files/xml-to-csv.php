@@ -1,4 +1,5 @@
 <?php
+
 // 1. Load the XML file
 $xml = simplexml_load_file('ultra-feed.xml');
 
@@ -12,7 +13,7 @@ foreach ($xml->children() as $row) {
     $rowData = get_object_vars($row);
 
     // Write column headers once using the XML tag names
-    if (!$headerSet) {
+    if (! $headerSet) {
         fputcsv($fp, array_keys($rowData));
         $headerSet = true;
     }
@@ -23,5 +24,4 @@ foreach ($xml->children() as $row) {
 
 // 4. Close the file
 fclose($fp);
-echo "Conversion complete!";
-?>
+echo 'Conversion complete!';

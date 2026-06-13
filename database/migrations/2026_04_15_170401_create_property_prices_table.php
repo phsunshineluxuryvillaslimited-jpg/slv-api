@@ -19,12 +19,12 @@ return new class extends Migration
                 ->on('properties')
                 ->onDelete('cascade');
             $table->boolean('is_poa')->default(false);
-            $table->decimal('basic_price', 14, 2)->default(0);
-            $table->decimal('original_price', 10, 2)->default(0)->nullable();
+            $table->integer('basic_price')->default(0);
+            $table->integer('original_price')->default(0)->nullable();
             $table->decimal('total_reduction_percentage', 10, 2)->default(0)->nullable();
             $table->decimal('total_reduction_price', 10, 2)->default(0)->nullable();
-            $table->decimal('commission', 10, 2)->default(0);
-            $table->decimal('communal_charge', 10, 2)->default(0)->nullable();
+            $table->integer('commission')->default(0);
+            $table->integer('communal_charge')->default(0)->nullable();
             $table->timestamps();
         });
     }

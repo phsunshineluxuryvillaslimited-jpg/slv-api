@@ -18,22 +18,22 @@ return new class extends Migration
                 ->references('id')
                 ->on('properties')
                 ->onDelete('cascade');
-            $table->decimal('amenities', 8, 2)->default(0);
-            $table->decimal('airport', 8, 2)->default(0);
-            $table->decimal('sea', 8, 2)->default(0);
-            $table->decimal('public_transport', 8, 2)->default(0);
-            $table->decimal('schools', 8, 2)->default(0);
-            $table->decimal('resorts', 8, 2)->default(0);
+            $table->integer('amenities')->default(0)->nullable();
+            $table->integer('airport')->default(0)->nullable();
+            $table->integer('sea')->default(0)->nullable();
+            $table->integer('public_transport')->default(0)->nullable();
+            $table->integer('schools')->default(0)->nullable();
+            $table->integer('resorts')->default(0)->nullable();
 
-            $table->decimal('terrace', 8, 2)->default(0)->index();
-            $table->decimal('attic', 8, 2)->default(0);
-            $table->decimal('roof_garden', 8, 2)->default(0);
-            $table->decimal('covered_veranda', 8, 2)->default(0);
-            $table->decimal('uncovered_veranda', 8, 2)->default(0);
-            $table->decimal('covered_parking', 8, 2)->default(0);
-            $table->decimal('basement', 8, 2)->default(0);
-            $table->decimal('courtyard', 8, 2)->default(0);
-            $table->decimal('garden', 8, 2)->default(0);
+            $table->integer('terrace')->default(0)->index();
+            $table->integer('attic')->default(0)->nullable();
+            $table->integer('roof_garden')->default(0)->nullable();
+            $table->integer('covered_veranda')->default(0)->nullable();
+            $table->integer('uncovered_veranda')->default(0)->nullable();
+            $table->integer('covered_parking')->default(0)->nullable();
+            $table->integer('basement')->default(0)->nullable();
+            $table->integer('courtyard')->default(0)->nullable();
+            $table->integer('garden')->default(0)->nullable();
             $table->timestamps();
         });
     }

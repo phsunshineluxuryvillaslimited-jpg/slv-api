@@ -16,8 +16,6 @@ class S3FileUploadController extends Controller
         $folder = $request->input('folder');
         $extension = pathinfo($origFilename, PATHINFO_EXTENSION);
 
-        $filename = (string) Str::uuid().'.'.$extension;
-
         $path = Storage::disk('s3')->put($folder, $file, [
             'visibility' => 'public',
             'ContentType' => $file->getClientMimeType(),
@@ -25,7 +23,7 @@ class S3FileUploadController extends Controller
 
         // Get permanent URL
         $url = Storage::disk('s3')->url($path);
-
+        Log::info();
         return response()->json([
             'path' => $path,
             'url' => $url,

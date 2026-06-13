@@ -31,7 +31,7 @@
                          */ ?>
                     </header>
 
-                    <main class="mt-6">
+                    <main class="mt-4">
                         <div class="grid gap-6 lg:grid-cols-2 lg:gap-8">
                             <?php /*
                             <a

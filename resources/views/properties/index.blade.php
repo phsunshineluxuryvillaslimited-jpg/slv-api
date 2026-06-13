@@ -86,7 +86,7 @@
                             <tr>
                                 <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
                                     <img
-                                        class="w-full h-full rounded w-[200px]"
+                                        class="w-full h-full rounded w-[140px]"
                                         src="{{ $property->photos[0]->url ?? 'https://via.placeholder.com/150' }}"
                                         alt=""
                                     />

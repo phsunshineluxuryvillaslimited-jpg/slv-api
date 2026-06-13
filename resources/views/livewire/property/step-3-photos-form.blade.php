@@ -57,7 +57,6 @@ new class extends Component
     public function getS3TempPhotos()
     {
         if ( $this->property->reference !== '' ) {
-
             $this->tempPhotos = Storage::disk('s3')->files($this->property->reference);
             if (!empty($this->tempPhotos)) {
                 foreach ($this->photos as $photo) {
@@ -73,24 +72,24 @@ new class extends Component
     #[On('parentNextStepButtonTriggered')]
     public function hundleNextStepButtonTriggered()
     {
-        try {
+        // try {
 
-            foreach ($this->tempPhotos as $key => $item) {
-                PropertyPhotos::create([
-                    'property_id' => $this->propertyId,
-                    'type' => 'gallery',
-                    'path' => $item['path'],
-                    'url' => $item['url'],
-                    'orig_filename' => $item['orig_filename'],
-                    'sort_order' => ++$key
-                ]);
-            }
+        //     foreach ($this->tempPhotos as $key => $item) {
+        //         PropertyPhotos::create([
+        //             'property_id' => $this->propertyId,
+        //             'type' => 'gallery',
+        //             'path' => $item['path'],
+        //             'url' => $item['url'],
+        //             'orig_filename' => $item['orig_filename'],
+        //             'sort_order' => ++$key
+        //         ]);
+        //     }
 
-            $this->dispatch( 'proceed-to-next-step', property_id: $this->property->id);
-         } catch (ValidationException $e) {
-            Log::info('Property validation error. Please double check.');
-            throw $e;
-        }
+        //     $this->dispatch( 'proceed-to-next-step', property_id: $this->property->id);
+        //  } catch (ValidationException $e) {
+        //     Log::info('Property validation error. Please double check.');
+        //     throw $e;
+        // }
     }
 
     // for edit action
@@ -151,8 +150,7 @@ new class extends Component
                                     </div>
                                 </label>
                             </div>
-                        </div>
-                        <div class="mt-5">
+
                             <div class="p-3">
                                 <h3 class="text-lg font-custom">Posted Photos</h3>
                             </div>
@@ -177,7 +175,7 @@ new class extends Component
                             <div class="p-3">
                                 <h3 class="text-lg font-custom">{{ __('Upload but not saved') }}</h3>
                             </div>
-                            <div class="grid grid-cols-5 gap-3 mt-2 p-3">
+                            <div x-data="" class="grid grid-cols-5 gap-3 mt-2 p-3">
                                
                                 @foreach ($tempPhotos as $tempPhoto)
                                     <div class="w-32 relative">
@@ -277,7 +275,7 @@ new class extends Component
 @script
 <script>
     let imageType = 'galleries';
-
+    
     window.isUploading = function() {
         return this.files.some(file => file.progress < 100);
     }

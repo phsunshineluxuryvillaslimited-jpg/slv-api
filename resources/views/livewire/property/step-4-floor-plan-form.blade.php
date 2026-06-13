@@ -9,6 +9,117 @@ use App\Models\Property;
 use Illuminate\Validation\ValidationException;
 
 
+new class extends Component
+{
+    use WithFileUploads;
+
+    public bool $isEdit = false;
+
+    public ?Property $property;
+
+    public int $propertyId;
+    #[Validate([
+        'photos' => 'required|array|max:5', // Max 5 total files
+        'photos.*' => 'image|max:1024|mimes:jpeg,jpg,webp' // Individual rules per image
+    ])]
+    public $photos = [];
+
+    public $tempPhotos = [];
+
+    public $propertyReference = [];
+
+    // 2mb
+    // jpeg webp
+
+    // .doc .pdf .docx .xlsx .csv
+
+    public function mount(Property $property, $isEdit = false): void
+    {
+        $this->property = $property;
+        $this->isEdit   = $isEdit;
+        $this->propertyId = $property->id;
+        $this->propertyReference = $property->reference;
+
+        if ($isEdit && ($property && $property->photos()->exists())) {
+            $this->photos = $property->photos()->orderBy('sort_order')->get();
+        }
+
+        // load tempt Images which is not yet stored in database
+        $this->getS3TempPhotos();
+    }
+
+    /**
+     * Populate all temporary images that was not yet stored in database
+     * Temporary file images store in AWS s3 bucket
+     * Remove in stored list the existing images from database base on temp photos in AWS S3
+     */
+    public function getS3TempPhotos()
+    {
+        if ( $this->property->reference !== '' ) {
+
+            $this->tempPhotos = Storage::disk('s3')->files($this->property->reference);
+            if (!empty($this->tempPhotos)) {
+                foreach ($this->photos as $photo) {
+                    if ($key = array_search($photo->path, $this->tempPhotos)) {
+                        unset($this->tempPhotos[$key]);
+                    }
+                }
+            }
+        }
+    }
+
+    // for creating action
+    #[On('parentNextStepButtonTriggered')]
+    public function hundleNextStepButtonTriggered()
+    {
+        try {
+
+            foreach ($this->tempPhotos as $key => $item) {
+                PropertyPhotos::create([
+                    'property_id' => $this->propertyId,
+                    'type' => 'gallery',
+                    'path' => $item['path'],
+                    'url' => $item['url'],
+                    'orig_filename' => $item['orig_filename'],
+                    'sort_order' => ++$key
+                ]);
+            }
+
+            $this->dispatch( 'proceed-to-next-step', property_id: $this->property->id);
+         } catch (ValidationException $e) {
+            Log::info('Property validation error. Please double check.');
+            throw $e;
+        }
+    }
+
+    // for edit action
+    #[On('parentUpdateButtonTriggered')]
+    public function handleUpdateProperty()
+    {   
+         try {
+            foreach ($this->tempPhotos as $key => $item) {
+                // dd($item['orig_filename']);
+                PropertyPhotos::updateOrCreate([
+                    'orig_filename' => $item['orig_filename']
+                ],[
+                    'property_id' => $this->propertyId,
+                    'type' => 'gallery',
+                    'path' => $item['path'],
+                    'url' => $item['url'],
+                    'orig_filename' => $item['orig_filename'],
+                    'sort_order' => ++$key
+                ]);
+            }
+
+            session()->flash('success', 'Property updated successfully');
+         } catch (ValidationException $e) {
+            Log::info('Property validation error. Please double check.');
+            throw $e;
+        }
+        
+    }
+}
+
 ?><div>
     <!-----------------------------------------
     Basic location info
@@ -70,3 +181,90 @@ use Illuminate\Validation\ValidationException;
         </div>
     @endif
 </div>
+
+@script
+<script>
+    let imageType = 'galleries';
+
+    window.isUploading = function() {
+        return this.files.some(file => file.progress < 100);
+    }
+
+    window.uploadMultiple = function (folder) {
+    return {
+        imageType: 'galleries',
+        files: [],
+        galleries: [], 
+
+        async upload(event) {
+            showLoading = true;
+
+            let uploads = [];
+
+            for (let file of event.target.files) {
+                uploads.push(this.uploadSingle(file, folder));
+            }
+
+            await Promise.all(uploads);
+
+            @this.set('tempPhotos', this[this.imageType]);
+        },
+
+        uploadSingle(file, folder) {
+            return new Promise((resolve, reject) => {
+
+                let fileProgress = { 
+                    id: Date.now() + Math.random(),
+                    progress: 0
+                };
+
+                let formData = new FormData();
+                formData.append('file', file);
+                formData.append('folder', folder);
+
+                const xhr = new XMLHttpRequest();
+
+                xhr.open('POST', '/s3/file-upload', true);
+                xhr.setRequestHeader(
+                    'X-CSRF-TOKEN',
+                    document.querySelector('meta[name="csrf-token"]').content
+                );
+
+                xhr.upload.onprogress = (e) => {
+                    if (e.lengthComputable) {
+                        fileProgress.progress = Math.round((e.loaded / e.total) * 100);
+                    }
+                };
+
+                xhr.onload = () => {
+                    if (xhr.status === 200) {
+                        const res = JSON.parse(xhr.responseText);
+
+                        this.files.push({
+                            orig_filename: res.orig_filename,
+                            path: res.path,
+                            url: res.url,
+                            progress: fileProgress
+                        });
+
+                        this[this.imageType].push({
+                            orig_filename: res.orig_filename,
+                            path: res.path,
+                            url: res.url
+                        });
+
+                        resolve();
+                    } else {
+                        reject();
+                    }
+                };
+
+                xhr.onerror = reject;
+
+                xhr.send(formData);
+            });
+        }
+    }
+}
+</script>
+@endscript

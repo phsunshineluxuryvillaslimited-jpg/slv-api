@@ -41,6 +41,8 @@ return new class extends Migration
             $table->dateTime('photo_update_date')
                 ->comment('The date the media at this URL was last updated in the format: dd-MM-yyyy HH:mm:ss')
                 ->nullable();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->foreign('created_by')->references('id')->on('users');
             $table->timestamp('created_at')->useCurrent();
         });
     }

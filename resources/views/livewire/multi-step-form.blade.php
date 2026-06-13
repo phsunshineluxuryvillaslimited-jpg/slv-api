@@ -212,7 +212,7 @@
     </script>
 @endscript
 @push('scripts')
+    @vite(['resources/js/Sortable.min.js'])
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAjtQlPL0rirZ70g8Xew5Ol3mqhqmAju08&&callback=initMap&loading=async&libraries=places"></script>
     <script src="{{ asset('/js/google.map.js') }}" defer></script>
-    <script src="https://cdn.tiny.cloud/1/b3wc1i5bv8b638wzwjui8jkokn0wypyger45sw99mzhtse9i/tinymce/8/tinymce.min.js" referrerpolicy="origin" crossorigin="anonymous" defer></script>
 @endpush

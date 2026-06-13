@@ -60,12 +60,12 @@ class Property extends Model
 
     public function photos(): HasMany
     {
-        return $this->hasMany(PropertyPhotos::class);
+        return $this->hasMany(PropertyPhotos::class); //set for gallery images
     }
-
-    public function media(): HasMany
+    
+    public function floorPlan(): HasMany
     {
-        return $this->hasMany(PropertyPhotos::class);
+        return $this->hasMany(PropertyPhotos::class); // Set for floor plan category
     }
 
     public function keyFeature(): HasMany

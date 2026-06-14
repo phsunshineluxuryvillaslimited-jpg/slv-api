@@ -97,14 +97,16 @@
                         &larr; Cancel
                     </a>
                 <!---------EDIT BUTTON----------->
-                    <button id="nextBtn"  wire:click="$dispatch('parentUpdateButtonTriggered')" wire:loading.class="opacity-50" 
-                        class="px-7 py-2 bg-red-500 text-white rounded-md hover:bg-red-500 cursor-pointer"
-                    >
-                        <span wire:loading.remove>&#x21bb; {{ __('Update') }} </span>
-                        <span wire:loading>
-                            Loading..
-                        </span>
-                    </button>
+                    @if ( $currentStep !== 3 && $currentStep !== 4)
+                        <button id="updatetBtn"  wire:loading.class="opacity-50" wire:click="$dispatch('parentUpdateButtonTriggered')" 
+                            class="px-7 py-2 bg-red-500 text-white rounded-md hover:bg-red-500 cursor-pointer"
+                        >
+                            <span wire:loading.remove>&#x21bb; {{ __('Update') }} </span>
+                            <span wire:loading>
+                                Loading..
+                            </span>
+                        </button>
+                    @endif
                 @endif
             </div>
         </div>

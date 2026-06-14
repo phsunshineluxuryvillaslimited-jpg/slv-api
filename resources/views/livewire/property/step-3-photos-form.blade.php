@@ -30,6 +30,12 @@ new class extends Component
     public $propertyReference = [];
 
     public string $imageUrl;
+
+    /**
+     * For delete action
+     */
+    public $showModal = false;
+    public ?PropertyPhotos $selectDeletePhoto;
     
 
     // 2mb
@@ -124,27 +130,26 @@ new class extends Component
     public function savePhotos(array $files)
     {
         foreach ($files as $file) {
-
+            Log::info("files upload detail: " . json_encode($file));
             list($filename, $ext) = explode('.',$file['orig_filename']);
 
             //check if the photo already exist on respective propety
-            $isPhotoExist = PropertyPhotos::where([
-                    'orig_filename' => $file['orig_filename'],
-                    'type' => 'gallery',
-                    'property_id' => $this->propertyId
-                ])
-                ->where('orig_filename', 'like', "%{$filename}(%)%")
-                ->count();
+            $isPhotoExist = PropertyPhotos::whereRaw('orig_filename REGEXP ?', [
+                                    '^' . $filename . '(\\([0-9]+\\))?\\.[a-zA-Z0-9]+$'
+                                ])
+                                ->where([
+                                    'type' => 'gallery',
+                                    'property_id' => $this->propertyId
+                                ])
+                                ->count();
             
             // if image name already exist, then trancate image name with adding number at the end
             // e.g:  sample-image.jpg to sample-image(1).jpg
             if ($isPhotoExist > 0) {
-                
                 ++$isPhotoExist;
-
                 $file['orig_filename'] = "{$filename}({$isPhotoExist}).{$ext}";
             }
-            
+
             // get the total number of properties and plus 1 for the sorting of the images
             // $total count + 1 = sort number of the new photo
             $lastSortNumber = PropertyPhotos::where([
@@ -169,6 +174,38 @@ new class extends Component
 
         // refresh the image list
         $this->refreshPhotoList();
+    }
+
+
+    /*******************************
+     * Delete warning Modal
+     */
+    public function openWarningDeleteModal(int $propertyPhotoId)
+    {
+        $this->selectDeletePhoto = PropertyPhotos::find($propertyPhotoId);
+
+        $this->showModal = true;
+
+    }
+    /*******************************
+     * Delete photo
+     */
+    public function deletePhoto(int $propertyPhotoId)
+    {
+        $item = PropertyPhotos::find($propertyPhotoId);
+
+        Storage::disk('s3')->delete($item->path);
+
+        $item->delete();
+
+        // refresh the image list
+        $this->refreshPhotoList();
+    }
+
+    public function deleteTempFile(string $path)
+    {
+        Storage::disk('s3')->delete($path);
+        $this->getS3TempPhotos();
     }
 
 }
@@ -253,7 +290,14 @@ new class extends Component
                                             </svg>
                                             <span class="sr-only">Loading...</span>
                                         </div> 
-
+                                        <button type="button" wire:click="openWarningDeleteModal({{ $photo->id }})" 
+                                            class="absolute right-2 top-2 z-2 text-white font-extrabold shadow bg-red-500 rounded text-sm p-1"
+                                            title="Delete photo"
+                                        >
+                                            <svg class="w-4 h-4 text-white hover:text-red-200 cursor-pointer" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                            </svg>
+                                        </button>
                                         <img src="{{ $photo->url }}"
                                             x-show="isLoaded"
                                             @load="isLoaded = true"
@@ -262,15 +306,39 @@ new class extends Component
                                             class="transition-opacity duration-300"
                                         />
                                     </div>
-                                @endforeach 
+                                @endforeach
+                                @if($showModal)
+                                    <div class="fixed inset-0 bg-gray-500/75 flex items-center justify-center">
+                                        <!-- Modal Content -->
+                                        <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm mx-auto">
+                                            <h3 class="text-lg font-bold text-gray-900">Warning</h3>
+                                            <p class="mt-2 text-sm text-gray-500">This delete action cannot be undone. Proceed?</p>
+                                            
+                                            <div class="mt-4 flex justify-end space-x-2">
+                                                <button type="button" wire:confirm="$set('showModal', false)" class="px-4 py-2 border rounded text-gray-700">
+                                                    Cancel
+                                                </button>
+                                                <button type="button" wire:click="deletePhoto({{ $selectDeletePhoto->id }})" class="px-4 py-2 bg-red-600 text-white rounded">
+                                                    Confirm
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
-                           
+                            @foreach($tempPhotos as $photo)
+                                <p>{{ $photo  }}</p> 
+                                <button type="button" wire:click="deleteTempFile('{{ $photo }}')">
+                                    Delete Account
+                                </button>
+                            @endforeach
                         </div> 
                     </form>
                 </div>
             </div>
         </div>
     </div>
+
     @if ($errors->any())
         <div x-data="{ show: true }"
             x-show="show"
@@ -359,6 +427,7 @@ new class extends Component
 
                 await Promise.all(uploads);
                 $wire.savePhotos(this[this.imageType]);
+                this[this.imageType] = [];
                 // @this.set('tempPhotos', this[this.imageType]);
             },
 
@@ -437,7 +506,7 @@ window.sortableImages = function() {
                     el.querySelectorAll('[data-id]').forEach(item => {
                         orderedIds.push(item.dataset.id);
                     });
-                    console.log(orderedIds);
+
                     this.$wire.reOrder(orderedIds);
                 }
             });

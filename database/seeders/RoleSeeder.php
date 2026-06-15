@@ -17,8 +17,8 @@ class RoleSeeder extends Seeder
             ['name' => 'Manager'],
             ['name' => 'Listing'],
             ['name' => 'Sales'],
-            ['name' => 'General'],
-            ['name' => 'API User'],
+            ['name' => 'User'], //investment
+            ['name' => 'API'],
         ]);
     }
 }

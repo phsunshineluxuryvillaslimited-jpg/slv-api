@@ -31,10 +31,16 @@ new class extends Component
 
     public string $imageUrl;
 
+    public $isListFresh = 'false';
+
+    public ?UploadedFile $file = null;
+
+    public $fileInputId = 1;
+
     /**
      * For delete action
      */
-    public $showModal = false;
+    public ?bool $showModal = false;
     public ?PropertyFile $selectDeletePhoto;
     
 
@@ -62,7 +68,7 @@ new class extends Component
         }
 
         // load tempt Images which is not yet stored in database
-        // $this->getS3TempPhotos();
+        $this->getS3TempPhotos();
     }
 
     /**
@@ -94,6 +100,18 @@ new class extends Component
                         ->where('type', 'gallery')
                         ->orderBy('sort_order')
                         ->get();
+
+        $this->isListFresh = 'true';
+    }
+
+    /**
+     * Reset input file
+     */
+    public function resetInputFile()
+    {
+        $this->reset('file'); // clear the input file value
+        $this->file = null;
+        $this->fileInputId++; // new input file id
     }
 
     /**
@@ -123,7 +141,7 @@ new class extends Component
      * 
      */
     #[On('parentNextStepButtonTriggered')]
-    public function hundleNextStepButtonTriggered()
+    public function handleNextStepButtonTriggered()
     {
         if ($this->isEdit)
         $this->dispatch( 'proceed-to-next-step', property_id: $this->property->id);
@@ -136,37 +154,39 @@ new class extends Component
      */
     public function savePhotos(array $files)
     {
+        Log::info('duplicate filename count: ' . json_encode($files));
+
         foreach ($files as $file) {
             try {
 
-                list($filename, $ext) = explode('.', $file['orig_filename']);
-
+                $plainFilename = substr($file['orig_filename'], 0, -(((int) strlen($file['ext'])) + 1));
+                
                 //check if the photo already exist on respective propety
-                $isPhotoExist = PropertyFile::whereRaw('orig_filename REGEXP ?', [
-                                    '^' . $filename . '(\\([0-9]+\\))?\\.[a-zA-Z0-9]+$'
+                $duplicateFilenames = PropertyFile::whereRaw('orig_filename REGEXP ?', [
+                                    '^' . $plainFilename . '(\\([0-9]+\\))?\\.[a-zA-Z0-9]+$'
                                 ])
                                 ->where([
                                     'type' => 'gallery',
                                     'property_id' => $this->propertyId
-                                ])
-                                ->count();
-            
+                                ])->get()->toArray();
+
                 // if image name already exist, then trancate image name with adding number at the end
                 // e.g:  sample-image.jpg to sample-image(1).jpg
-                if ($isPhotoExist > 0) {
-                    ++$isPhotoExist;
-                    $file['orig_filename'] = "{$filename}({$isPhotoExist}).{$ext}";
+                $totalDuplicate = count($duplicateFilenames);
+                if ($totalDuplicate !== 0) {
+                    $file['orig_filename'] = "{$plainFilename}({$totalDuplicate}).{$file['ext']}";
                 }
+
+                Log::info('duplicate filename count: ' . $totalDuplicate);
+                Log::info('duplicate filename: ' . $file['orig_filename']);
 
                 // get the total number of properties and plus 1 for the sorting of the images
                 // $total count + 1 = sort number of the new photo
                 $lastSortNumber = PropertyFile::where([
                         'type' => 'gallery',
                         'property_id' => $this->propertyId
-                    ])->count();
-
-                ++$lastSortNumber;
-
+                    ])->count() + 1;
+                // dd($lastSortNumber);
                 // Store the new photo
                 PropertyFile::updateOrCreate([
                     'orig_filename' => $file['orig_filename'],
@@ -176,15 +196,17 @@ new class extends Component
                     'path' => $file['path'],
                     'url' => $file['url'],
                     'orig_filename' => $file['orig_filename'],
-                    'sort_order' => ++$lastSortNumber,
+                    'sort_order' => $lastSortNumber,
                 ]);
+
+                $this->resetInputFile();
 
             } catch (ErrorException $e) {
                 Log::error('Saving uploaded photos error: ' . $e);
                 throw $e;
             }
         }
-
+        
         // refresh the image list
         $this->refreshPhotoList();
     }
@@ -208,6 +230,8 @@ new class extends Component
     {
         // refresh the image list
         $this->showModal = false;
+
+        $this->selectDeletePhoto = null;
     }
 
     /*******************************
@@ -221,11 +245,19 @@ new class extends Component
 
         $item->delete();
 
+        $photo = PropertyFile::where('type', 'gallery')
+            ->orderBy('sort_order')->first();
+
+        if (isset($photo->id)) {
+            $this->reOrder([$photo->id]);
+        }
+
+        $this->selectDeletePhoto = null;
+        
         // refresh the image list
         $this->refreshPhotoList();
         $this->showModal = false;
     }
-
     
 
     /**
@@ -254,42 +286,50 @@ new class extends Component
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="p-4 sm:p-8 bg-white shadow-md sm:rounded-lg">
                 <div class="w-full">
-                    <!-- <form wire:submit.prevent="save"> -->
-                        <h3 class="font-semibold text-xl text-blue-900 leading-tight mb-5">
-                            {{ __('Photos')  }}
-                        </h3>
-                        <p class="mb-5 text-sm text-gray-600">{{ __('Upload photos of the property. This will help your property show up in more search results and attract more potential buyers.') }}</p>
+                    <h3 class="font-semibold text-xl text-blue-900 leading-tight mb-5">
+                        {{ __('Photos')  }}
+                    </h3>
+                    <p class="mb-5 text-sm text-gray-600">{{ __('Upload photos of the property. This will help your property show up in more search results and attract more potential buyers.') }}</p>
+                    
+                    <div x-data="uploadMultiple('{{ $propertyReference }}/gallery')" class="border rounded">
+
+                        <!-------- To avoid traffic and multiple upload - recommend to upload single image only ---------->
+                        <input id="dropzone-file" wire:model="file" type="file" 
+                            @change="upload($event)" class="hidden" accept="image/webp, image/jpeg" 
+                            $wire:key="{{ $fileInputId }}"/>
+
+                        <div class="flex items-center justify-center w-full">
+                            <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-64 border border-dashed rounded cursor-pointer">
+                            <div class="flex flex-col items-center justify-center text-body pt-2 pb-2">
+                                    <svg class="w-8 h-8 mb-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h3a3 3 0 0 0 0-6h-.025a5.56 5.56 0 0 0 .025-.5A5.5 5.5 0 0 0 7.207 9.021C7.137 9.017 7.071 9 7 9a4 4 0 1 0 0 8h2.167M12 19v-9m0 0-2 2m2-2 2 2"/></svg>
+                                    <p class="mb-2 text-sm"><span class="font-semibold">Click to upload</span> or drag and drop</p>
+                                    <p class="text-xs text-center">Accepted formats: JPG & WEBP <br >(Max 2MB per file)</p>
+                                </div>
+                            </label>
+                        </div>
+
+                        @if (count($photos) == 0)
+                    
+                            <div class="p-5 text-center text-gray-500 bg-gray-200 text-sm">{{ __("No photos to view") }} </div>
                         
-                        <div x-data="uploadMultiple('{{ $propertyReference }}')" class="border rounded">
-
-                            <!-------- To avoid traffic and multiple upload - recommend to upload single image only ---------->
-                            <input id="dropzone-file" type="file" @change="upload($event)" class="hidden" accept="image/webp, image/jpeg"/>
-
-                            <div class="flex items-center justify-center w-full">
-                                <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-64 border border-dashed rounded cursor-pointer">
-                                <div class="flex flex-col items-center justify-center text-body pt-2 pb-2">
-                                        <svg class="w-8 h-8 mb-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h3a3 3 0 0 0 0-6h-.025a5.56 5.56 0 0 0 .025-.5A5.5 5.5 0 0 0 7.207 9.021C7.137 9.017 7.071 9 7 9a4 4 0 1 0 0 8h2.167M12 19v-9m0 0-2 2m2-2 2 2"/></svg>
-                                        <p class="mb-2 text-sm"><span class="font-semibold">Click to upload</span> or drag and drop</p>
-                                        <p class="text-xs text-center">Accepted formats: JPG & WEBP <br >(Max 2MB per file)</p>
-                                    </div>
-                                </label>
-                            </div>
-
+                        @else
                             <p class="p-5 text-sm text-gray-600"> {{ __('To organize property images, drag and drop them based on your preferred arrangement.') }}</p>
-                            
+                        
                             <div
                                 x-data="sortableImages()"
-                                x-init="init()" 
+                                x-init="init()"
                                 class="grid grid-cols-4 gap-3 p-3 bg-gray-200"
                             >
-                                @foreach ( $photos as $photo )
+                                @foreach ( $photos as $key => $photo )
                                     <div 
                                         data-id="{{ $photo->id }}"
                                         class="border p-2 cursor-move bg-white shadow relative"
                                         x-data="{ isLoaded: false }"
+                                        wire:key="section-{{ $photo->id }}"
+                                        wire:sort:item="{{ $photo->id }}"
                                     >
                                         <!-- PROGRESS BAR -->
-                                        <div role="progress" class="uploadStatus absolute inset-0 m-auto z-2" x-show="!isLoaded" wire:loading.remove>
+                                        <div wire:target="refreshed" :key="section-{{ $photo->id }}" role="progress" class="uploadStatus absolute inset-0 m-auto z-2" x-show="!isLoaded" wire:loading.remove>
                                             <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
                                                 <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
@@ -298,7 +338,8 @@ new class extends Component
                                         </div> 
 
                                         <!----- SHOW MODAL FOR DELETE ----->
-                                        <button type="button" wire:click="openWarningDeleteModal({{ $photo->id }})" 
+                                        <button :key="section-{{ $photo->id }}"  wire:target="deletePhoto" type="button" 
+                                            wire:click="openWarningDeleteModal({{ $photo->id }})" 
                                             class="absolute right-2 top-2 z-2 text-white font-extrabold shadow bg-red-500 rounded text-sm p-1"
                                             title="Delete photo"
                                         >
@@ -309,16 +350,16 @@ new class extends Component
 
                                         <!------- RENDER IMAGE----------->
                                         <img src="{{ $photo->url }}"
-                                            x-show="isLoaded"
                                             @load="isLoaded = true"
                                             x-init="if ($el.complete) isLoaded = true"
                                             x-show="isLoaded"
                                             class="transition-opacity duration-300"
+                                            :key="section-{{ $photo->id }}"
                                         />
                                     </div>
                                 @endforeach
                                 @if($showModal)
-                                    <div class="fixed inset-0 bg-gray-500/75 flex items-center justify-center">
+                                    <div wire:target="deletePhoto" class="fixed inset-0 bg-gray-500/75 flex items-center justify-center">
                                         <!-- Modal Content -->
                                         <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm mx-auto">
                                             <h3 class="text-lg font-bold text-gray-900">Warning</h3>
@@ -326,7 +367,7 @@ new class extends Component
                                             
                                             <div class="mt-4 flex justify-end space-x-2">
                                                 <button
-                                                    wire:click="$set('showModal', false)" 
+                                                    @click="$wire.set('showModal', 0)"
                                                     class="px-4 py-2 border rounded text-gray-700"
                                                 >
                                                     Cancel
@@ -337,8 +378,8 @@ new class extends Component
                                                     wire:target="deletePhoto"
                                                     class="px-4 py-2 bg-red-600 text-white rounded"
                                                 >
-                                                    <span wire:loading.remove wire:target="deletePhoto">&#x21bb; {{ __('Confirm') }} </span>
-                                                    <span wire:loading wire:target="deletePhoto">
+                                                    <span wire:target="deletePhoto" wire:loading.remove>&#x21bb; {{ __('Confirm') }} </span>
+                                                    <span wire:target="deletePhoto" wire:loading>
                                                         Deleting..
                                                     </span>
                                                 </button>
@@ -347,14 +388,14 @@ new class extends Component
                                     </div>
                                 @endif
                             </div>
-                            @foreach($tempPhotos as $photo)
-                                <p>{{ $photo  }}</p> 
-                                <button type="button" wire:click="deleteTempFile('{{ $photo }}')">
-                                    Delete Account
-                                </button>
-                            @endforeach
-                        </div> 
-                    <!-- </form> -->
+                        @endif
+                        @foreach($tempPhotos as $photo)
+                            <p>{{ $photo  }}</p> 
+                            <button type="button" wire:click="deleteTempFile('{{ $photo }}')">
+                                Delete Account
+                            </button>
+                        @endforeach
+                    </div> 
                 </div>
             </div>
         </div>
@@ -438,8 +479,6 @@ new class extends Component
             galleries: [], 
 
             async upload(event) {
-                showLoading = true;
-
                 let uploads = [];
 
                 for (let file of event.target.files) {
@@ -448,6 +487,7 @@ new class extends Component
 
                 await Promise.all(uploads);
                 $wire.savePhotos(this[this.imageType]);
+
                 this[this.imageType] = [];
                 // @this.set('tempPhotos', this[this.imageType]);
             },
@@ -520,10 +560,9 @@ window.sortableImages = function() {
             new Sortable(el, {
                 animation: 150,
                 ghostClass: 'bg-gray-200',
-
                 onEnd: () => {
                     let orderedIds = [];
-
+                    console.log(el);
                     el.querySelectorAll('[data-id]').forEach(item => {
                         orderedIds.push(item.dataset.id);
                     });

@@ -19,8 +19,8 @@ new class extends Component
 
     public int $propertyId;
     #[Validate([
-        'photos' => 'required|array|max:5', // Max 5 total files
-        'photos.*' => 'image|max:1024|mimes:doc,pdf,xlsx,csv' // Individual rules per image
+        'floorPlans' => 'required|array|max:5', // Max 5 total files
+        'floorPlans.*' => 'file|max:2048|mimes:doc,docx,pdf,xlsx,csv' // Individual rules per file
     ])]
     public $floorPlans = [];
 
@@ -43,8 +43,6 @@ new class extends Component
         if ($isEdit && ($property && $property->floorPlan()->exists())) {
             $this->floorPlans = $property->floorPlan()->where('type', 'floorplan')->orderBy('created_at')->get();
         }
-
-        // dd($this->floorPlans);
     }
 
     // for creating action
@@ -61,12 +59,11 @@ new class extends Component
      */
     public function refreshFloorPlanList(): void
     {
-        $this->photos = PropertyFile::where('property_id', $this->propertyId)
+        $this->floorPlans = PropertyFile::where('property_id', $this->propertyId)
                         ->where('type', 'floorplan')
                         ->orderBy('sort_order')
                         ->get();
     }
-
 
     /**
      * Save to database on every uploaded images
@@ -75,46 +72,52 @@ new class extends Component
     public function saveFloorPlan(array $files)
     {
         foreach ($files as $file) {
-            Log::info("Floor plan upload detail: " . json_encode($file));
-            list($filename, $ext) = explode('.',$file['orig_filename']);
+            try {
+                $plainFilename = substr($file['orig_filename'], 0, -(((int) strlen($file['ext'])) + 1));
 
-            //check if the photo already exist on respective propety
-            $isPhotoExist = PropertyFile::whereRaw('orig_filename REGEXP ?', [
-                                    '^' . $filename . '(\\([0-9]+\\))?\\.[a-zA-Z0-9]+$'
-                                ])
-                                ->where([
-                                    'type' => 'floorplan',
-                                    'property_id' => $this->propertyId
-                                ])
-                                ->count();
-            
-            // if image name already exist, then trancate image name with adding number at the end
-            // e.g:  sample-image.jpg to sample-image(1).jpg
-            if ($isPhotoExist > 0) {
-                ++$isPhotoExist;
-                $file['orig_filename'] = "{$filename}({$isPhotoExist}).{$ext}";
-            }
+                //check if the floor plan already exist on respective propety
+                $duplicateFilenames = PropertyFile::whereRaw('orig_filename REGEXP ?', [
+                                        '^' . $plainFilename . '(\\([0-9]+\\))?\\.[a-zA-Z0-9]+$'
+                                    ])
+                                    ->where([
+                                        'type' => 'gallery',
+                                        'property_id' => $this->propertyId
+                                    ])->get()->toArray();
+                
+                // if file name already exist, then trancate image name with adding number at the end
+                // e.g:  sample-image.pdf to sample-image(1).pdf
+                $totalDuplicate = count($duplicateFilenames);
+                if ($totalDuplicate !== 0) {
+                    $file['orig_filename'] = "{$plainFilename}({$totalDuplicate}).{$file['ext']}";
+                }
 
-            // get the total number of properties and plus 1 for the sorting of the images
-            // $total count + 1 = sort number of the new photo
-            $lastSortNumber = PropertyFile::where([
+                Log::info('duplicate filename count: ' . $totalDuplicate);
+                Log::info('duplicate filename: ' . $file['orig_filename']);
+
+                // get the total number of properties and plus 1 for the sorting of the images
+                // $total count + 1 = sort number of the new photo
+                $lastSortNumber = PropertyFile::where([
                     'type' => 'floorplan',
                     'property_id' => $this->propertyId
-                ])->count();
+                ])->count() + 1;
 
-            ++$lastSortNumber;
+                // Store the new photo
+                PropertyFile::updateOrCreate([
+                    'orig_filename' => $file['orig_filename'],
+                    'property_id' => $this->propertyId,
+                ],[
+                    'property_id' => $this->propertyId,
+                    'type' => 'floorplan',
+                    'path' => $file['path'],
+                    'url' => $file['url'],
+                    'orig_filename' => $file['orig_filename'],
+                    'sort_order' => $lastSortNumber,
+                ]);
 
-            // Store the new photo
-            PropertyFile::updateOrCreate([
-                'orig_filename' => $file['orig_filename'],
-            ],[
-                'property_id' => $this->propertyId,
-                'type' => 'floorplan',
-                'path' => $file['path'],
-                'url' => $file['url'],
-                'orig_filename' => $file['orig_filename'],
-                'sort_order' => ++$lastSortNumber,
-            ]);
+            } catch (ErrorException $e) {
+                Log::error('Saving uploaded photos error: ' . $e);
+                throw $e;
+            }
         }
 
         // refresh the image list
@@ -125,31 +128,49 @@ new class extends Component
     /*******************************
      * Delete warning Modal
      */
-    public function openWarningDeleteModal(int $propertyPhotoId)
+    public function openWarningDeleteModal(int $propertyFloorPlanId)
     {
-        $this->selectDeleteFloorPlan = PropertyFile::find($propertyPhotoId);
+        $this->selectDeleteFloorPlan = PropertyFile::find($propertyFloorPlanId);
 
         $this->showModal = true;
 
     }
+
+    /*******************************
+     * Just close the warning delete modal
+     **/
+    public function closeWarningDeleteModal()
+    {
+        // refresh the image list
+        $this->showModal = false;
+
+        $this->selectDeleteFloorPlan = null;
+    }
+
     /*******************************
      * Delete floor plan from database to AWS S3
      */
-    public function deleteFloorPlan(int $propertyPhotoId)
+    public function deleteFloorPlan(int $propertyFloorPlanId)
     {
-        $item = PropertyFile::find($propertyPhotoId);
+        $item = PropertyFile::find($propertyFloorPlanId);
 
         Storage::disk('s3')->delete($item->path);
 
         $item->delete();
 
+        $photo = PropertyFile::where('type', 'floorplan')
+            ->orderBy('sort_order')->first();
+
+        if (isset($photo->id)) {
+            $this->reOrder([$photo->id]);
+        }
+
+        $this->selectDeleteFloorPlan = null;
+
         // refresh the image list
         $this->refreshFloorPlanList();
         $this->showModal = false;
     }
-
-
-
 }
 
 ?><div>
@@ -169,7 +190,7 @@ new class extends Component
 
                     <p class="mb-5 text-sm text-gray-600">{{ __('Upload floor plans of the property. This will help your property show up in more search results and attract more potential buyers.') }}</p>
 
-                    <div x-data="uploadFloorPlan('{{ $propertyReference }}')" class="border rounded">
+                    <div x-data="uploadFloorPlan('{{ $propertyReference }}/floorplan')" class="border rounded">
 
                         <!-------- To avoid traffic and multiple upload - recommend to upload single image only ---------->
                         <input id="dropzone-file" type="file" @change="upload($event)" 
@@ -195,27 +216,28 @@ new class extends Component
                         @else
 
                             <div
-                                x-data="sortableImages()"
-                                x-init="init()" 
                                 class="grid grid-cols-4 gap-3 p-3 bg-gray-200"
                             >
-                                @foreach ( $floorPlans as $floorPlan )
+                                @foreach ( $floorPlans as $key => $floorPlan )
                                     <div 
                                         data-id="{{ $floorPlan->id }}"
-                                        class="border p-2 cursor-move bg-white shadow relative"
+                                        class="border p-2 bg-white shadow relative"
                                         x-data="{ isLoaded: false }"
+                                        wire:key="section-{{ $floorPlan->id }}"
                                     >
                                         <!-- PROGRESS BAR -->
-                                        <div role="progress" class="uploadStatus absolute inset-0 m-auto z-2" x-show="!isLoaded" wire:loading.remove>
+                                        <?php
+                                        /*<div wire:target="refreshed" :key="section-{{ $floorPlan->id }}" role="progress" class="uploadStatus absolute inset-0 m-auto z-2" x-show="!isLoaded" wire:loading.remove>
                                             <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
                                                 <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
                                             </svg>
                                             <span class="sr-only">Loading...</span>
-                                        </div>
-
+                                        </div> 
+                                        */ ?>
                                         <!----- SHOW MODAL FOR DELETE ----->
-                                        <button type="button" wire:click="openWarningDeleteModal({{ $floorPlan->id }})" 
+                                        <button :key="section-{{ $floorPlan->id }}"  wire:target="deletePhoto" type="button" 
+                                            wire:click="openWarningDeleteModal({{ $floorPlan->id }})" 
                                             class="absolute right-2 top-2 z-2 text-white font-extrabold shadow bg-red-500 rounded text-sm p-1"
                                             title="Delete photo"
                                         >
@@ -225,33 +247,40 @@ new class extends Component
                                         </button>
 
                                         <!------- RENDER IMAGE----------->
-                                        <img src="{{ $floorPlan->url }}"
-                                            x-show="isLoaded"
+                                        <div
                                             @load="isLoaded = true"
                                             x-init="if ($el.complete) isLoaded = true"
-                                            x-show="isLoaded"
                                             class="transition-opacity duration-300"
-                                        />
+                                            :key="section-{{ $floorPlan->id }}"
+                                        >
+                                            <a href="{{ $floorPlan->url }}" target="_blank">
+                                                {{ $floorPlan->orig_filename }}
+                                            </a>
+                                        </div>
                                     </div>
                                 @endforeach
                                 @if($showModal)
-                                    <div class="fixed inset-0 bg-gray-500/75 flex items-center justify-center">
+                                    <div wire:target="deleteFloorPlan" class="fixed inset-0 bg-gray-500/75 flex items-center justify-center">
                                         <!-- Modal Content -->
                                         <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm mx-auto">
                                             <h3 class="text-lg font-bold text-gray-900">Warning</h3>
                                             <p class="mt-2 text-sm text-gray-500">This delete action cannot be undone. Proceed?</p>
                                             
                                             <div class="mt-4 flex justify-end space-x-2">
-                                                <button type="button" wire:confirm="$set('showModal', false)" class="px-4 py-2 border rounded text-gray-700">
+                                                <button
+                                                    @click="$wire.set('showModal', 0)"
+                                                    class="px-4 py-2 border rounded text-gray-700"
+                                                >
                                                     Cancel
                                                 </button>
-                                                <button type="button" 
-                                                    wire:click="deletePhoto({{ $selectDeletePhoto->id }})" 
-                                                    class="px-4 py-2 bg-red-600 text-white rounded"
+                                                <button
+                                                    wire:click="deleteFloorPlan({{ $selectDeleteFloorPlan->id }})"
                                                     wire:loading.class="opacity-50"
+                                                    wire:target="deleteFloorPlan"
+                                                    class="px-4 py-2 bg-red-600 text-white rounded"
                                                 >
-                                                    <span wire:loading.remove>&#x21bb; {{ __('Confirm') }} </span>
-                                                    <span wire:loading>
+                                                    <span wire:target="deleteFloorPlan" wire:loading.remove>&#x21bb; {{ __('Confirm') }} </span>
+                                                    <span wire:target="deleteFloorPlan" wire:loading>
                                                         Deleting..
                                                     </span>
                                                 </button>
@@ -319,6 +348,7 @@ new class extends Component
                 }
 
                 await Promise.all(uploads);
+
                 $wire.saveFloorPlan(this[this.fileType]);
                 this[this.fileType] = [];
             },
@@ -341,8 +371,7 @@ new class extends Component
                     xhr.onload = () => {
                         if (xhr.status === 200) {
                             const res = JSON.parse(xhr.responseText);
-                            console.log(res);
-                            console.log(this.fileType);
+
                             this[this.fileType].push({
                                 orig_filename: res.orig_filename,
                                 path: res.path,
@@ -363,29 +392,5 @@ new class extends Component
             }
         }
     }
-
-/**@abstract Sorting feature */
-window.sortableImages = function() {
-    return {
-        init() {
-            let el = this.$el;
-
-            new Sortable(el, {
-                animation: 150,
-                ghostClass: 'bg-gray-200',
-
-                onEnd: () => {
-                    let orderedIds = [];
-
-                    el.querySelectorAll('[data-id]').forEach(item => {
-                        orderedIds.push(item.dataset.id);
-                    });
-
-                    this.$wire.reOrder(orderedIds);
-                }
-            });
-        }
-    }
-}
 </script>
 @endscript

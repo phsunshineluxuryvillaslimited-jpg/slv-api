@@ -3,8 +3,10 @@ use Livewire\Attributes\Validate;
 use Livewire\Attributes\On;
 use Livewire\Volt\Component;
 use App\Models\Property;
+use App\Models\PropertyFile;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 new class extends Component
 {
@@ -97,7 +99,7 @@ new class extends Component
     {
         try {
             $validatedData = $this->validate();
-            $this->property->address()->updateOrCreate([
+            $this->property->PropertyContactDetail()->updateOrCreate([
                     'property_id' => $this->property->id,
                 ],
                 $validatedData
@@ -117,7 +119,7 @@ new class extends Component
         try {
             $validatedData = $this->validate();
 
-            $this->property->address()->updateOrCreate([
+            $this->property->PropertyContactDetail()->updateOrCreate([
                     'property_id' => $this->property->id,
                 ],
                 $validatedData
@@ -130,6 +132,126 @@ new class extends Component
         }
         
     }
+    /**
+     * Summary of refresh vendor files list
+     * @return void
+     */
+    public function refreshVendorFileList(): void
+    {
+        $this->floorPlans = PropertyFile::where('property_id', $this->propertyId)
+                        ->where('type', 'floorplan')
+                        ->orderBy('sort_order')
+                        ->get();
+    }
+
+    /**
+     * Save to database on every uploaded images
+     * Storage: AWS s3 bucket
+     */
+    public function saveVendorFile(array $files)
+    {
+        foreach ($files as $file) {
+            try {
+                $plainFilename = substr($file['orig_filename'], 0, -(((int) strlen($file['ext'])) + 1));
+
+                //check if the floor plan already exist on respective propety
+                $duplicateFilenames = PropertyFile::whereRaw('orig_filename REGEXP ?', [
+                                        '^' . $plainFilename . '(\\([0-9]+\\))?\\.[a-zA-Z0-9]+$'
+                                    ])
+                                    ->where([
+                                        'type' => 'gallery',
+                                        'property_id' => $this->propertyId
+                                    ])->get()->toArray();
+                
+                // if file name already exist, then trancate image name with adding number at the end
+                // e.g:  sample-image.pdf to sample-image(1).pdf
+                $totalDuplicate = count($duplicateFilenames);
+                if ($totalDuplicate !== 0) {
+                    $file['orig_filename'] = "{$plainFilename}({$totalDuplicate}).{$file['ext']}";
+                }
+
+                Log::info('duplicate filename count: ' . $totalDuplicate);
+                Log::info('duplicate filename: ' . $file['orig_filename']);
+
+                // get the total number of properties and plus 1 for the sorting of the images
+                // $total count + 1 = sort number of the new photo
+                $lastSortNumber = PropertyFile::where([
+                    'type' => 'floorplan',
+                    'property_id' => $this->propertyId
+                ])->count() + 1;
+
+                // Store the new photo
+                PropertyFile::updateOrCreate([
+                    'orig_filename' => $file['orig_filename'],
+                    'property_id' => $this->propertyId,
+                ],[
+                    'property_id' => $this->propertyId,
+                    'type' => 'floorplan',
+                    'path' => $file['path'],
+                    'url' => $file['url'],
+                    'orig_filename' => $file['orig_filename'],
+                    'sort_order' => $lastSortNumber,
+                ]);
+
+            } catch (ErrorException $e) {
+                Log::error('Saving uploaded photos error: ' . $e);
+                throw $e;
+            }
+        }
+
+        // refresh the image list
+        $this->refreshVendorFileList();
+    }
+
+
+    /*******************************
+     * Delete warning Modal
+     */
+    public function openWarningDeleteModal(int $propertyFloorPlanId)
+    {
+        $this->selectDeleteFloorPlan = PropertyFile::find($propertyFloorPlanId);
+
+        $this->showModal = true;
+
+    }
+
+    /*******************************
+     * Just close the warning delete modal
+     **/
+    public function closeWarningDeleteModal()
+    {
+        // refresh the image list
+        $this->showModal = false;
+
+        $this->selectDeleteFloorPlan = null;
+    }
+
+    /*******************************
+     * Delete floor plan from database to AWS S3
+     */
+    public function deleteVendorFile(int $propertyFloorPlanId)
+    {
+        $item = PropertyFile::find($propertyFloorPlanId);
+
+        Storage::disk('s3')->delete($item->path);
+
+        $item->delete();
+
+        $photo = PropertyFile::where('type', 'floorplan')
+            ->orderBy('sort_order')->first();
+
+        if (isset($photo->id)) {
+            $this->reOrder([$photo->id]);
+        }
+
+        $this->selectDeleteFloorPlan = null;
+
+        // refresh the image list
+        $this->refreshFloorPlanList();
+        $this->showModal = false;
+    }
+
+
 }    
 
 ?>
@@ -211,13 +333,18 @@ Basic location info
                     <div class="">
                         <label class="text-sm">{{ __('Vendor Documents') }}</label>
                         <div class="flex items-center justify-center w-full">
+                            
                             <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-44 bg-neutral-secondary-medium border border-dashed border-default-strong rounded-base cursor-pointer hover:bg-neutral-tertiary-medium">
                                 <div class="flex flex-col items-center justify-center text-body pt-2 pb-2">
                                     <svg class="w-8 h-8 mb-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h3a3 3 0 0 0 0-6h-.025a5.56 5.56 0 0 0 .025-.5A5.5 5.5 0 0 0 7.207 9.021C7.137 9.017 7.071 9 7 9a4 4 0 1 0 0 8h2.167M12 19v-9m0 0-2 2m2-2 2 2"/></svg>
                                     <p class="mb-2 text-sm"><span class="font-semibold">Click to upload</span> or drag and drop</p>
                                     <p class="text-xs text-center">Accepted formats: PDF, DOC or DOCX <br >(Max 20MB per file)</p>
                                 </div>
-                                <input id="dropzone-file" type="file" class="hidden" />
+                                <!-------- To avoid traffic and multiple upload - recommend to upload single image only ---------->
+                                <input id="dropzone-file" type="file" @change="upload($event)" 
+                                    class="hidden" 
+                                    accept=".doc, .docx, .pdf, .csv, .xlsx, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf, text/csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                                />
                             </label>
                         </div> 
                     </div>
@@ -293,7 +420,7 @@ Basic location info
             </div>
         </div>
     </div>
-    */ ?>
+    
     <div class="py-3">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="p-4 sm:p-8 bg-white shadow-md sm:rounded-lg">
@@ -365,3 +492,72 @@ Basic location info
         </div>
     @endif
 </div>
+
+@script
+<script>
+    let fileType = 'document';
+
+    /***************************
+     * Upload Multiple Files
+     ***************************/
+    window.uploadFloorPlan = function (folder) {
+        return {
+            fileType: 'document',
+            floorplans: [],
+
+            async upload(event) {
+                showLoading = true;
+
+                let uploads = [];
+
+                for (let file of event.target.files) {
+                    uploads.push(this.uploadSingle(file, folder));
+                }
+
+                await Promise.all(uploads);
+
+                $wire.saveVendorFile(this[this.fileType]);
+                this[this.fileType] = [];
+            },
+
+            uploadSingle(file, folder) {
+                return new Promise((resolve, reject) => {
+
+                    let formData = new FormData();
+                    formData.append('file', file);
+                    formData.append('folder', folder);
+
+                    const xhr = new XMLHttpRequest();
+
+                    xhr.open('POST', '/s3/file-upload', true);
+                    xhr.setRequestHeader(
+                        'X-CSRF-TOKEN',
+                        document.querySelector('meta[name="csrf-token"]').content
+                    );
+
+                    xhr.onload = () => {
+                        if (xhr.status === 200) {
+                            const res = JSON.parse(xhr.responseText);
+
+                            this[this.fileType].push({
+                                orig_filename: res.orig_filename,
+                                path: res.path,
+                                url: res.url,
+                                ext: res.ext
+                            });
+
+                            resolve();
+                        } else {
+                            reject();
+                        }
+                    };
+
+                    xhr.onerror = reject;
+
+                    xhr.send(formData);
+                });
+            }
+        }
+    }
+</script>
+@endscript

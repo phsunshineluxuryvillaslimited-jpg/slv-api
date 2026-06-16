@@ -68,7 +68,7 @@ new class extends Component
         }
 
         // load tempt Images which is not yet stored in database
-        $this->getS3TempPhotos();
+        // $this->getS3TempPhotos();
     }
 
     /**
@@ -143,7 +143,6 @@ new class extends Component
     #[On('parentNextStepButtonTriggered')]
     public function handleNextStepButtonTriggered()
     {
-        if ($this->isEdit)
         $this->dispatch( 'proceed-to-next-step', property_id: $this->property->id);
         
     }

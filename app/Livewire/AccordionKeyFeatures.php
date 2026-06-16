@@ -2,13 +2,19 @@
 
 namespace App\Livewire;
 
+use Livewire\Attributes\Validate;
+use Livewire\Attributes\On;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
+use App\Models\Property;
+use Livewire\Attributes\Modelable;
 
 class AccordionKeyFeatures extends Component
 {
     public ?int $openItem = null;
 
+    #[Validate('nullable')]
     public $keyFeature = [
         [
             'id' => 1,
@@ -519,6 +525,81 @@ class AccordionKeyFeatures extends Component
         ],
 
     ];
+
+    public ?Property $property;
+
+    public bool $isEdit = false;
+
+    public function mount(Property $property, $isEdit = false): void
+    {
+        $this->property = $property;
+        $this->isEdit   = $isEdit;
+    }
+
+    #[On('parentNextStepButtonTriggered')]
+    public function hundleNextStepButtonTriggered()
+    {
+        try {
+            $validatedData = $this->validate();
+            // dd($validatedData);
+
+            foreach ($validatedData as $key => $value) {
+                foreach ($value as $name => $fields) {
+                    if (is_numeric($name)) continue;
+                    foreach ($fields as $k => $v) {
+                        $this->property->keyFeature()->updateOrCreate([
+                            'property_id' => $this->property->id,
+                            'name' => $name
+                        ],
+                        [
+                            'name' => $name,
+                            'fields' => $k,
+                            'value' => $v
+                        ]);
+                    }
+                }
+            }
+
+            $this->dispatch( 'proceed-to-next-step', property_id: $this->property->id);
+         } catch (ValidationException $e) {
+            Log::info('Property validation error. Please double check.');
+            throw $e;
+        }
+    }
+
+    // for edit action
+    #[On('parentUpdateButtonTriggered')]
+    public function handleUpdateProperty()
+    {   
+        try {
+            $validatedData = $this->validate();
+            // dd($validatedData);
+
+            foreach ($validatedData as $key => $value) {
+                foreach ($value as $name => $fields) {
+                    if (is_numeric($name)) continue;
+                    foreach ($fields as $k => $v) {
+                        $this->property->keyFeature()->updateOrCreate([
+                            'property_id' => $this->property->id,
+                            'name' => $name,
+                            'fields' => $k
+                        ],
+                        [
+                            'name' => $name,
+                            'fields' => $k,
+                            'value' => $v
+                        ]);
+                    }
+                }
+            }
+
+            $this->dispatch('update-is-success');            
+         } catch (ValidationException $e) {
+            Log::info('Property validation error. Please double check.');
+            throw $e;
+        }
+        
+    }
 
     public function toggle(int $id)
     {

@@ -22,7 +22,7 @@ new class extends Component
 
     public function mount(Property $property, $isEdit = false): void
     {
-        $this->property =  $property;
+        $this->property = $property;
         $this->isEdit   = $isEdit;
     }
 
@@ -44,25 +44,30 @@ new class extends Component
         }
     }
 
-    // for edit action
-    #[On('parentUpdateButtonTriggered')]
-    public function handleUpdateProperty()
-    {   
-        try {
-            $validatedData = $this->validate();
-
-            $this->property->keyFeature()->updateOrCreate([
-                    'property_id' => $this->property->id,
-                ],
-                $validatedData
-            );
-            session()->flash('success', 'Property updated successfully');
-         } catch (ValidationException $e) {
-            Log::info('Property validation error. Please double check.');
-            throw $e;
-        }
-        
+    #[On('update-is-success')]
+    public function updateSuccess()
+    {
+        session()->flash('success', 'Property key feature updated successfully');
     }
+    // for edit action
+    // #[On('parentUpdateButtonTriggered')]
+    // public function handleUpdateProperty()
+    // {   
+    //     try {
+    //         $validatedData = $this->validate();
+
+    //         $this->property->keyFeature()->updateOrCreate([
+    //                 'property_id' => $this->property->id,
+    //             ],
+    //             $validatedData
+    //         );
+    //         session()->flash('success', 'Property updated successfully');
+    //      } catch (ValidationException $e) {
+    //         Log::info('Property validation error. Please double check.');
+    //         throw $e;
+    //     }
+        
+    // }
 }    
 
 ?>

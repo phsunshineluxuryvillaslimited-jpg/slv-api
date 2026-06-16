@@ -122,7 +122,6 @@ new class extends Component
             session()->flash('success', 'Property updated successfully');
          } catch (ValidationException $e) {
             Log::info('Property validation error. Please double check.');
-            dd($e);
             throw $e;
         }
         

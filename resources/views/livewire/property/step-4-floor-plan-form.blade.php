@@ -49,7 +49,6 @@ new class extends Component
     #[On('parentNextStepButtonTriggered')]
     public function hundleNextStepButtonTriggered()
     {
-        if ($this->isEdit)
             $this->dispatch( 'proceed-to-next-step', property_id: $this->property->id);
     }
 

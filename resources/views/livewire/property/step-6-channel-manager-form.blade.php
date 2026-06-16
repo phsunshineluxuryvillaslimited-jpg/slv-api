@@ -5,10 +5,11 @@ use Livewire\Volt\Component;
 use App\Models\Property;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Log;
+use App\Models\PropertyNetworks;
 
 new class extends Component
 {
-    public ?Property $prooperty;
+    public ?Property $property;
 
     public bool $isEdit = false;
 
@@ -22,20 +23,34 @@ new class extends Component
     {
         $this->property = $property;
         $this->isEdit   = $isEdit;
+
+        if ($this->isEdit) {
+            if (isset($property->networks->external_feeds))
+                $this->external_feed = unserialize($property->networks->external_feeds);
+            if (isset($property->networks->webisite_banner))
+                $this->webisite_banner = unserialize($property->networks->webisite_banner);
+        }
     }
 
     #[On('parentNextStepButtonTriggered')]
     public function hundleNextStepButtonTriggered()
     {
-        dd($this->external_feed);
         try {
+            $validatedData = $this->validate();
+                
+            if (!empty($validatedData['external_feed'])) {
+                
                 $this->property->networks()->updateOrCreate([
-                    'property_id' => $this->property->id,
+                        'property_id' => $this->property->id,
                     ],
                     [
-
+                        'external_feed' => !empty($validatedData['external_feed']) ? 
+                                                serialize($validatedData['external_feed']) : null,
+                        'website_banner' => !empty($validatedData['website_banner']) ? 
+                                                serialize($validatedData['website_banner']) : null
                     ]
                 );
+            }
 
             $this->dispatch( 'proceed-to-next-step', property_id: $this->property->id);
          } catch (ValidationException $e) {
@@ -48,15 +63,22 @@ new class extends Component
     #[On('parentUpdateButtonTriggered')]
     public function handleUpdateProperty()
     {   
-        dd($this->external_feed);
         try {
             $validatedData = $this->validate();
 
-            $this->property->networks()->updateOrCreate([
-                    'property_id' => $this->property->id,
-                ],
-                $validatedData
-            );
+            if (!empty($validatedData['external_feed'])) {
+                
+                $this->property->networks()->updateOrCreate([
+                        'property_id' => $this->property->id,
+                    ],
+                    [
+                        'external_feed' => !empty($validatedData['external_feed']) ? 
+                                                serialize($validatedData['external_feed']) : null,
+                        'website_banner' => !empty($validatedData['website_banner']) ? 
+                                                serialize($validatedData['website_banner']) : null
+                    ]
+                );
+            }
 
             session()->flash('success', 'Property updated successfully');
          } catch (ValidationException $e) {

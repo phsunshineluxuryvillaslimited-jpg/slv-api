@@ -1,8 +1,8 @@
 <div class="space-y-2">
 
     @foreach($keyFeature as $item)
+        @continue (!isset($item['id']))
         <div wire:ignore.self class="border rounded">
-            {{ print_r($item)  }}
             <button
                 wire:click="toggle({{ $item['id'] }})"
                 class="flex w-full px-4 py-3 text-left bg-gray-100 hover:bg-gray-200"

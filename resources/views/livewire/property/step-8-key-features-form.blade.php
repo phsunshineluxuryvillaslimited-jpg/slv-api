@@ -16,7 +16,7 @@ new class extends Component
     protected function rules()
     {
         return [
-            'keyFeature.*.fields.*.value' => 'boolean',
+            'keyFeature.*.field.*.value' => 'boolean',
         ];
     }
 

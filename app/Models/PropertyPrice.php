@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 #[Hidden(['property_id', 'created_at'])]
 class PropertyPrice extends Model
 {
-    public function propertity(): BelongsTo
+    public function property(): BelongsTo
     {
         return $this->belongsTo(Property::class, 'property_id');
     }

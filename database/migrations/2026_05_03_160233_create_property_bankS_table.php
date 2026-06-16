@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('property_bank', function (Blueprint $table) {
+        Schema::create('property_banks', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('property_id');
             $table->foreign('property_id')
                 ->references('id')
                 ->on('properties')
                 ->onDelete('cascade');
-            $table->string('bank_id');
+            $table->integer('bank_id');
             $table->string('branch');
             $table->string('account_ref')->unique();
             $table->string('sort_code');

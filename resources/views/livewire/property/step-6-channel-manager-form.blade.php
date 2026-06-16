@@ -14,21 +14,22 @@ new class extends Component
     public bool $isEdit = false;
 
     #[Validate('nullable')]
-    public array $external_feed = [];
+    public array $external_feeds = [];
 
     #[Validate('nullable')]
-    public array $webisite_banner = [];
+    public array $website_banner = [];
     
     public function mount(Property $property, $isEdit = false): void
     {
         $this->property = $property;
         $this->isEdit   = $isEdit;
 
-        if ($this->isEdit) {
-            if (isset($property->networks->external_feeds))
-                $this->external_feed = unserialize($property->networks->external_feeds);
-            if (isset($property->networks->webisite_banner))
-                $this->webisite_banner = unserialize($property->networks->webisite_banner);
+        if ($this->isEdit && isset($property->id)) {
+            $externalFeeds = PropertyNetworks::where(['property_id' => $property->id])->first()->external_feeds;
+            $this->external_feeds = unserialize($externalFeeds);
+
+            $websiteBanner = PropertyNetworks::where(['property_id' => $property->id])->first()->website_banner;
+            $this->website_banner = unserialize($websiteBanner);
         }
     }
 
@@ -37,15 +38,15 @@ new class extends Component
     {
         try {
             $validatedData = $this->validate();
-                
-            if (!empty($validatedData['external_feed'])) {
+              
+            if (!empty($validatedData['external_feeds'])) {
                 
                 $this->property->networks()->updateOrCreate([
                         'property_id' => $this->property->id,
                     ],
                     [
-                        'external_feed' => !empty($validatedData['external_feed']) ? 
-                                                serialize($validatedData['external_feed']) : null,
+                        'external_feeds' => !empty($validatedData['external_feeds']) ? 
+                                                serialize($validatedData['external_feeds']) : null,
                         'website_banner' => !empty($validatedData['website_banner']) ? 
                                                 serialize($validatedData['website_banner']) : null
                     ]
@@ -66,21 +67,24 @@ new class extends Component
         try {
             $validatedData = $this->validate();
 
-            if (!empty($validatedData['external_feed'])) {
-                
+            // if (!empty($validatedData['external_feeds']) 
+            //     || !empty($validatedData['website_banner'])
+            // ) {
                 $this->property->networks()->updateOrCreate([
                         'property_id' => $this->property->id,
                     ],
                     [
-                        'external_feed' => !empty($validatedData['external_feed']) ? 
-                                                serialize($validatedData['external_feed']) : null,
+                        'external_feeds' => !empty($validatedData['external_feeds']) ? 
+                                                serialize($validatedData['external_feeds']) : null,
                         'website_banner' => !empty($validatedData['website_banner']) ? 
                                                 serialize($validatedData['website_banner']) : null
                     ]
                 );
-            }
 
-            session()->flash('success', 'Property updated successfully');
+                
+            // }
+
+            session()->flash('success', 'Property channel manager updated successfully');
          } catch (ValidationException $e) {
             Log::info('Property validation error. Please double check.');
             throw $e;
@@ -117,41 +121,41 @@ Add your form or content for adding a property here
                         <h4 class="text-lg">{{ __('External Feeds') }}</h4>
                         <div class="flex py-2">
                             <label class="border-2 border-gray-300 text-slate-600 px-3 py-2 rounded text-sm tracking-wider has-[:checked]:border-blue-800 mr-3">
-                                <input type="checkbox" wire:model="external_feed" value="right_move" class="border rounded text-blue-800 h-5 w-5 mr-2" /> Right Move 
+                                <input type="checkbox" wire:model="external_feeds" value="right_move" class="border rounded text-blue-800 h-5 w-5 mr-2" /> Right Move 
                             </label>
                             <label class="border-2 border-gray-300 text-slate-600 px-3 py-2 rounded text-sm tracking-wider has-[:checked]:border-blue-800 mr-3">
-                                <input type="checkbox" wire:model="external_feed" value="zoopla" class="border rounded text-blue-800 h-5 w-5 mr-2" /> Zoopla
+                                <input type="checkbox" wire:model="external_feeds" value="zoopla" class="border rounded text-blue-800 h-5 w-5 mr-2" /> Zoopla
                             </label>
                             <label class="border-2 border-gray-300 text-slate-600 px-3 py-2 rounded text-sm tracking-wider has-[:checked]:border-blue-800 mr-3">
-                                <input type="checkbox" wire:model="external_feed" value="barazaki" class="border rounded text-blue-800 h-5 w-5 mr-2" /> Barazaki
+                                <input type="checkbox" wire:model="external_feeds" value="barazaki" class="border rounded text-blue-800 h-5 w-5 mr-2" /> Barazaki
                             </label>
                             <label class="border-2 border-gray-300 text-slate-600 px-3 py-2 rounded text-sm tracking-wider has-[:checked]:border-blue-800 mr-3">
-                                <input type="checkbox" nawire:model="external_feed" value="apits" class="border rounded text-blue-800 h-5 w-5 mr-2" /> APITS
+                                <input type="checkbox" wire:model="external_feeds" value="apits" class="border rounded text-blue-800 h-5 w-5 mr-2" /> APITS
                             </label>
                             <label class="border-2 border-gray-300 text-slate-600 px-3 py-2 rounded text-sm tracking-wider has-[:checked]:border-blue-800 mr-3">
-                                <input type="checkbox" wire:model="external_feed" value="slv" class="border rounded text-blue-800 h-5 w-5 mr-2" /> SLV (Searchable on website)
+                                <input type="checkbox" wire:model="external_feeds" value="slv" class="border rounded text-blue-800 h-5 w-5 mr-2" /> SLV (Searchable on website)
                             </label>
                             <label class="border-2 border-gray-300 text-slate-600 px-3 py-2 rounded text-sm tracking-wider has-[:checked]:border-blue-800">
-                                <input type="checkbox" wire:model="external_feed" value="directs" value="directs" class="border rounded text-blue-800 h-5 w-5 mr-2" /> Directs
+                                <input type="checkbox" wire:model="external_feeds" value="directs" value="directs" class="border rounded text-blue-800 h-5 w-5 mr-2" /> Directs
                             </label>
                         </div>
                         <hr class="my-5 border-gray-400" />
                         <h4 class="text-lg">Website Banner</h4>
                         <div class="flex py-2">
                             <label class="border-2 border-gray-300 text-slate-600 px-3 py-2 rounded text-sm tracking-wider has-[:checked]:border-blue-800 mr-3">
-                                <input type="checkbox" wire:model="webisite_banner" value="reduced" class="border rounded text-blue-800 h-5 w-5 mr-2" /> Reduced
+                                <input type="checkbox" wire:model="website_banner" value="reduced" class="border rounded text-blue-800 h-5 w-5 mr-2" /> Reduced
                             </label>
                             <label class="border-2 border-gray-300 text-slate-600 px-3 py-2 rounded text-sm tracking-wider has-[:checked]:border-blue-800 mr-3">
-                                <input type="checkbox" wire:model="webisite_banner" value="reserved" class="border rounded text-blue-800 h-5 w-5 mr-2" /> Reserved
+                                <input type="checkbox" wire:model="website_banner" value="reserved" class="border rounded text-blue-800 h-5 w-5 mr-2" /> Reserved
                             </label>
                             <label class="border-2 border-gray-300 text-slate-600 px-3 py-2 rounded text-sm tracking-wider has-[:checked]:border-blue-800 mr-3">
-                                <input type="checkbox" wire:model="webisite_banner" value="sold" class="border rounded text-blue-800 h-5 w-5 mr-2" /> Sold
+                                <input type="checkbox" wire:model="website_banner" value="sold" class="border rounded text-blue-800 h-5 w-5 mr-2" /> Sold
                             </label>
                             <label class="border-2 border-gray-300 text-slate-600 px-3 py-2 rounded text-sm tracking-wider has-[:checked]:border-blue-800 mr-3">
-                                <input type="checkbox" wire:model="webisite_banner" value="exclusive" class="border rounded text-blue-800 h-5 w-5 mr-2" /> Exclusive
+                                <input type="checkbox" wire:model="website_banner" value="exclusive" class="border rounded text-blue-800 h-5 w-5 mr-2" /> Exclusive
                             </label>
                             <label class="border-2 border-gray-300 text-slate-600 px-3 py-2 rounded text-sm tracking-wider has-[:checked]:border-blue-800 mr-3">
-                                <input type="checkbox" wire:model="webisite_banner" value="new listing" class="border rounded text-blue-800 h-5 w-5 mr-2" /> New Listing
+                                <input type="checkbox" wire:model="website_banner" value="new listing" class="border rounded text-blue-800 h-5 w-5 mr-2" /> New Listing
                             </label>
                         </div>
                     </div>

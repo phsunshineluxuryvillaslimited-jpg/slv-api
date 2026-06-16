@@ -22,8 +22,13 @@ class MultiStepForm extends Component
     public function mount(Property $editProperty, string $editMode = '')
     {
         $this->property = $editProperty;
+        
         if ($editMode == 'editMode') {
             $this->isEdit = true;
+        }
+
+        if (!$this->property->id && $this->currentStep !== 1) {
+            redirect('/properties');
         }
     }
 

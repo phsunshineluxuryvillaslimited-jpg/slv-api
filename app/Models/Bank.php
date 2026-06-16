@@ -13,8 +13,5 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 ])]
 class Bank extends Model
 {
-    public function property(): BelongsTo
-    {
-        return $this->belongsTo(Property::class, 'property_id');
-    }
+    
 }

@@ -15,7 +15,7 @@ class PropertyContactDocument extends Model
 {
     const UPDATED_AT = null;
 
-    public function property(): BelongsTo
+    public function contactDetail(): BelongsTo
     {
         return $this->belongsTo(PropertyContactDetail::class, 'property_contact_detail_id');
     }

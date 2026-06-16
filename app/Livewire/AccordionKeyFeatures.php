@@ -553,7 +553,7 @@ class AccordionKeyFeatures extends Component
                         ],
                         [
                             'name' => $name,
-                            'fields' => $k,
+                            'field' => $k,
                             'value' => $v
                         ]);
                     }
@@ -586,7 +586,7 @@ class AccordionKeyFeatures extends Component
                         ],
                         [
                             'name' => $name,
-                            'fields' => $k,
+                            'field' => $k,
                             'value' => $v
                         ]);
                     }

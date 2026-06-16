@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 #[Fillable([
-    'property_id', 'name', 'fields', 'value',
+    'property_id', 'name', 'field', 'value',
 ])]
 class PropertyKeyFeature extends Model
 {

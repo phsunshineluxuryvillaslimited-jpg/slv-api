@@ -19,8 +19,8 @@ class PropertiesController extends Controller
     {
         $query = Property::query()
             ->with(['networks'])
-            ->where('status', 'published')
-            ->whereHas('networks', fn ($query) => $query->where('external_feeds', 'slv'));
+            // ->where('status', 'published')
+            ->whereHas('networks', fn ($query) => $query->where('external_feeds', 'like', '%slv%'));
 
         if ($request->filled('include')) {
             $query->with($this->parseIncludes($request->input('include')));
@@ -87,11 +87,11 @@ class PropertiesController extends Controller
                 $query->where('properties.plot', '>=', $request->input('plot_size'));
             }
 
-            if ($request->filled('area_size')
-                && $request->input('area_size') != 'any'
-            ) {
-                $query->whereHas('amenities', fn ($query) => $query->where('covered', '>=', $request->input('area_size')));
-            }
+            // if ($request->filled('area_size')
+            //     && $request->input('area_size') != 'any'
+            // ) {
+            //     $query->whereHas('amenities', fn ($query) => $query->where('covered', '>=', $request->input('area_size')));
+            // }
         }
 
         $propertyList = $query->paginate(1);

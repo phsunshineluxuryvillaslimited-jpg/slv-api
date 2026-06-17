@@ -582,7 +582,7 @@ class AccordionKeyFeatures extends Component
                         $this->property->keyFeature()->updateOrCreate([
                             'property_id' => $this->property->id,
                             'name' => $name,
-                            'fields' => $k
+                            'field' => $k
                         ],
                         [
                             'name' => $name,

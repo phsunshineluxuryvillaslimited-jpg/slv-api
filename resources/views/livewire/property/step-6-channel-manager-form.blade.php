@@ -25,14 +25,14 @@ new class extends Component
         $this->isEdit   = $isEdit;
 
         if ($this->isEdit && isset($property->id)) {
-            $networks = PropertyNetworks::where(['property_id' => $property->id]);
-            if ($networks->first()->external_feeds !== null) {
-                $this->external_feeds = unserialize($networks->first()->external_feeds);
+            $networks = PropertyNetworks::where(['property_id' => $property->id])->first();
+            if ($networks?->external_feeds) {
+                $this->external_feeds = unserialize($networks?->external_feeds);
             }
 
-            $websiteBanner = PropertyNetworks::where(['property_id' => $property->id]);
-            if (!$websiteBanner->first()->website_banner !== null) {
-                $this->website_banner = unserialize($websiteBanner->first()->website_banner);
+            $websiteBanner = PropertyNetworks::where(['property_id' => $property->id])->first();
+            if ($websiteBanner?->website_banner) {
+                $this->website_banner = unserialize($websiteBanner?->website_banner);
             }
         }
     }

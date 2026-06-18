@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 #[Fillable([
     'property_id', 'is_poa', 'basic_price', 'original_price', 'total_reduction_percentage',
-    'total_reduction_price', 'commission', 'communal_charge',
+    'total_reduction_price', 'commission', 'commission_type', 'communal_charge', 'communal_charge_type'
 ])]
 
 #[Hidden(['property_id', 'created_at'])]

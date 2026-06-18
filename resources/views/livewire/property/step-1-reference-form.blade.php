@@ -20,7 +20,7 @@ new class extends Component
     public string $edit_reference = '';
     
     // #[Validate('required|string|unique:properties,id')] //edit only
-    #[Validate('required|string|unique:properties,reference')]
+    // #[Validate('required|string|unique:properties,reference')]
     public string $reference = '';
 
     #[Validate('required|numeric')]
@@ -111,11 +111,12 @@ new class extends Component
     {
         if ($this->isEdit) {
             return [
-                'edit_reference' => [
-                    'required',
-                    'string',
-                    Rule::unique('properties', 'reference')->ignore($this->property->id),
-                ],
+                'reference' => 'required|string|unique:properties,reference,' . $this->property->id,
+                                //  [
+                                //     'required',
+                                //     'string',
+                                //     Rule::unique('properties', 'reference')->ignore($this->property->id),
+                                // ],
                 'year_of_construction' => 'required|integer|digits:4|min:1900|max:' . date('Y')
             ];
         }
@@ -137,8 +138,8 @@ new class extends Component
         if ($property && $property->exists) {
             $this->isEdit               = true;
             $this->property             = $property;
-            $this->edit_reference       = $property->reference;
-            $this->reference            = 'XDIRTY-CREATE1';
+            // $this->edit_reference       = $property->reference;
+            $this->reference            = $property->reference;
             $this->basic_price          = $property->price->basic_price ?? 0;
             $this->area_size            = $property->area_size;
             $this->bedrooms             = $property->bedrooms;
@@ -216,14 +217,12 @@ new class extends Component
     //Update
     #[On('parentUpdateButtonTriggered')]
     public function handleUpdateProperty()
-    {   $result = $this->property->update($this->validate());
-        dd($this->validate);
-        try {
+    {   try {
 
             $validatedData = $this->validate();
-            $validatedData['reference'] = $validatedData['edit_reference']; //change value of reference
+            // $validatedData['reference'] = $validatedData['edit_reference']; //change value of reference
             
-            unset($validatedData['edit_reference']);
+            // unset($validatedData['edit_reference']);
             
             if ($this->property && $this->property->exists) {
                 $price = [
@@ -284,18 +283,10 @@ Basic information about the property
                                 id="reference" 
                                 class="uppercase placeholder:normal-case w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" 
                                 placeholder="SLV-1234"
-                                @if ( $isEdit )
-                                    wire:model.live.debounce.700ms="edit_reference"
-                                @else
-                                    wire:model.live.debounce.700ms="reference"
-                                @endif
+                                wire:model.live.debounce.500ms="reference"
                                 required
                                 />
-                            @if ( $isEdit )
-                                @error('edit_reference') <span class="text-red-500 text-shadow-sm">{{ $message }}</span> @enderror
-                            @else
                                 @error('reference') <span class="text-red-500 text-shadow-sm">{{ $message }}</span> @enderror
-                            @endif
                         </div>
                         <div>
                             <label for="basicPrice" class="required-field block text-black text-sm mb-1">{{ __('Price') }}</label>
@@ -304,10 +295,10 @@ Basic information about the property
                                     &euro;
                                 </div>
                                 <input type="number" 
-                                    wire:model.live.debounce.700ms="basic_price" 
+                                    wire:model.live.debounce.500ms="basic_price" 
                                     id="basicPrice"
                                     placeholder="e.g. 250000"
-                                    class="w-full pl-7 text-sm  border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 [&::-webkit-inner-spin-button]:mr-8" 
+                                    class="{{ $basicPriceDisabled ? 'bg-gray-100' : '' }} w-full pl-7 text-sm  border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 [&::-webkit-inner-spin-button]:mr-8" 
                                     required
                                     {{ $basicPriceDisabled ? 'disabled' : '' }}
                                 />
@@ -320,7 +311,7 @@ Basic information about the property
                         <div>
                             <label for="poa" class="block text-black text-sm mb-1">&nbsp;</label>
                             <div class="flex items-center pt-2">
-                                <input type="checkbox" wire:model.live="is_poa" id="poa" class="border-gray-300 text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
+                                <input type="checkbox" wire:model.live.debounce.500ms="is_poa" id="poa" class="border-gray-300 text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
                                 <label class="text-gray-700 ml-2">{{ __('POA (hide price)') }}</label>
                             </div>
                         </div>
@@ -388,7 +379,7 @@ Basic information about the property
                         <div>
                             <label for="bedrooms" class="required-field block text-black text-sm mb-1">{{ __('Bedrooms') }}</label>
                             <input type="number" 
-                                wire:model.live.debounce.700ms="bedrooms" 
+                                wire:model.live.debounce.500ms="bedrooms" 
                                 id="bedrooms" 
                                 value="0" 
                                 class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" 
@@ -397,7 +388,7 @@ Basic information about the property
                         </div>
                         <div>
                             <label for="bathrooms" class="required-field block text-black text-sm mb-1">{{ __('Bathrooms') }}</label>
-                            <input type="number" wire:model.live.debounce.700ms="bathrooms" id="bathrooms" value="0" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
+                            <input type="number" wire:model.live.debounce.500ms="bathrooms" id="bathrooms" value="0" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
                             @error('bathrooms') <span class="text-red-500 text-shadow-sm">{{ $message }}</span> @enderror
                         </div>
                     </div>
@@ -405,7 +396,7 @@ Basic information about the property
                         <div>
                             <label for="area_size" class="required-field block text-black text-sm mb-1">{{ __('Area Size') }}</label>
                             <div class="relative rounded-md shadow-sm max-w-sm">
-                                <input type="number" wire:model.live.debounce.700ms="area_size" id="area_size" value="0" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 [&::-webkit-inner-spin-button]:mr-9" placeholder="" />
+                                <input type="number" wire:model.live.debounce.500ms="area_size" id="area_size" value="0" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 [&::-webkit-inner-spin-button]:mr-9" placeholder="" />
                                 <div class="absolute inset-y-0 right-0 flex items-center h-full pl-3 pr-3 bg-gray-50 text-center text-gray-500 border border-gray-300 rounded-r-md text-sm">
                                     {{ __('m') }}<span class="text-[0.65rem] align-super mb-2">{{ __('2') }}</span>
                                 </div>
@@ -415,7 +406,7 @@ Basic information about the property
                         <div>
                             <label for="plot" class="required-field block text-black text-sm mb-1 mb-1">{{ __('Plot') }}</label>
                             <div class="relative rounded-md shadow-sm max-w-sm">
-                                <input type="number" wire:model.live.debounce.700ms="plot" id="plot" value="0" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 [&::-webkit-inner-spin-button]:mr-9" placeholder="" />
+                                <input type="number" wire:model.live.debounce.500ms="plot" id="plot" value="0" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 [&::-webkit-inner-spin-button]:mr-9" placeholder="" />
                                 
                                 <div class="absolute inset-y-0 right-0 flex items-center h-full pl-3 pr-3 bg-gray-50 text-center text-gray-500 border border-gray-300 rounded-r-md text-sm">
                                     {{ __('m') }}<span class="text-[0.65rem] align-super mb-2">{{ __('2') }}</span>
@@ -425,14 +416,15 @@ Basic information about the property
                         </div>
                         <div>
                             <label for="plot_description" class="required-field block text-black text-sm mb-1">{{ __('Plot Description') }}</label>
-                            <input type="text" wire:model.live.debounce.700ms="plot_description" placeholder="e.g. Corner Plot, flat, slight slope, cul-de-sac" id="plot_description" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
+                            <input type="text" wire:model.live.debounce.500ms="plot_description" placeholder="e.g. Corner Plot, flat, slight slope, cul-de-sac" id="plot_description" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
                             @error('plot_description') <span class="text-red-500 text-shadow-sm">{{ $message }}</span> @enderror
                         </div>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
+                    <div class="flex gap-5 mb-6">
+                        <?php /*
                         <div>
                             <label for="agent" class="required-field block text-black text-sm mb-1 mb-1">{{ __('Managing Agent') }}</label>
-                            <select wire:model.live="managing_agent_user_id" id="agent" class="w-full border-gray-300 py-3 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm" required />
+                            <select wire:model.live.debounce.500ms="managing_agent_user_id" id="agent" class="w-full border-gray-300 py-3 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm" required />
                                 <option value="12">SLV (General)</option>
                                 @foreach( $users as  $id => $user )
                                 <option value="{{ $user->id }}"  wire:key="{{ $user->id }}">{{ $user->first_name . ' ' . $user->last_name }}</option>
@@ -440,12 +432,8 @@ Basic information about the property
                             </select>
                             @error('managing_agent_user_id') <span class="text-red-500 text-shadow-sm">{{ $message }}</span> @enderror
                         </div>
-                        <div>
-                            <label for="year_of_construction" class="required-field block text-black text-sm mb-1">{{ __('Year of Construction') }}</label>
-                            <input type="number" wire:model.live.debounce.700ms="year_of_construction" placeholder="e.g. 2005" id="year_of_construction" class="w-full border-gray-300 text-sm rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
-                            @error('year_of_construction') <span class="text-red-500 text-shadow-sm">{{ $message }}</span> @enderror
-                        </div>
-                        <div>
+                        */ ?>
+                        <div class="w-32 flex-none">
                             <label for="pool" class="block text-black text-sm mb-1">{{ __('Pool') }}</label>
                             <div class="flex items-center pt-2">
                                 <div class="flex items-center">
@@ -458,20 +446,25 @@ Basic information about the property
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="mb-6">
-                        <div class="w-1/2">
+                        <div class="flex-1">
                             <label for="pool_description" class="required-field block text-black text-sm mb-1">{{ __('Pool Description') }}</label>
-                            <input type="text" wire:model.live.debounce.700ms="pool_description" id="pool_description" class="w-full border-gray-300 text-sm rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="Enter pool details (e.g. Infinity, Heated, Shared)" required />
+                            <input type="text" wire:model.live.debounce.500ms="pool_description" id="pool_description" class="w-full border-gray-300 text-sm rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="Enter pool details (e.g. Infinity, Heated, Shared)" required />
                             @error('pool_description') <span class="text-red-500 text-shadow-sm">{{ $message }}</span> @enderror
                         </div>
                     </div>
                 </div>
-                <div class="grid grid-cols-2 md:grid-cols-2 gap-5 mb-4">
+                <div class="grid grid-cols-3 md:grid-cols-3 gap-5 mb-4">
+                    <div>
+                        <label for="year_of_construction" class="required-field block text-black text-sm mb-1">{{ __('Year of Construction') }}</label>
+                        <input type="number" wire:model.live.debounce.500ms="year_of_construction" placeholder="e.g. 2005" id="year_of_construction" class="w-full border-gray-300 text-sm rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
+                        @error('year_of_construction') <span class="text-red-500 text-shadow-sm">{{ $message }}</span> @enderror
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 md:grid-cols-3 gap-5 mb-4">
                     <div>
                         <label for="commission" class="required-field block text-black text-sm mb-1">{{ __('Commission') }}</label>
                         <div class="relative rounded-md shadow-sm max-w-sm">
-                            <input type="number" wire:model.live.debounce.700ms="commission" id="commission" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 [&::-webkit-inner-spin-button]:mr-7" placeholder="" />
+                            <input type="number" wire:model.live.debounce.500ms="commission" id="commission" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 [&::-webkit-inner-spin-button]:mr-7" placeholder="" />
                             <div class="absolute inset-y-0 right-0 flex items-center h-full pl-3 px-3 bg-gray-100 text-center text-gray-500 border border-gray-300 rounded-r-md text-sm">
                                 %
                             </div>
@@ -560,7 +553,7 @@ Basic information about the property
                         <div>
                             <label for="communal_charge" class="block text-black text-sm mb-1">{{ __('Communal Charge') }} (&euro;)</label>
                             <div class="relative rounded-md shadow-sm max-w-sm">
-                                <input type="number" wire:model.live.debounce.700ms="communal_charge" id="communal_charge" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 [&::-webkit-inner-spin-button]:mr-[55px]" placeholder="" />
+                                <input type="number" wire:model.live.debounce.500ms="communal_charge" id="communal_charge" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 [&::-webkit-inner-spin-button]:mr-[55px]" placeholder="" />
                                 <div class="absolute inset-y-0 right-0 flex items-center">
                                     <select id="currency" name="currency" class="h-full pl-2 rounded-r-md border-gray-300 pr-3 bg-gray-100 text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm">
                                         <option value="yearly" default>{{ __('p/yr') }}</option>
@@ -574,7 +567,7 @@ Basic information about the property
             </div>
         </div>
     </div>
-    <?php /*
+    
     @if ($errors->any())
         <div x-data="{ show: true }"
             x-show="show"
@@ -604,7 +597,7 @@ Basic information about the property
             </div>
         </div>
     @endif
-    */ ?>
+
     @if (session()->has('success'))
         <div x-data="{ show: true }"
             x-show="show"

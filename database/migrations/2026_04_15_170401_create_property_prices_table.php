@@ -23,8 +23,10 @@ return new class extends Migration
             $table->integer('original_price')->default(0)->nullable();
             $table->decimal('total_reduction_percentage', 10, 2)->default(0)->nullable();
             $table->decimal('total_reduction_price', 10, 2)->default(0)->nullable();
-            $table->integer('commission')->default(0);
+            $table->integr('commission')->default(0);
+             $table->enum('commission_type', ['eauro', 'percentage'])->default(0);
             $table->integer('communal_charge')->default(0)->nullable();
+            $table->enum('communal_charge_type',['p/yr','p/mon', null])->nullable();
             $table->timestamps();
         });
     }

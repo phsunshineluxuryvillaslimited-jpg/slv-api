@@ -170,8 +170,8 @@ class PropertiesController extends Controller
                     'contact',
                     'photos',
                     'amenities',
-                    'key_features',
-                    'media',
+                    'keyFeatures',
+                    'photos',
                 ]);
             } else {
                 $property->load($this->parseIncludes($request->input('include')));

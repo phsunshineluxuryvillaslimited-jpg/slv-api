@@ -68,7 +68,7 @@ class Property extends Model
         return $this->hasMany(PropertyFile::class)->where('type', 'floorplan'); // Set for floor plan category
     }
 
-    public function keyFeature(): HasMany
+    public function keyFeatures(): HasMany
     {
         return $this->HasMany(PropertyKeyFeature::class);
     }

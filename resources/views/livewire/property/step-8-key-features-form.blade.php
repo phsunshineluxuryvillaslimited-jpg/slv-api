@@ -16,7 +16,7 @@ new class extends Component
     protected function rules()
     {
         return [
-            'keyFeature.*.field.*.value' => 'boolean',
+            'keyFeatures.*.field.*.value' => 'boolean',
         ];
     }
 
@@ -31,7 +31,7 @@ new class extends Component
     {
         try {
             $validatedData = $this->validate();
-            $this->property->keyFeature()->updateOrCreate([
+            $this->property->keyFeatures()->updateOrCreate([
                     'property_id' => $this->property->id,
                 ],
                 $validatedData

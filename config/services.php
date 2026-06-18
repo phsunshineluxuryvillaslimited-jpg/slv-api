@@ -35,4 +35,7 @@ return [
         ],
     ],
 
+    'slv_website' => [
+        'url' => env('WEBSITE_URL')
+    ]
 ];

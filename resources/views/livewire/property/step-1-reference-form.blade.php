@@ -551,7 +551,7 @@ Basic information about the property
             </div>
         </div>
     </div>
-    <? /*
+    <?php /*
     @if ($errors->any())
         <div x-data="{ show: true }"
             x-show="show"

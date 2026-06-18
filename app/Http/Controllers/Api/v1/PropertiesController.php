@@ -157,8 +157,8 @@ class PropertiesController extends Controller
     {
         $property = Property::where('reference', trim($reference))
             ->with(['networks'])
-            ->where('status', 'published')
-            ->whereHas('networks', fn ($query) => $query->where('external_feeds', 'slv'))
+            // ->where('status', 'published')
+            // ->whereHas('networks', fn ($query) => $query->where('external_feeds', 'slv'))
             ->firstOrFail();
 
         if ($request->filled('include')) {

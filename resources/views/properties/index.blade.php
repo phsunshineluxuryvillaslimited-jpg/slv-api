@@ -1,6 +1,7 @@
 <?php 
 // echo "<pre>";
 // print_r($properties); exit;
+$siglepageurl = config('services.slv_website.url') . '/property';
 ?>
 
 <x-app-layout>
@@ -92,7 +93,9 @@
                                     />
                                 </td>
                                 <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                    <p class="text-gray-900 whitespace-no-wrap">{{ $property->reference }}</p>
+                                    <p class="text-gray-900 whitespace-no-wrap">
+                                        <a href="{{ $siglepageurl . '/' . Str::slug( $property->propertyType->name, '-') . '-in-' . Str::slug($property->address->town_city, '-') . '-ref' . $property->reference }}" target="_blank" class="font-semibold">{{ $property->reference }}</a>
+                                    </p>
                                 </td>
                                 <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
                                     <p class="text-gray-900 whitespace-no-wrap">{{ $property->propertyType->name ?? '' }} in<br />{{ $property->address->town_city ?? '' }}</p>

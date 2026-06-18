@@ -1,3 +1,16 @@
+// const region = document.getElementById('region');
+// console.log(region);
+// const geocoder = new google.maps.Geocoder();
+
+// geocoder.geocode({ address: "Papos" }, (results, status) => {
+//   if (status === "OK") {
+//     const lat = results[0].geometry.location.lat();
+//     const lng = results[0].geometry.location.lng();
+//     console.log(`Latitude: ${lat}, Longitude: ${lng}`);
+//   } else {
+//     console.error("Geocode failed due to: " + status);
+//   }
+// });
 
 function initMap() {
     const center = { 

@@ -60,15 +60,15 @@ new class extends Component
                 'Pernera','Protaras','Sotira','Vrysoulles'
             ],
 
-            'Nicosia' => [
-                'Agios Dometios','Aglandjia','Agrokipia','Analiontas','Anayia','Anthoupoli',
-                'Archangelos','Arediou','Astromeritis','Dali','Deftera','Episkopeio',
-                'Ergates','Geri','Inia','Kakopetria','Kalo Chorio','Kapedes','Klirou',
-                'Kokkinotrimithia','Lakatamia','Latsia','Lythrodontas','Makedonitissa',
-                'Mammari','Meniko','Mitsero','Nicosia','Nisou','Panagia','Palaiometocho',
-                'Pera','Pera Chorio','Peristerona','Politiko','Sia','Strovolos',
-                'Trachoni','Tseri','Vyzakia'
-            ]
+            // 'Nicosia' => [
+            //     'Agios Dometios','Aglandjia','Agrokipia','Analiontas','Anayia','Anthoupoli',
+            //     'Archangelos','Arediou','Astromeritis','Dali','Deftera','Episkopeio',
+            //     'Ergates','Geri','Inia','Kakopetria','Kalo Chorio','Kapedes','Klirou',
+            //     'Kokkinotrimithia','Lakatamia','Latsia','Lythrodontas','Makedonitissa',
+            //     'Mammari','Meniko','Mitsero','Nicosia','Nisou','Panagia','Palaiometocho',
+            //     'Pera','Pera Chorio','Peristerona','Politiko','Sia','Strovolos',
+            //     'Trachoni','Tseri','Vyzakia'
+            // ]
     ];
 
     public string $selectedRegion;

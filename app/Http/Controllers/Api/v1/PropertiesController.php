@@ -21,11 +21,11 @@ class PropertiesController extends Controller
             ->with(['networks'])
             // ->where('status', 'published')
             ->whereHas('networks', fn ($query) => $query->where('external_feeds', 'like', '%slv%'));
-
+        
         if ($request->filled('include')) {
             $query->with($this->parseIncludes($request->input('include')));
         }
-
+        
         if ($request->filled('reference')) {
             $query->where('properties.reference', trim($request->input('reference')));
         } else {
@@ -93,8 +93,8 @@ class PropertiesController extends Controller
             //     $query->whereHas('amenities', fn ($query) => $query->where('covered', '>=', $request->input('area_size')));
             // }
         }
-
-        $propertyList = $query->paginate(1);
+        
+        $propertyList = $query->paginate();
 
         $propertyList->getCollection()->each->makeHidden(['description', 'plot_description', 'pool_description']);
 

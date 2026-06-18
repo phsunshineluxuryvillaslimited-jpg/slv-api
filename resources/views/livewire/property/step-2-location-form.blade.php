@@ -251,7 +251,7 @@ Property Location input form
                         <div>
                             <label for="latitude" class="required-field font-md block text-black text-sm mb-1">{{ __('Latitude') }}</label>
                             <input type="number"
-                                wire:model.live="latitude" 
+                                wire:model.live.debounce.700ms="latitude" 
                                 id="latitude" 
                                 class="w-full border-gray-300 rounded-md text-sm  shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                             />
@@ -260,7 +260,7 @@ Property Location input form
                         <div>
                             <label for="longitude" class="required-field font-md block text-black text-sm mb-1">{{ __('Longtitude') }}</label>
                             <input type="number" 
-                                wire:model.live="longitude" 
+                                wire:model.live.debounce.700ms="longitude" 
                                 id="longitude" 
                                 class="w-full border-gray-300 rounded-md text-sm  shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                                 x-data
@@ -280,7 +280,7 @@ Property Location input form
                     <div>
                         <label class="required-field text-sm">Map Address</label>
                         <input type="text" 
-                            wire:model.live="map_address" 
+                            wire:model.live.debounce.700ms="map_address" 
                             id="mapAddress" 
                             class="required-fields  w-full border-gray-300 rounded-md text-sm  shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                             x-data

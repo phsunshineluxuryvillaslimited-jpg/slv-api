@@ -13,6 +13,7 @@ php artisan key:generate --show
 php artisan migrate
 php artisan db:seed
 php artisan db:seed --class=AgentSeeder 
+php artisan db:seed --class=BankSeeder
 php artisan db:seed --class=PropertyTypesSeeder
 php artisan db:seed --class=RoleSeeder
 
@@ -59,6 +60,11 @@ Deployment Workflow
     composer install --optimize-autoloader --no-dev
 4. Database: to run migrations without a prompt.
     php artisan migrate --force 
+4. Database Seeding: run to seed the requied data
+    php artisan db:seed --class=AgentSeeder 
+    php artisan db:seed --class=BankSeeder
+    php artisan db:seed --class=PropertyTypesSeeder
+    php artisan db:seed --class=RoleSeeder
 5. Caching: 
     php artisan optimize
 6. Frontend: (if using Vite/Mix).

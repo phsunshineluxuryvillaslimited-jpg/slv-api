@@ -18,7 +18,7 @@ return new class extends Migration
                 ->references('id')
                 ->on('properties')
                 ->onDelete('cascade');
-            $table->integer('bank_id');
+            $table->string('bank');
             $table->string('branch');
             $table->string('account_ref')->unique();
             $table->string('sort_code');

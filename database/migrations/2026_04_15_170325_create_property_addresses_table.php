@@ -43,7 +43,7 @@ return new class extends Migration
                 ->comment('Address from google maps is the full address of the property as 
                     it should appear on a map, including street name, number, and postal code')
                 ->nullable();
-            $table->decimal('map_accuracy')
+            $table->integer('map_accuracy')
                 ->default(0);
             $table->timestamps();
         });

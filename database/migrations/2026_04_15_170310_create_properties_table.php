@@ -38,10 +38,10 @@ return new class extends Migration
             $table->integer('bathrooms')->index()
                 ->default(0)
                 ->comment('Number of bathrooms');
-            $table->decimal('area_size', 10)
+            $table->integer('area_size', 10)->index()
                 ->default(0)
                 ->comment('Area area in square meters');
-            $table->decimal('plot', 10)->index()
+            $table->integer('plot', 10)->index()
                 ->default(0)
                 ->comment('Plot area in square meters');
             $table->string('plot_description', 255)

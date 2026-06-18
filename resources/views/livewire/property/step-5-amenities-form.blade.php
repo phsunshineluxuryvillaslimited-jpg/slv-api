@@ -153,7 +153,7 @@ Add your form or content for adding a property here
                             <label for="amenities" class="block text-black text-sm mb-1">{{ __('Amenities (km)') }}</label>
                             <input type="number"
                                     wire:model="amenities" 
-                                    id="amenities" 
+                                    id="amenities"
                                     class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
                         </div>
                         <div>

@@ -24,7 +24,7 @@ new class extends Component
     public string $reference = '';
 
     #[Validate('required|numeric')]
-    public float $basic_price;
+    public int $basic_price;
 
     #[Validate('required|numeric|min:1')]
     public int $bedrooms;
@@ -87,6 +87,8 @@ new class extends Component
     public int $developer_id = 0;
 
     public $isEdit = false;
+
+    public $basicPriceDisabled = false;
 
     // check parent next button is click/triggered
     public $isParentNextButtonTriggered  = '';
@@ -167,6 +169,17 @@ new class extends Component
         }
     }
 
+    //if the poa is check then the basic price should be zero (0) value
+    public function updatedIsPoa($value) 
+    {
+        if ($value) {
+            $this->basic_price = 0;
+            $this->basicPriceDisabled = true;
+        } else {
+            $this->basicPriceDisabled = false;
+        }
+    }
+
     //Create
     #[On('parentNextStepButtonTriggered')]
     public function hundleNextStepButtonTriggered()
@@ -203,7 +216,7 @@ new class extends Component
     //Update
     #[On('parentUpdateButtonTriggered')]
     public function handleUpdateProperty()
-    {
+    { Log::info('uupdatee click');
         $validatedData = $this->validate();
         $validatedData['reference'] = $validatedData['edit_reference']; //change value of reference
         unset($validatedData['edit_reference']);
@@ -263,9 +276,9 @@ Basic information about the property
                                 class="uppercase placeholder:normal-case w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" 
                                 placeholder="SLV-1234"
                                 @if ( $isEdit )
-                                    wire:model.live="edit_reference"
+                                    wire:model.live.debounce.700ms="edit_reference"
                                 @else
-                                    wire:model.live="reference"
+                                    wire:model.live.debounce.700ms="reference"
                                 @endif
                                 required
                                 />
@@ -282,11 +295,12 @@ Basic information about the property
                                     &euro;
                                 </div>
                                 <input type="number" 
-                                    wire:model.live="basic_price" 
-                                    id="basicPrice" 
+                                    wire:model.live.debounce.700ms="basic_price" 
+                                    id="basicPrice"
                                     placeholder="e.g. 250000"
                                     class="w-full pl-7 text-sm  border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 [&::-webkit-inner-spin-button]:mr-8" 
                                     required
+                                    {{ $basicPriceDisabled ? 'disabled' : '' }}
                                 />
                                 <div class="absolute ml-0 text-gray-500 pr-3 border-r-1 border-gray-300 rounded-r-md h-full right-0 flex items-center">
                                     {{ __('GBP') }}
@@ -365,7 +379,7 @@ Basic information about the property
                         <div>
                             <label for="bedrooms" class="required-field block text-black text-sm mb-1">{{ __('Bedrooms') }}</label>
                             <input type="number" 
-                                wire:model.live="bedrooms" 
+                                wire:model.live.debounce.700ms="bedrooms" 
                                 id="bedrooms" 
                                 value="0" 
                                 class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" 
@@ -374,7 +388,7 @@ Basic information about the property
                         </div>
                         <div>
                             <label for="bathrooms" class="required-field block text-black text-sm mb-1">{{ __('Bathrooms') }}</label>
-                            <input type="number" wire:model.live="bathrooms" id="bathrooms" value="0" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
+                            <input type="number" wire:model.live.debounce.700ms="bathrooms" id="bathrooms" value="0" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
                             @error('bathrooms') <span class="text-red-500 text-shadow-sm">{{ $message }}</span> @enderror
                         </div>
                     </div>
@@ -382,7 +396,7 @@ Basic information about the property
                         <div>
                             <label for="area_size" class="required-field block text-black text-sm mb-1">{{ __('Area Size') }}</label>
                             <div class="relative rounded-md shadow-sm max-w-sm">
-                                <input type="number" wire:model.live="area_size" id="area_size" value="0" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 [&::-webkit-inner-spin-button]:mr-9" placeholder="" />
+                                <input type="number" wire:model.live.debounce.700ms="area_size" id="area_size" value="0" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 [&::-webkit-inner-spin-button]:mr-9" placeholder="" />
                                 <div class="absolute inset-y-0 right-0 flex items-center h-full pl-3 pr-3 bg-gray-50 text-center text-gray-500 border border-gray-300 rounded-r-md text-sm">
                                     {{ __('m') }}<span class="text-[0.65rem] align-super mb-2">{{ __('2') }}</span>
                                 </div>
@@ -392,7 +406,7 @@ Basic information about the property
                         <div>
                             <label for="plot" class="required-field block text-black text-sm mb-1 mb-1">{{ __('Plot') }}</label>
                             <div class="relative rounded-md shadow-sm max-w-sm">
-                                <input type="number" wire:model.live="plot" id="plot" value="0" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 [&::-webkit-inner-spin-button]:mr-9" placeholder="" />
+                                <input type="number" wire:model.live.debounce.700ms="plot" id="plot" value="0" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 [&::-webkit-inner-spin-button]:mr-9" placeholder="" />
                                 
                                 <div class="absolute inset-y-0 right-0 flex items-center h-full pl-3 pr-3 bg-gray-50 text-center text-gray-500 border border-gray-300 rounded-r-md text-sm">
                                     {{ __('m') }}<span class="text-[0.65rem] align-super mb-2">{{ __('2') }}</span>
@@ -402,7 +416,7 @@ Basic information about the property
                         </div>
                         <div>
                             <label for="plot_description" class="required-field block text-black text-sm mb-1">{{ __('Plot Description') }}</label>
-                            <input type="text" wire:model.live="plot_description" placeholder="e.g. Corner Plot, flat, slight slope, cul-de-sac" id="plot_description" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
+                            <input type="text" wire:model.live.debounce.700ms="plot_description" placeholder="e.g. Corner Plot, flat, slight slope, cul-de-sac" id="plot_description" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
                             @error('plot_description') <span class="text-red-500 text-shadow-sm">{{ $message }}</span> @enderror
                         </div>
                     </div>
@@ -419,7 +433,7 @@ Basic information about the property
                         </div>
                         <div>
                             <label for="year_of_construction" class="required-field block text-black text-sm mb-1">{{ __('Year of Construction') }}</label>
-                            <input type="number" wire:model.live="year_of_construction" placeholder="e.g. 2005" id="year_of_construction" class="w-full border-gray-300 text-sm rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
+                            <input type="number" wire:model.live.debounce.700ms="year_of_construction" placeholder="e.g. 2005" id="year_of_construction" class="w-full border-gray-300 text-sm rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
                             @error('year_of_construction') <span class="text-red-500 text-shadow-sm">{{ $message }}</span> @enderror
                         </div>
                         <div>
@@ -439,7 +453,7 @@ Basic information about the property
                     <div class="mb-6">
                         <div class="w-1/2">
                             <label for="pool_description" class="required-field block text-black text-sm mb-1">{{ __('Pool Description') }}</label>
-                            <input type="text" wire:model.live="pool_description" id="pool_description" class="w-full border-gray-300 text-sm rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="Enter pool details (e.g. Infinity, Heated, Shared)" required />
+                            <input type="text" wire:model.live.debounce.700ms="pool_description" id="pool_description" class="w-full border-gray-300 text-sm rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="Enter pool details (e.g. Infinity, Heated, Shared)" required />
                             @error('pool_description') <span class="text-red-500 text-shadow-sm">{{ $message }}</span> @enderror
                         </div>
                     </div>
@@ -448,7 +462,7 @@ Basic information about the property
                     <div>
                         <label for="commission" class="required-field block text-black text-sm mb-1">{{ __('Commission') }}</label>
                         <div class="relative rounded-md shadow-sm max-w-sm">
-                            <input type="number" wire:model.live="commission" id="commission" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 [&::-webkit-inner-spin-button]:mr-7" placeholder="" />
+                            <input type="number" wire:model.live.debounce.700ms="commission" id="commission" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 [&::-webkit-inner-spin-button]:mr-7" placeholder="" />
                             <div class="absolute inset-y-0 right-0 flex items-center h-full pl-3 px-3 bg-gray-100 text-center text-gray-500 border border-gray-300 rounded-r-md text-sm">
                                 %
                             </div>
@@ -537,7 +551,7 @@ Basic information about the property
                         <div>
                             <label for="communal_charge" class="block text-black text-sm mb-1">{{ __('Communal Charge') }} (&euro;)</label>
                             <div class="relative rounded-md shadow-sm max-w-sm">
-                                <input type="number" wire:model.live="communal_charge" id="communal_charge" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 [&::-webkit-inner-spin-button]:mr-[55px]" placeholder="" />
+                                <input type="number" wire:model.live.debounce.700ms="communal_charge" id="communal_charge" class="w-full border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 [&::-webkit-inner-spin-button]:mr-[55px]" placeholder="" />
                                 <div class="absolute inset-y-0 right-0 flex items-center">
                                     <select id="currency" name="currency" class="h-full pl-2 rounded-r-md border-gray-300 pr-3 bg-gray-100 text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm">
                                         <option value="yearly" default>{{ __('p/yr') }}</option>

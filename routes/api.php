@@ -22,7 +22,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 // Route::middleware('api')->group(function () {
 Route::post('/login', [LoginController::class, 'store']);
 Route::post('/logout', [LoginController::class, 'destroy']);
-// Route::post('/register', [RegisteredUserController::class, 'store']);
+Route::post('/register', [RegisteredUserController::class, 'store']);
 // });
 
 // Route::get('/user', function (Request $request) {

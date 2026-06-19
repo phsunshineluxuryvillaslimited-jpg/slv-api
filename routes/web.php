@@ -16,6 +16,18 @@ Route::middleware(['auth:sanctum'])->group(function () {
         ->middleware(['verified'])
         ->name('diaries');
 
+    Route::view('developers', 'developers')
+        ->middleware(['verified'])
+        ->name('developers');
+
+    Route::view('agents', 'agents')
+        ->middleware(['verified'])
+        ->name('agents');
+
+    Route::view('vendors', 'vendors')
+        ->middleware(['verified'])
+        ->name('vendors');
+
     Route::view('profile', 'profile')
         ->name('profile');
 

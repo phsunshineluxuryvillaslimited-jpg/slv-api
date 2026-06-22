@@ -8,7 +8,7 @@ use Livewire\Component;
 
 class MultiStepForm extends Component
 {
-    public $currentStep = 1;
+    public $currentStep = 2;
 
     public $totalSteps = 10;
 
@@ -38,7 +38,7 @@ class MultiStepForm extends Component
         $this->updatedStep = $value;
 
         if ($value == 2) {
-            $this->dispatch('load-map');
+            // $this->dispatch('load-map');
         }
 
         if ($value == 10) {

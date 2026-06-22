@@ -12,6 +12,26 @@
 //   }
 // });
 
+//  const geocoder = new google.maps.Geocoder();
+
+//   geocoder.geocode({ address: "Bulacan, Philippines" }, function(results, status) {
+//     if (status === "OK") {
+//       const location = results[0].geometry.location;
+
+//       console.log("Latitude:", location.lat());
+//       console.log("Longitude:", location.lng());
+
+//       // Optional: get bounds of the region
+//       const bounds = results[0].geometry.bounds;
+//       if (bounds) {
+//         console.log("NE:", bounds.getNorthEast().toString());
+//         console.log("SW:", bounds.getSouthWest().toString());
+//       }
+//     } else {
+//       console.error("Geocode failed:", status);
+//     }
+//   });
+
 function initMap() {
     const center = { 
         lat: 51.505, 
@@ -37,7 +57,6 @@ function initMap() {
     });
 
     map.addListener('click', function(event) {
-
         marker.setPosition(event.latLng);
         markerClicked(marker);
     });

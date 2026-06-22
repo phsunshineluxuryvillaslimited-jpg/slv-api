@@ -12,7 +12,6 @@
     <!-- <link rel="stylesheet" href="{{ asset('css/app.css') }}"> -->
     <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
     <link rel="stylesheet" href="{{ asset('css/dashboard-template.css') }}">
-    <link rel="stylesheet" href="{{ asset('/css/vendors-template.css') }}">
     <!-- <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script> -->
 </head>
 <body>

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PropertiesController;
 use App\Http\Controllers\PropertiesXmlController;
+use App\Livewire\Diaries\Calendar;
 
 Route::view('/', 'welcome');
 
@@ -11,9 +12,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         ->middleware(['verified'])
         ->name('dashboard');
 
-    Route::view('diaries', 'diaries')
-        ->middleware(['verified'])
-        ->name('diaries');
+    Route::get('/diaries', Calendar::class)->name('diaries');
 
     Route::view('developers', 'developers.index')
         ->middleware(['verified'])
@@ -23,13 +22,17 @@ Route::middleware(['auth:sanctum'])->group(function () {
         ->middleware(['verified'])
         ->name('agents');
 
+    Route::view('agent-info', 'agents.agent')
+        ->middleware(['verified'])
+        ->name('agent-info');
+
     Route::view('vendors', 'suppliers.index')
         ->middleware(['verified'])
         ->name('vendors');
 
-    Route::view('overview', 'suppliers.vendors')
+    Route::view('vendors-info', 'suppliers.vendors')
         ->middleware(['verified'])
-        ->name('overview');
+        ->name('vendors-info');
 
     Route::view('profile', 'profile')
         ->name('profile');

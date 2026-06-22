@@ -172,8 +172,6 @@
         tbody.innerHTML = '';
 
         agents.slice(0, limit).forEach(agent => {
-            // Assign a color once and stick to it, so re-rendering (e.g. changing
-            // the "Show" count) doesn't reshuffle every avatar's color
             if (!agent.avatarColor) {
                 agent.avatarColor = getRandomColor();
             }
@@ -181,8 +179,10 @@
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td class="flex px-6 py-3 people-identity">
-                    <div class="slv-avatar" style="background: ${agent.avatarColor};">${getInitials(agent.name)}</div>
-                    <span class="font-bold text-blue-500">${agent.name}</span>
+                    <a class="flex items-center gap-3" href="{{ route('agent-info') }}">
+                        <div class="slv-avatar" style="background: ${agent.avatarColor};">${getInitials(agent.name)}</div>
+                        <span class="font-bold text-blue-500">${agent.name}</span>
+                    </a>
                 </td>
                 <td class="px-6 py-3">
                     <a class="font-bold text-blue-500 text-hover-link-amber" href="mailto:${agent.email}" target="_blank">${agent.email}</a>

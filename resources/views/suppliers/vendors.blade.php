@@ -1,14 +1,6 @@
 
 <x-app-layout>
 
-export default {
-  content: [
-    './resources/**/*.blade.php',
-    './resources/**/*.js',
-    './app/**/*.php',
-  ],
-}
-
 <div class="min-h-screen bg-[#f5f8fa] text-slate-700">
     <div class="flex flex-col min-h-screen lg:flex-row">
 

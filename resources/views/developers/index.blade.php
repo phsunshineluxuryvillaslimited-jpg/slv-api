@@ -172,8 +172,6 @@
         tbody.innerHTML = '';
 
         developers.slice(0, limit).forEach(developer => {
-            // Assign a color once and stick to it, so re-rendering (e.g. changing
-            // the "Show" count) doesn't reshuffle every avatar's color
             if (!developer.avatarColor) {
                 developer.avatarColor = getRandomColor();
             }

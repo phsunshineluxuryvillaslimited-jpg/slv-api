@@ -52,7 +52,7 @@ new class extends Component
         $theProperty['bathrooms']       = $this->property->bathrooms;
         $theProperty['year_of_construction'] = $this->property->year_of_construction;
         $theProperty['listing_type']    = $this->property->listing_type;
-        $theProperty['amenities_']    = $this->property->listing_type;
+        $theProperty['amenities']    = $this->property->listing_type;
 
         $propertyAmenities = $this->property->amenities->toArray();
 

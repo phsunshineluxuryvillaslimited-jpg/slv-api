@@ -2,11 +2,11 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="text-xl font-semibold leading-tight text-gray-800">
-            {{ __('Developers') }}
+            {{ __('Agents') }}
         </h2>
     </x-slot>
 
-    <div class="flex items-center justify-end max-w-5xl gap-4 py-8 my-8 action-tabs">
+    <div class="flex items-center justify-end w-full gap-4 py-2 my-2 action-tabs">
         <div class="flex items-center gap-2 text-sm text-gray-600">
             <label for="showCount">Show</label>
             <div class="relative">
@@ -23,18 +23,18 @@
         </div>
 
         <button class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700">
-            Add Developer
+            Add Agent
         </button>
     </div>
 
-    <div class="max-w-5xl mx-auto overflow-x-auto border rounded-lg shadow-sm content-wrapper md:px-8">
-        <!-- List of the Developers Informations -->
+    <div class="w-full overflow-x-auto border rounded-lg shadow-sm content-wrapper">
+        <!-- List of the Agents Informations -->
         <table class="w-full text-sm text-left table-auto">
             <thead class="font-medium text-gray-600 border-b bg-gray-50">
                 <tr>
                     <th class="px-6 py-3">
                         <span class="flex items-center gap-1">
-                            DEVELOPERS NAME
+                            AGENT NAME
                             <svg class="w-3 h-3 text-gray-400" viewBox="0 0 10 12" fill="currentColor">
                                 <path d="M5 0L8 4H2L5 0Z"/>
                                 <path d="M5 12L2 8H8L5 12Z"/>
@@ -89,7 +89,7 @@
                 </tr>
             </thead>
 
-            <tbody id="developersTableBody" class="text-gray-600 divide-y">
+            <tbody id="agentTableBody" class="text-gray-600 divide-y">
             </tbody>
             
         </table>
@@ -143,17 +143,17 @@
 <script>
     const avatarColors = ['#CD7100', '#00A552', '#DCB601', '#009ACD', '#EB5736', '#226E34', '#692DE7', '#D52828', '#AC7DAD'];
 
-    const developers = [
-        { name: 'Leo Davis', email: 'leo@dev.com', mobile: '4234524534634', contactOwner: 'Hazel', primaryCompany: '3KM group', lastStatus: '01/01/0001 00:00:00' },
-        { name: 'Lorris Jacob', email: 'lorris@dev.com', mobile: '4234524534634', contactOwner: 'Jasmine', primaryCompany: 'A-House', lastStatus: '01/01/0001 00:00:00' },
-        { name: 'Rue Benneth', email: 'rue@dev.com', mobile: '4234524534634', contactOwner: 'Abby', primaryCompany: '5 Queens', lastStatus: '01/01/0001 00:00:00' },
-        { name: 'Cassie Ventura', email: 'cassie@dev.com', mobile: '4234524534634', contactOwner: 'Hazel', primaryCompany: 'A&M Pittakas Developers', lastStatus: '01/01/0001 00:00:00' },
-        { name: 'Maddie Perez', email: 'maddie@dev.com', mobile: '4234524534634', contactOwner: 'Yulya', primaryCompany: 'Develta Group', lastStatus: '01/01/0001 00:00:00' },
-        { name: 'Alamo Brown', email: 'alamo@dev.com', mobile: '4234524534634', contactOwner: 'Yulya', primaryCompany: 'A.C Priority Homes', lastStatus: '01/01/0001 00:00:00' },
-        { name: 'Fez Frazco', email: 'fez@dev.com', mobile: '4234524534634', contactOwner: 'Jasmine', primaryCompany: 'AGG Luxury Homes', lastStatus: '01/01/0001 00:00:00' },
-        { name: 'Hilda Coronel', email: 'hilda@dev.com', mobile: '4234524534634', contactOwner: 'Hazel', primaryCompany: 'Aphroditehills realty', lastStatus: '01/01/0001 00:00:00' },
-        { name: 'Meng Smith', email: 'meng@dev.com', mobile: '4234524534634', contactOwner: 'Abby', primaryCompany: 'Cyprus Dream Homes', lastStatus: '01/01/0001 00:00:00' },
-        { name: 'Randel Jackson', email: 'randel@dev.com', mobile: '4234524534634', contactOwner: 'Hazel', primaryCompany: 'D.Zavos Group', lastStatus: '01/01/0001 00:00:00' },
+    const agents = [
+        { name: 'Alice Guytengco', email: 'alice@agent.com', mobile: '4234524534634', contactOwner: 'Hazel', primaryCompany: '3KM group', lastStatus: '01/01/0001 00:00:00' },
+        { name: 'Jessie De Leon', email: 'jessie@agent.com', mobile: '4234524534634', contactOwner: 'Jasmine', primaryCompany: 'A-House', lastStatus: '01/01/0001 00:00:00' },
+        { name: 'Mika Reyes', email: 'mika@agent.com', mobile: '4234524534634', contactOwner: 'Abby', primaryCompany: '5 Queens', lastStatus: '01/01/0001 00:00:00' },
+        { name: 'Miu Schuette', email: 'miu@agent.com', mobile: '4234524534634', contactOwner: 'Hazel', primaryCompany: 'A&M Pittakas Developers', lastStatus: '01/01/0001 00:00:00' },
+        { name: 'Becca Armstrong', email: 'becca@agent.com', mobile: '4234524534634', contactOwner: 'Yulya', primaryCompany: 'Develta Group', lastStatus: '01/01/0001 00:00:00' },
+        { name: 'Lyndel Lin', email: 'lyndel@agent.com', mobile: '4234524534634', contactOwner: 'Yulya', primaryCompany: 'A.C Priority Homes', lastStatus: '01/01/0001 00:00:00' },
+        { name: 'Maja Fernandez', email: 'maja@agent.com', mobile: '4234524534634', contactOwner: 'Jasmine', primaryCompany: 'AGG Luxury Homes', lastStatus: '01/01/0001 00:00:00' },
+        { name: 'Rachel Violet', email: 'rachel@agent.com', mobile: '4234524534634', contactOwner: 'Hazel', primaryCompany: 'Aphroditehills realty', lastStatus: '01/01/0001 00:00:00' },
+        { name: 'Der Hobbs', email: 'der@agent.com', mobile: '4234524534634', contactOwner: 'Abby', primaryCompany: 'Cyprus Dream Homes', lastStatus: '01/01/0001 00:00:00' },
+        { name: 'Luka Doncic', email: 'luka@agent.com', mobile: '4234524534634', contactOwner: 'Hazel', primaryCompany: 'D.Zavos Group', lastStatus: '01/01/0001 00:00:00' },
     ];
 
     function getInitials(name) {
@@ -167,40 +167,40 @@
         return avatarColors[Math.floor(Math.random() * avatarColors.length)];
     }
 
-    function renderDevelopers(limit) {
-        const tbody = document.getElementById('developersTableBody');
+    function renderAgents(limit) {
+        const tbody = document.getElementById('agentTableBody');
         tbody.innerHTML = '';
 
-        developers.slice(0, limit).forEach(developer => {
-            // Assign a color once and stick to it, so re-rendering (e.g. changing
-            // the "Show" count) doesn't reshuffle every avatar's color
-            if (!developer.avatarColor) {
-                developer.avatarColor = getRandomColor();
+        agents.slice(0, limit).forEach(agent => {
+            if (!agent.avatarColor) {
+                agent.avatarColor = getRandomColor();
             }
 
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td class="flex px-6 py-3 people-identity">
-                    <div class="slv-avatar" style="background: ${developer.avatarColor};">${getInitials(developer.name)}</div>
-                    <span class="font-bold text-blue-500">${developer.name}</span>
+                    <a class="flex items-center gap-3" href="{{ route('agent-info') }}">
+                        <div class="slv-avatar" style="background: ${agent.avatarColor};">${getInitials(agent.name)}</div>
+                        <span class="font-bold text-blue-500">${agent.name}</span>
+                    </a>
                 </td>
                 <td class="px-6 py-3">
-                    <a class="font-bold text-blue-500 text-hover-link-amber" href="mailto:${developer.email}" target="_blank">${developer.email}</a>
+                    <a class="font-bold text-blue-500 text-hover-link-amber" href="mailto:${agent.email}" target="_blank">${agent.email}</a>
                 </td>
-                <td class="px-6 py-3">${developer.mobile}</td>
-                <td class="px-6 py-3">${developer.contactOwner}</td>
-                <td class="px-6 py-3"><span class="font-bold">${developer.primaryCompany}</span></td>
-                <td class="px-6 py-3">${developer.lastStatus}</td>
+                <td class="px-6 py-3">${agent.mobile}</td>
+                <td class="px-6 py-3">${agent.contactOwner}</td>
+                <td class="px-6 py-3"><span class="font-bold">${agent.primaryCompany}</span></td>
+                <td class="px-6 py-3">${agent.lastStatus}</td>
             `;
             tbody.appendChild(row);
         });
     }
 
     document.getElementById('showCount').addEventListener('change', (e) => {
-        renderDevelopers(parseInt(e.target.value, 10));
+        renderAgents(parseInt(e.target.value, 10));
     });
 
-    renderDevelopers(10); // initial render
+    renderAgents(10); // initial render
 </script>
 
-</x-app-layout>
+</x-app-layout> 

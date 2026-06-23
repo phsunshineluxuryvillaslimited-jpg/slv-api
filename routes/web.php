@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PropertiesController;
+use App\Http\Controllers\DeveloperController;
 use App\Http\Controllers\PropertiesXmlController;
 use App\Http\Controllers\S3FileUploadController;
 use Illuminate\Support\Facades\Route;
@@ -15,9 +16,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('/diaries', Calendar::class)->name('diaries');
 
-    Route::view('developers', 'developers.index')
-        ->middleware(['verified'])
-        ->name('developers');
+    // Route::view('developers', 'developers.index')
+    //     ->middleware(['verified'])
+    //     ->name('developers');
 
     Route::view('agents', 'agents.index')
         ->middleware(['verified'])
@@ -37,6 +38,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::view('profile', 'profile')
         ->name('profile');
+
+    Route::resource('developer', DeveloperController::class);
 
     Route::resource('properties', PropertiesController::class);
 

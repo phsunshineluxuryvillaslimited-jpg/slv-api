@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Bank;
 use Illuminate\Http\Request;
+use App\Http\Resources\BankResource;
 
 class BankController extends Controller
 {
@@ -12,7 +13,9 @@ class BankController extends Controller
      */
     public function index()
     {
-        //
+        $banks = Bank::paginate(10);
+        
+        return view('banks.index', compact('banks'));
     }
 
     /**
@@ -20,7 +23,7 @@ class BankController extends Controller
      */
     public function create()
     {
-        //
+        return view('banks.create');
     }
 
     /**
@@ -28,7 +31,11 @@ class BankController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validated();
+
+        $bank = Bank::create($data);
+
+        return new BankResource($bank);
     }
 
     /**
@@ -44,7 +51,7 @@ class BankController extends Controller
      */
     public function edit(Bank $bank)
     {
-        //
+        return view('banks.edit',  compact('bank'));
     }
 
     /**
@@ -52,7 +59,11 @@ class BankController extends Controller
      */
     public function update(Request $request, Bank $bank)
     {
-        //
+        $data = $request->all();
+        
+        $bank->update($data);
+
+        return new BankResource($bank);
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Agent;
+use App\Http\Resources\AgentResource;
 use Illuminate\Http\Request;
 
 class AgentController extends Controller
@@ -12,7 +13,9 @@ class AgentController extends Controller
      */
     public function index()
     {
-        //
+        $agent = Agent::paginate(10);
+        
+        return view('agents.index', compact('agent'));
     }
 
     /**
@@ -20,7 +23,7 @@ class AgentController extends Controller
      */
     public function create()
     {
-        //
+        return view('agents.create');
     }
 
     /**
@@ -28,7 +31,11 @@ class AgentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validated();
+
+        $agent = Agent::create($data);
+
+        return new AgentResource($agent);
     }
 
     /**
@@ -44,7 +51,7 @@ class AgentController extends Controller
      */
     public function edit(Agent $agent)
     {
-        //
+        return view('agents.edit', compact('agent'));
     }
 
     /**
@@ -52,7 +59,11 @@ class AgentController extends Controller
      */
     public function update(Request $request, Agent $agent)
     {
-        //
+        $data = $request->all();
+        
+        $agent->update($data);
+
+        return new AgentResource($agent);
     }
 
     /**

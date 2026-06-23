@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use Illuminate\Http\Request;
+use App\Http\Resources\ClientResource;
 
 class ClientController extends Controller
 {
@@ -12,7 +13,9 @@ class ClientController extends Controller
      */
     public function index()
     {
-        //
+        $clients = Client::paginate(10);
+        
+        return view('clients.index', compact('clients'));
     }
 
     /**
@@ -20,7 +23,7 @@ class ClientController extends Controller
      */
     public function create()
     {
-        //
+        return view('clients.create');
     }
 
     /**
@@ -28,7 +31,11 @@ class ClientController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validated();
+
+        $agent = Client::create($data);
+
+        return new ClientResource($agent);
     }
 
     /**
@@ -44,7 +51,7 @@ class ClientController extends Controller
      */
     public function edit(Client $client)
     {
-        //
+        return view('clients.edit', compact('client'));
     }
 
     /**
@@ -52,7 +59,11 @@ class ClientController extends Controller
      */
     public function update(Request $request, Client $client)
     {
-        //
+        $data = $request->all();
+        
+        $client->update($data);
+
+        return new ClientResource($client);
     }
 
     /**

@@ -31,10 +31,13 @@
                     <div class="grid grid-cols-3 gap-4">
                         <!-- <div class=""> -->
                             @if (isset($item['fields']) && count($item['fields']) > 0)
-                            @foreach ($item['fields'] as $field)
-                            <div wire:ignore.self class="border border-gray-300 flex items-center rounded p-2">
+                            @foreach ($item['fields'] as $index => $field)
+                            <div wire:key="value-{{ $field['name'] }}" class="border border-gray-300 flex items-center rounded p-2">
                                 <span>{{ $field['label'] }}</span>
-                                <input type="checkbox" class="ml-auto rounded border-gray-400" wire:model="{{ $field['name'] }}" value="1" checked />
+                                <input type="checkbox" 
+                                    class="ml-auto rounded border-gray-400" 
+                                    wire:model.live="{{ $field['name'] }}" 
+                                />
                             </div>
                             @endforeach
                             @endif

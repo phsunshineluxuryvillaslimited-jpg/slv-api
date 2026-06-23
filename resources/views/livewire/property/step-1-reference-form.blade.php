@@ -414,18 +414,6 @@ Basic information about the property
                         </div>
                     </div>
                     <div class="flex gap-5 mb-6">
-                        <?php /*
-                        <div>
-                            <label for="agent" class="required-field block text-black text-sm mb-1 mb-1">{{ __('Managing Agent') }}</label>
-                            <select wire:model.live.debounce.500ms="managing_agent_user_id" id="agent" class="w-full border-gray-300 py-3 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm" required />
-                                <option value="12">SLV (General)</option>
-                                @foreach( $users as  $id => $user )
-                                <option value="{{ $user->id }}"  wire:key="{{ $user->id }}">{{ $user->first_name . ' ' . $user->last_name }}</option>
-                                @endforeach
-                            </select>
-                            @error('managing_agent_user_id') <span class="text-red-500 text-shadow-sm">{{ $message }}</span> @enderror
-                        </div>
-                        */ ?>
                         <div class="w-32 flex-none">
                             <label for="pool" class="block text-black text-sm mb-1">{{ __('Pool') }}</label>
                             <div class="flex items-center pt-2">
@@ -560,37 +548,6 @@ Basic information about the property
             </div>
         </div>
     </div>
-    <?php /*
-    @if ($errors->any())
-        <div x-data="{ show: true }"
-            x-show="show"
-            x-init="setTimeout(() => show = false, 2500)"
-            x-transition:enter="transition ease-out duration-300"
-            x-transition:enter-start="opacity-0 scale-95"
-            x-transition:enter-end="opacity-100 scale-100"
-            x-transition:leave="transition ease-in duration-200"
-            x-transition:leave-start="opacity-100 scale-100"
-            x-transition:leave-end="opacity-0 scale-95"
-            class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
-            aria-modal="true" 
-            role="dialog">
-
-            <!-- Modal Box -->
-            <div class="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full mx-4 text-center">
-                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
-                    <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <circle cx="12" cy="12" r="9" stroke-width="2"></circle>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 9l6 6M15 9l-6 6" />
-                    </svg>
-                </div>
-                <h3 class="text-lg leading-6 font-medium text-gray-900">{{ __("Oops! Some fields need your attention.") }} </h3>
-                <div class="mt-2 px-7 py-3">
-                    <p class="text-sm text-gray-500"></p>
-                </div>
-            </div>
-        </div>
-    @endif
-    */ ?>
     @if (session()->has('success'))
         <div x-data="{ show: true }"
             x-show="show"

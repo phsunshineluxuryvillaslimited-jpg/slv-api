@@ -118,97 +118,11 @@
         </div>
     </div>
 </section>
-@script
-    <script>
 
-    Livewire.on('load-tinymce', () => {
-        tinymce.init({
-            selector: '#description'
-        });
-    });
-<?php /*
-    // function uploadSingle(folder) {
-    //     return {
-    //         fileUrl: null,
-
-    //         async upload(event) {
-    //             const file = event.target.files[0];
-
-    //             const res = await fetch('/s3/file-upload/', {
-    //                 method: 'POST',
-    //                 headers: {
-    //                     'Content-Type': 'application/json',
-    //                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
-    //                 },
-    //                 body: JSON.stringify({
-    //                     filename: file.name,
-    //                     type: file.type,
-    //                     folder: folder
-    //                 })
-    //             });
-
-    //             const data = await res.json();
-
-    //             await fetch(data.url, {
-    //                 method: 'PUT',
-    //                 headers: { 'Content-Type': file.type },
-    //                 body: file
-    //             });
-
-    //             this.fileUrl = data.file_url;
-
-    //             @this.set(folder, {
-    //                 path: data.path,
-    //                 url: data.file_url
-    //             });
-    //         }
-    //     };
-    // }
-
-    // function uploadMultiple(folder) {
-    //     return {
-    //         files: [],
-
-    //         async upload(event) {
-    //             for (let file of event.target.files) {
-    //                 console.log('upload');
-    //                 const res = await fetch('/s3/file-upload/', {
-    //                     method: 'POST',
-    //                     headers: {
-    //                         'Content-Type': 'application/json',
-    //                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
-    //                     },
-    //                     body: JSON.stringify({
-    //                         filename: file.name,
-    //                         type: file.type,
-    //                         folder: folder
-    //                     })
-    //                 });
-
-    //                 const data = await res.json();
-
-    //                 await fetch(data.url, {
-    //                     method: 'PUT',
-    //                     headers: { 'Content-Type': file.type },
-    //                     body: file
-    //                 });
-
-    //                 this.files.push({
-    //                     path: data.path,
-    //                     url: data.file_url
-    //                 });
-
-    //                 window.Livewire.find('{{ $property->id }}').push(folder, {
-    //                     path: data.path,
-    //                     url: data.file_url
-    //                 });
-    //             }
-    //         }
-    //     }
-    // }
-*/ ?>
-    </script>
-@endscript
 @push('scripts')
     <!-- @vite(['resources/js/Sortable.min.js']) -->
+     
+    <!-- <script>
+        window.Sortable = window.Sortable
+    </script> -->
 @endpush

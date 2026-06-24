@@ -1,11 +1,13 @@
 
 <?php
+
 use Livewire\Attributes\Validate;
 use Livewire\Attributes\On;
 use Livewire\Volt\Component;
 use App\Models\Property;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Log;
+use App\Services\GeocodingServices;
 
 new class extends Component
 {
@@ -86,10 +88,10 @@ new class extends Component
     public string $locality = 'All Locality';
 
     #[Validate('required|numeric|between:-90,90')]
-    public float $latitude;
+    public ?float $latitude = 35.1264;
 
     #[Validate('required|numeric|between:-180,180')]
-    public float $longitude;
+    public ?float $longitude = 33.4299;
 
     #[Validate('required|string')]
     public string $map_address;
@@ -97,11 +99,18 @@ new class extends Component
     #[Validate('required|numeric')]
     public int $accuracy = 500;
 
+    protected GeocodingServices $geocoder;
+
     public array $galleries = [];
 
     public bool $isEdit = false;
 
     public ?Property $property = null;
+
+    public function boot(GeocodingServices $geocoder): void
+    {
+        $this->geocoder = $geocoder;
+    }
 
     public function mount(Property $property, $isEdit = false): void
     {
@@ -126,11 +135,51 @@ new class extends Component
     /**
      * feature when region select will filter town for the selected region
      */
-    public function updatedRegion(string $region)
+    public function updatedRegion(?string $region)
     {   
+            $this->reset('town_city');
             $this->selectedRegion = $region;
             $this->towns = $this->regionTownMap[$region] ?? [];
-            $this->town_city = '';
+            // $this->town_city = '';
+    }
+
+    /**
+     * Feature whe town_city select
+     */
+    public function updatedTownCity(?string $value)
+    {
+        if ($value == null) {
+            return;
+        }
+
+        $address = "{$this->region}, {$value}";
+
+        $geolocation = $this->geocoder->geocode($address);
+
+        $this->latitude = $geolocation['lat'];
+        $this->longitude = $geolocation['lng'];
+        $this->map_address = $geolocation['formatted_address'];
+
+        $this->dispatch(
+            'location-changed',
+            lat:$this->latitude,
+            lng: $this->longitude,
+            radius: $this->accuracy,
+            zoom: 14,
+        );
+    }
+
+
+     /**
+     * Called from JS when the user drags the marker by hand.
+     * (See dragend listener in the Blade/Alpine map component.)
+     */
+    public function setCoordinatesFromMap(float $lat, float $lng, string $mapAddress): void
+    {
+        $this->latitude = round($lat, 7);
+        $this->longitude = round($lng, 7);
+        $this->map_address = $mapAddress;
+
     }
 
     // for creating action
@@ -201,7 +250,12 @@ Property Location input form
                     <div class="grid grid-cols-3 md:grid-cols-3 gap-5 mb-4">
                         <div>
                             <label for="region" class="required-field font-md block text-black text-sm mb-1">{{ __('Region') }}</label>
-                            <select wire:model.live="region" id="region" class="w-full border-gray-300 text-sm rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                            <select 
+                                wire:model.live="region" 
+                                id="region" 
+                                class="w-full border-gray-300 text-sm rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" 
+                                required
+                            >
                                 <option value="" selected class="text-gray-500">Select Region</option>
                                 @foreach ($regions as $item)
                                     <option value="{{ $item }}">{{ $item }}</option>
@@ -211,7 +265,10 @@ Property Location input form
                         </div>
                         <div>
                             <label for="town_city" class="required-field font-md block text-black text-sm mb-1">{{ __('Town / City') }}</label>
-                            <select wire:model="town_city" name="town_city" id="town_city" @disabled(!$selectedRegion) class="w-full border-gray-300 text-sm rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                            <select wire:model.live="town_city" 
+                                id="town_city" @disabled(!$selectedRegion) 
+                                class="w-full border-gray-300 text-sm rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                >
                                 <option value="" selected class="text-gray-500">Select Town / City</option>
                                  @foreach($towns as $town)
                                     <option value="{{ $town }}">
@@ -236,7 +293,15 @@ Property Location input form
     <!-----------------------------------------
     Lat and Long from map
     ----------------------------------------->
-    <div class="py-3">
+    <div class="py-3"
+        x-data="locationMap({
+            lat: @js($latitude),
+            lng: @js($longitude),
+            radius: @js($accuracy),
+            apiKey: @js(config('services.google_maps.key')),
+        })"
+
+    >
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="p-4 sm:p-8 bg-white shadow-md sm:rounded-lg">
                 <div class="w-full">
@@ -263,9 +328,6 @@ Property Location input form
                                 wire:model.live.debounce.700ms="longitude" 
                                 id="longitude" 
                                 class="w-full border-gray-300 rounded-md text-sm  shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                x-data
-                                x-init="$watch('$el.value', value => $el.dispatchEvent(new Event('input', { bubbles: true })))"
-                                required 
                             />
                             @error('longitude') <span class="text-red-500 text-shadow-sm">{{ $message }}</span> @enderror
                         </div>
@@ -283,19 +345,112 @@ Property Location input form
                             wire:model.live.debounce.700ms="map_address" 
                             id="mapAddress" 
                             class="required-fields  w-full border-gray-300 rounded-md text-sm  shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                            x-data
-                            x-init="$watch('$el.value', value => $el.dispatchEvent(new Event('input', { bubbles: true })))"
                             required
                         />
                         @error('map_address') <span class="text-red-500 text-shadow-sm">{{ $message }}</span> @enderror
+                        <p wire:loading wire:target="mapAddress" class="text-xs text-gray-400 mt-1">Looking up address…</p>
                     </div>
                     <div wire:ignore class="gmap border h-[700px] mt-4 bg-white p-1">
-                        <div id="gmap" class="h-full">
+                        <div id="property-map" class="h-full">
                         </div>
                     </div>
                 </div>  
             </div>
         </div>
+        {{-- ===================== MAP BEHAVIOUR ===================== --}}
+        @script
+        <script>
+            Alpine.data('locationMap', (initial) => ({
+                map: null,
+                marker: null,
+                circle: null,
+
+                init() {
+                    this.loadGoogleMaps(initial.apiKey).then(() => this.initMap(initial));
+
+                    // SCENARIO 1 & 2: Livewire tells the map to recenter / move the pin.
+                    Livewire.on('location-changed', (e) => {
+                        this.recenter(e.lat, e.lng, e.radius, e.zoom);
+                    });
+
+                    // Accuracy dropdown changed — just resize the circle.
+                    Livewire.on('radius-changed', (e) => {
+                        this.updateRadius(e.radius);
+                    });
+                },
+
+                loadGoogleMaps(apiKey) {
+                    if (window.google?.maps) {
+                        return Promise.resolve();
+                    }
+
+                    return new Promise((resolve) => {
+                        window.__gmapsReady = resolve;
+                        const script = document.createElement('script');
+                        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&callback=__gmapsReady`;
+                        script.async = true;
+                        document.head.appendChild(script);
+                    });
+                },
+
+                initMap({ lat, lng, radius }) {
+                    const center = { lat: parseFloat(lat), lng: parseFloat(lng) };
+
+                    this.map = new google.maps.Map(document.getElementById('property-map'), {
+                        center,
+                        zoom: 14,
+                        mapTypeControl: true,
+                    });
+
+                    this.marker = new google.maps.Marker({
+                        position: center,
+                        map: this.map,
+                        draggable: true,
+                    });
+
+                    this.circle = new google.maps.Circle({
+                        map: this.map,
+                        center,
+                        radius: parseInt(radius, 10),
+                        fillColor: '#f97316',
+                        fillOpacity: 0.12,
+                        strokeColor: '#f97316',
+                        strokeWeight: 1,
+                    });
+
+                    // Let the user nudge the pin by hand; push the new position back to Livewire.
+                    this.marker.addListener('dragend', (event) => {
+                        const lat = event.latLng.lat();
+                        const lng = event.latLng.lng();
+                        let mapAddress = '';
+                        this.circle.setCenter({ lat, lng });
+                         
+                        const geocoder = new google.maps.Geocoder();
+                        const latlng = { lat: lat, lng: lng };
+                        geocoder.geocode({ location: latlng }, (results, status) => {
+                            if (status === "OK") {
+                                mapAddress = results[0].formatted_address;
+                            }
+                            $wire.setCoordinatesFromMap(lat, lng, mapAddress);
+                        });
+                    });
+                },
+
+                recenter(lat, lng, radius, zoom) {
+                    const position = { lat: parseFloat(lat), lng: parseFloat(lng) };
+                    // this.marker.setPosition(position);
+                    this.circle.setCenter(position);
+                    if (radius) this.circle.setRadius(parseInt(radius, 10));
+                    this.map.panTo(position);
+                    if (zoom) this.map.setZoom(zoom);
+                },
+
+                updateRadius(radius) {
+                    this.circle.setRadius(parseInt(radius, 10));
+                },
+            }));
+        </script>
+        @endscript
     </div>
     <?php /*
     @if ($errors->any())

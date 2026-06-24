@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('first_name');
             $table->string('last_name');
-            $table->string('email');
-            $table->string('mobile_number')->unique();
-            $table->string('phone_number')->unique();
+            $table->string('email')->unique();
+            $table->string('mobile_number')->nullable();
+            $table->string('phone_number')->nullable();
             $table->string('subscription_status')->nullable();
 
             $table->timestamps();

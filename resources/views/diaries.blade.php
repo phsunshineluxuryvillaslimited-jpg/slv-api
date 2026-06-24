@@ -55,10 +55,10 @@
         </div>
 
         {{-- Calendar --}}
-        <div style="border:1px solid #d1d5db; border-radius:8px; overflow:hidden; background:#fff;">
+        <div class="content-wrapper">
 
             {{-- Day headers --}}
-            <div style="display:grid; grid-template-columns:repeat(7,1fr); border-bottom:1px solid #d1d5db; background:#fff;">
+            <div class="calendar-format" style="display:grid; grid-template-columns:repeat(7,1fr); border-bottom:1px solid #d1d5db; background:#fff;">
                 @foreach(['Mon','Tue','Wed','Thu','Fri','Sat','Sun'] as $d)
                 <div style="padding:10px 0; text-align:center; font-size:12px; font-weight:600; color:#6b7280;
                     {{ !$loop->last ? 'border-right:1px solid #d1d5db;' : '' }}">

@@ -1,4 +1,4 @@
-<nav class="flex flex-1 justify-end">
+<nav class="flex flex-1 justify-center">
     @auth
         <?php /*
         <a

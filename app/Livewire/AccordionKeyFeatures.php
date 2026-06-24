@@ -534,7 +534,7 @@ class AccordionKeyFeatures extends Component
     {
         $this->property = $property;
         $this->isEdit   = $isEdit;
-        // dd($this->keyFeatures);
+
         if ($isEdit) {
             $keyFeatures = $this->property->keyFeatures()->get();
             $keyFeaturesWithValue = [];
@@ -561,9 +561,10 @@ class AccordionKeyFeatures extends Component
                     }
                 }
                 unset($varKeyFeature);
-                
             }
         }
+
+        // dd($this->keyFeatures);
     }
 
     #[On('parentNextStepButtonTriggered')]

@@ -596,6 +596,7 @@ Basic location info
                             @error('address') <span class="text-red-500 text-shadow-sm">{{ $message }}</span> @enderror
                         </div>
                     </div>
+                    
                     <div class="grid grid-cols-2 md:grid-cols-2 gap-5 mb-4">
                         <div>
                             <label for="contact_name" class="required-field block text-black text-sm mb-1">{{ __('Contact Name') }}</label>

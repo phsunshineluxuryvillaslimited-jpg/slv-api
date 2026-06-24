@@ -10,6 +10,7 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700&display=swap" rel="stylesheet"/>
     @vite('resources/css/app.css')
     <!-- <link rel="stylesheet" href="{{ asset('css/app.css') }}"> -->
+    <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
     <link rel="stylesheet" href="{{ asset('css/dashboard-template.css') }}">
     <!-- <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script> -->
      <script src="https://ckeditor.com"></script>
@@ -35,21 +36,25 @@
                 Diaries
             </a>
             <div class="nav-section">People</div>
-            <a href="#" class="nav-link">
+            <a href="{{ route('developer.index') }}" class="nav-link {{ request()->routeIs('developer') ? 'active' : '' }}">
                 <svg fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16M3 21h18M9 21V10.5M15 21V10.5M9 7.5h6M12 3v4.5"/></svg>
                 Developers
             </a>
-            <a href="#" class="nav-link">
+            <a href="{{ route('agent.index') }}" class="nav-link {{request()->routeIs('agent') ? 'active' : '' }}">
                 <svg fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                 Agents
             </a>
-            <a href="#" class="nav-link">
+            <a href="{{ route('bank.index') }}" class="nav-link {{request()->routeIs('bank') ? 'active' : '' }}">
                 <svg fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 6l9-4 9 4M3 6v14a1 1 0 001 1h16a1 1 0 001-1V6M3 6h18M9 10v8M15 10v8M12 10v8"/></svg>
                 Banks
             </a>
-            <a href="#" class="nav-link">
+            <a href="{{ route('vendor.index') }}" class="nav-link {{ request()->routeIs('vendor') ? 'active' : '' }}">
                 <svg fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 6l9-4 9 4M3 6v14a1 1 0 001 1h16a1 1 0 001-1V6M3 6h18M9 10v8M15 10v8M12 10v8"/></svg>
                 Vendors
+            </a>
+            <a href="{{ route('client.index') }}" class="nav-link {{ request()->routeIs('client') ? 'active' : '' }}">
+                <svg fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 6l9-4 9 4M3 6v14a1 1 0 001 1h16a1 1 0 001-1V6M3 6h18M9 10v8M15 10v8M12 10v8"/></svg>
+                Client
             </a>
             <div class="nav-section">Business</div>
             <a href="#" class="nav-link">
@@ -101,6 +106,7 @@
                 </button>
                 <div class="header-divider"></div>
                 <div class="user-menu" x-data="{ open: false }">
+                    
                     <button class="user-menu-btn" @click="open = !open">
                         <img class="user-avatar" src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&background=1e4080&color=fff" alt="{{ auth()->user()->name }}">
                         <span>{{ auth()->user()->name }}</span>
@@ -128,7 +134,7 @@
         </main>
     </div>
 </div>
-<footer class="py-6 text-center text-sm text-gray-500">
+<footer class="py-6 text-sm text-center text-gray-500">
     SLV Admin v{{ config('app.APP_VERSION') }} &copy; 2026. All rights reserved.
 </footer>
 <script src="{{ asset('js/app.js') }}" defer></script>

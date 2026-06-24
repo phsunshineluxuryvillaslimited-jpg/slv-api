@@ -63,7 +63,13 @@
 
     <div class="py-3">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6 flex justify-end">
-            <div>
+            <div x-data x-init="
+                $nextTick(() => {
+                    Sortable.create($refs.items, {
+                        animation: 150
+                    })
+                })
+                ">
                 
                 @if ( !$isEdit )   
                     @if ( $currentStep > 1 )
@@ -112,109 +118,11 @@
         </div>
     </div>
 </section>
-@script
-    <script>
-    // let mapInitialized = false;
 
-    Livewire.on('load-map', () => {
-        // if (!mapInitialized) {
-            // if (document.getElementById('map')) {
-                initMap();
-            // }
-            // mapInitialized = true;
-        // }
-    });
-
-    Livewire.on('load-tinymce', () => {
-        tinymce.init({
-            selector: '#description'
-        });
-    });
-<?php /*
-    // function uploadSingle(folder) {
-    //     return {
-    //         fileUrl: null,
-
-    //         async upload(event) {
-    //             const file = event.target.files[0];
-
-    //             const res = await fetch('/s3/file-upload/', {
-    //                 method: 'POST',
-    //                 headers: {
-    //                     'Content-Type': 'application/json',
-    //                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
-    //                 },
-    //                 body: JSON.stringify({
-    //                     filename: file.name,
-    //                     type: file.type,
-    //                     folder: folder
-    //                 })
-    //             });
-
-    //             const data = await res.json();
-
-    //             await fetch(data.url, {
-    //                 method: 'PUT',
-    //                 headers: { 'Content-Type': file.type },
-    //                 body: file
-    //             });
-
-    //             this.fileUrl = data.file_url;
-
-    //             @this.set(folder, {
-    //                 path: data.path,
-    //                 url: data.file_url
-    //             });
-    //         }
-    //     };
-    // }
-
-    // function uploadMultiple(folder) {
-    //     return {
-    //         files: [],
-
-    //         async upload(event) {
-    //             for (let file of event.target.files) {
-    //                 console.log('upload');
-    //                 const res = await fetch('/s3/file-upload/', {
-    //                     method: 'POST',
-    //                     headers: {
-    //                         'Content-Type': 'application/json',
-    //                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
-    //                     },
-    //                     body: JSON.stringify({
-    //                         filename: file.name,
-    //                         type: file.type,
-    //                         folder: folder
-    //                     })
-    //                 });
-
-    //                 const data = await res.json();
-
-    //                 await fetch(data.url, {
-    //                     method: 'PUT',
-    //                     headers: { 'Content-Type': file.type },
-    //                     body: file
-    //                 });
-
-    //                 this.files.push({
-    //                     path: data.path,
-    //                     url: data.file_url
-    //                 });
-
-    //                 window.Livewire.find('{{ $property->id }}').push(folder, {
-    //                     path: data.path,
-    //                     url: data.file_url
-    //                 });
-    //             }
-    //         }
-    //     }
-    // }
-*/ ?>
-    </script>
-@endscript
 @push('scripts')
-    @vite(['resources/js/Sortable.min.js'])
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAjtQlPL0rirZ70g8Xew5Ol3mqhqmAju08&&callback=initMap&loading=async&libraries=places"></script>
-    <script src="{{ asset('/js/google.map.js') }}" defer></script>
+    <!-- @vite(['resources/js/Sortable.min.js']) -->
+     
+    <!-- <script>
+        window.Sortable = window.Sortable
+    </script> -->
 @endpush

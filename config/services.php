@@ -34,6 +34,9 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
+    'google_maps' => [
+        'key' => env('GOOGLE_MAP_KEY'),
+    ],
 
     'slv_website' => [
         'url' => env('WEBSITE_URL')

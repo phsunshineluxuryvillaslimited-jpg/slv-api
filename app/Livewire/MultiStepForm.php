@@ -38,7 +38,7 @@ class MultiStepForm extends Component
         $this->updatedStep = $value;
 
         if ($value == 2) {
-            $this->dispatch('load-map');
+            // $this->dispatch('load-map');
         }
 
         if ($value == 10) {

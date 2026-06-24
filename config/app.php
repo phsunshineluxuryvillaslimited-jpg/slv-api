@@ -128,7 +128,7 @@ return [
     */
     'lead_email' => env('LEAD_EMAIL', 'sample@emmail.com'),
 
-    'APP_VERSION' => env('APP_VERSION', '1.0.0'),
+    'APP_VERSION' => env('APP_VERSION', '0.0.1'),
 
     'WEBSITE_URL' => env('WEBSITE_URL', 'https://slv2.sunshineluxuryvillas.co.uk'),
 

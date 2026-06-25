@@ -8,7 +8,7 @@
         <aside class="w-full lg:w-[320px] shrink-0 bg-white border-r border-slate-200">
             {{-- Back + actions --}}
             <div class="flex items-center justify-between px-5 py-3 border-b border-slate-100">
-                <a href="{{ url('/vendors') }}"
+                <a href="{{ url('/clients') }}"
                    class="flex items-center gap-1 text-sm font-medium text-slate-600 hover:text-blue-600">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
@@ -190,19 +190,20 @@
                     </h3>
                 </div>
                 <div class="px-4 py-4">
-                    <p class="text-[11px] text-slate-400">Generated June 15, 2026 3:47 PM</p>
-                    <p class="mt-2 text-sm leading-relaxed text-slate-600">There are no associated activities yet. Add notes, calls, or properties to build a fuller summary of this vendor.</p>
-                    <button class="mt-3 inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-blue-600 border border-blue-200 rounded-full hover:bg-blue-50">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" /></svg>
-                        Ask a question
-                    </button>
+                    <input class="w-full mb-3 border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 disabled" type="text" name="clientName" value="Cristiano Ronaldo">
+                    <input class="w-full mb-3 border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 disabled" type="email" name="clientEmail" value="cr7@samplemail.com">
+                    <input class="w-full mb-3 border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 disabled" type="date" name="clientScheduleDate" placeholder="Select Date">
+                    <input class="w-full mb-3 border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 disabled" type="time" name="clientScheduleTime" placeholder="Select Time">
+                    <!--<button class="w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+                        Submit
+                    </button>-->
                 </div>
             </section>
 
-            {{-- Companies --}}
+            {{-- Developers Match --}}
             <section class="bg-white border rounded-lg border-slate-200">
                 <div class="flex items-center justify-between px-4 py-3 border-b border-slate-100">
-                    <h3 class="text-sm font-semibold text-slate-800">Companies (1)</h3>
+                    <h3 class="text-sm font-semibold text-slate-800">Match Company (1)</h3>
                     <button class="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" /></svg>
                         Add
@@ -210,12 +211,8 @@
                 </div>
                 <div class="px-4 py-4">
                     <div class="flex items-center gap-2">
-                        <span class="flex items-center justify-center text-xs font-semibold rounded w-7 h-7 bg-slate-100 text-slate-500">3K</span>
-                        <span class="text-sm font-semibold text-slate-800">3KM group</span>
-                        <span class="text-[10px] font-semibold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">Primary</span>
+                        <span class="flex items-center justify-center px-2 text-xs font-bold rounded w-sm h-7 bg-slate-100 text-slate-500">3KM group</span>
                     </div>
-                    <p class="mt-2 text-xs text-slate-500">Company phone: --</p>
-                    <a href="#" class="inline-block mt-2 text-sm text-blue-600 hover:underline">Add association label</a>
                 </div>
             </section>
 
@@ -231,16 +228,20 @@
                 <p class="px-4 py-4 text-xs text-slate-500">Track the revenue opportunities associated with this vendor.</p>
             </section>
 
-            {{-- Quotes --}}
+            {{-- Budget --}}
             <section class="bg-white border rounded-lg border-slate-200">
                 <div class="flex items-center justify-between px-4 py-3 border-b border-slate-100">
-                    <h3 class="text-sm font-semibold text-slate-800">Quotes (0)</h3>
+                    <h3 class="text-sm font-semibold text-slate-800">Budget</h3>
                     <button class="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" /></svg>
                         Add
                     </button>
                 </div>
-                <p class="px-4 py-4 text-xs text-slate-500">Track the sales documents associated with this vendor.</p>
+                <div class="px-4 py-4">
+                    <div class="flex items-center gap-2">
+                        <span class="flex items-center justify-center px-2 text-xs font-bold rounded w-sm h-7 bg-slate-100 text-slate-500">500,000</span>
+                    </div>
+                </div>
             </section>
 
             {{-- Contracts --}}

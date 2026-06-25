@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('mobile_number')->nullable();
             $table->string('phone_number')->nullable();
+            $table->string('company')->nullable();
             $table->string('subscription_status')->nullable();
-
             $table->timestamps();
         });
     }

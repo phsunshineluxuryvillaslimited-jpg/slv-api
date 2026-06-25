@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Vendor;
 use App\Http\Resources\VendorResource;
+use App\Http\Requests\StoreVendorRequest;
 use Illuminate\Http\Request;
 
 class VendorController extends Controller
@@ -29,7 +30,7 @@ class VendorController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreVendorRequest $request)
     {
         $data = $request->validated();
 

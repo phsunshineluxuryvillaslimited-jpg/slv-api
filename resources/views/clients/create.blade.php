@@ -32,12 +32,12 @@
                         @error('email') <span class="text-red-500 text-shadow-sm">{{ $message }}</span> @enderror
                     </div>
                     <div>
-                        <label for="telephone" class="required-field block text-black text-sm mb-1">{{ __('Telephone') }}</label>
+                        <label for="telephone" class="block text-black text-sm mb-1">{{ __('Telephone') }}</label>
                         <input type="text" name="phone_number" id="telephone" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required placeholder="Enter client telephone number">
                     </div>
 
                     <div>
-                        <label for="mobile" class="required-field block text-black text-sm mb-1">{{ __('Mobile') }}</label>
+                        <label for="mobile" class="block text-black text-sm mb-1">{{ __('Mobile') }}</label>
                         <input type="text"  name="mobile_number" id="mobile" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required placeholder="Enter client mobile number">
                     </div>
                     
@@ -49,11 +49,11 @@
                     </div>
                     <div>
                         <label for="id_card_number" class="block text-black text-sm mb-1">{{ __('ID Card Number') }}</label>
-                        <input type="email" name="id_card_number" id="id_card_number" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required placeholder="Enter client ID card number" >
+                        <input type="text" name="id_card_number" id="id_card_number" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required placeholder="Enter client ID card number" >
                     </div>
                     <div>
                         <label for="passport_number" class="block text-black text-sm mb-1">{{ __('Passport Number') }}</label>
-                        <input type="email" name="passport_number" id="passport_number" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required placeholder="Enter client passport number" >
+                        <input type="text" name="passport_number" id="passport_number" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required placeholder="Enter client passport number" >
                     </div>
                 </div>
                 <h2 class="text-lg font-semibold">{{ __('Client Address') }}</h2>

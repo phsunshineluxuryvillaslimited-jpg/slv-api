@@ -24,6 +24,11 @@
                     <input type="text" name="last_name" id="lastName" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required placeholder="Enter agent last name">
                     @error('last_name') <span class="text-red-500 text-shadow-sm">{{ $message }}</span> @enderror
                 </div>
+                <div>
+                    <label for="company" class="block text-black text-sm mb-1">{{ __('Primary Company') }}</label>
+                    <input type="text" name="company" id="company" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required placeholder="Enter developer primary company">
+                    @error('company') <span class="text-red-500 text-shadow-sm">{{ $message }}</span> @enderror
+                </div>
             </div>
             <div class="grid grid-cols-3 md:grid-cols-3 gap-5 mb-4">
                  <div>
@@ -32,12 +37,12 @@
                     @error('email') <span class="text-red-500 text-shadow-sm">{{ $message }}</span> @enderror
                 </div>
                 <div>
-                    <label for="telephone" class="required-field block text-black text-sm mb-1">{{ __('Telephone') }}</label>
+                    <label for="telephone" class="block text-black text-sm mb-1">{{ __('Telephone') }}</label>
                     <input type="text" name="phone_number" id="telephone" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required placeholder="Enter agent telephone number">
                 </div>
 
                 <div>
-                    <label for="mobile" class="required-field block text-black text-sm mb-1">{{ __('Mobile') }}</label>
+                    <label for="mobile" class="block text-black text-sm mb-1">{{ __('Mobile') }}</label>
                     <input type="text"  name="mobile_number" id="mobile" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required placeholder="Enter agent mobile number">
                 </div>
             </div>

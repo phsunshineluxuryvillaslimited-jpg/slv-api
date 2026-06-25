@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('address')->nullable();
-            $table->string('telephone')->nullable();
-            $table->string('mobile')->nullable();
+            $table->string('mobile_number')->nullable();
+            $table->string('phone_number')->nullable();
             $table->timestamp('created_at')->useCurrent();
         });
     }

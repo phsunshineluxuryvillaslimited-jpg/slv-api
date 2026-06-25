@@ -23,11 +23,11 @@ class StoreVendorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'first_name'    => 'required|string|max:45',
-            'last_name'     => 'required|string|max:45',
-            'email'         => 'required|string|email|max:255|unique:developers,email',
+            'first_name'    => 'required|string|max:200',
+            'last_name'     => 'required|string|max:200',
+            'email'         => 'required|string|email|max:255|unique:vendors,email',
             'mobile_number' => 'nullable|string',
-            'phone_number'  =>  'nullable|string',
+            'phone_number'  => 'nullable|string',
         ];
     }
 }

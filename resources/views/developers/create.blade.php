@@ -33,6 +33,11 @@
                         <input type="text" name="last_name" id="lastName" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required placeholder="Enter developer last name">
                         @error('last_name') <span class="text-red-500 text-shadow-sm">{{ $message }}</span> @enderror
                     </div>
+                    <div>
+                        <label for="company" class="required-field block text-black text-sm mb-1">{{ __('Primary Company') }}</label>
+                        <input type="text" name="company" id="company" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required placeholder="Enter developer primary company">
+                        @error('company') <span class="text-red-500 text-shadow-sm">{{ $message }}</span> @enderror
+                    </div>
                 </div>
                 <div class="grid grid-cols-3 md:grid-cols-3 gap-5 mb-4">
                     <div>

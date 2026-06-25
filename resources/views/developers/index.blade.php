@@ -61,7 +61,7 @@
                     </th>
                     <th class="px-6 py-3">
                         <span class="flex items-center gap-1">
-                            CONTACT OWNER
+                            PHONE NUMBER
                             <svg class="w-3 h-3 text-gray-400" viewBox="0 0 10 12" fill="currentColor">
                                 <path d="M5 0L8 4H2L5 0Z"/>
                                 <path d="M5 12L2 8H8L5 12Z"/>
@@ -70,7 +70,7 @@
                     </th>
                     <th class="px-6 py-3">
                         <span class="flex items-center gap-1">
-                            PRIMARY COMPANY
+                            MOBILE NUMBER
                             <svg class="w-3 h-3 text-gray-400" viewBox="0 0 10 12" fill="currentColor">
                                 <path d="M5 0L8 4H2L5 0Z"/>
                                 <path d="M5 12L2 8H8L5 12Z"/>
@@ -79,7 +79,7 @@
                     </th>
                     <th class="px-6 py-3">
                         <span class="flex items-center gap-1">
-                            LAST STATUS
+                            CREATED AT
                             <svg class="w-3 h-3 text-gray-400" viewBox="0 0 10 12" fill="currentColor">
                                 <path d="M5 0L8 4H2L5 0Z"/>
                                 <path d="M5 12L2 8H8L5 12Z"/>
@@ -103,59 +103,68 @@
         </div>
         <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
             <div>
-            <p class="text-sm text-gray-700">
-                Showing
-                <span class="font-medium">10</span>
-                to
-                <span class="font-medium">10</span>
-                of
-                <span class="font-medium">97</span>
-                results
-            </p>
+               @if ( $developers->count() )
+                    Showing {{ $developers->firstItem() }} to {{ $developers->lastItem() }} of {{ $developers->total() }} entries
+                @else
+                    Showing 0 entries
+                @endif
             </div>
+            
+            <!----------------------------------
+                Pagination
+             ----------------------------------> 
             <div>
-            <nav aria-label="Pagination" class="inline-flex -space-x-px rounded-md shadow-xs isolate">
-                <a href="#" class="relative inline-flex items-center px-2 py-2 text-gray-400 rounded-l-md inset-ring inset-ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
-                <span class="sr-only">Previous</span>
-                <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="size-5">
-                    <path d="M11.78 5.22a.75.75 0 0 1 0 1.06L8.06 10l3.72 3.72a.75.75 0 1 1-1.06 1.06l-4.25-4.25a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd" fill-rule="evenodd" />
-                </svg>
-                </a>
-                <!-- Current: "z-10 bg-indigo-600 text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600", Default: "text-gray-900 inset-ring inset-ring-gray-300 hover:bg-gray-50 focus:outline-offset-0" -->
-                <a href="#" aria-current="page" class="relative z-10 inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-blue-700 focus:z-20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">1</a>
-                <a href="#" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 inset-ring inset-ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">2</a>
-                <a href="#" class="relative items-center hidden px-4 py-2 text-sm font-semibold text-gray-900 inset-ring inset-ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex">3</a>
-                <span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 inset-ring inset-ring-gray-300 focus:outline-offset-0">...</span>
-                <a href="#" class="relative items-center hidden px-4 py-2 text-sm font-semibold text-gray-900 inset-ring inset-ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex">8</a>
-                <a href="#" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 inset-ring inset-ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">9</a>
-                <a href="#" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 inset-ring inset-ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">10</a>
-                <a href="#" class="relative inline-flex items-center px-2 py-2 text-gray-400 rounded-r-md inset-ring inset-ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
-                <span class="sr-only">Next</span>
-                <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="size-5">
-                    <path d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
-                </svg>
-                </a>
-            </nav>
+                <nav aria-label="Pagination" class="inline-flex -space-x-px rounded-md shadow-xs isolate">
+                    {{-- Previous --}}
+                    @if ( $developers->onFirstPage())
+                        <div class="relative inline-flex items-center px-2 py-2 text-gray-400 rounded-l-md inset-ring inset-ring-gray-300">
+                            <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="size-5">
+                                <path d="M11.78 5.22a.75.75 0 0 1 0 1.06L8.06 10l3.72 3.72a.75.75 0 1 1-1.06 1.06l-4.25-4.25a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd" fill-rule="evenodd" />
+                            </svg>
+                        </div>
+                    @else
+                        <a href="{{ $developers->previousPageUrl() }}" class="relative inline-flex items-center px-2 py-2 text-gray-400 rounded-l-md inset-ring inset-ring-gray-300 hover:text-gray-700 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                            <span class="sr-only">{{ __('Previous') }}</span>
+                            <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="size-5">
+                                <path d="M11.78 5.22a.75.75 0 0 1 0 1.06L8.06 10l3.72 3.72a.75.75 0 1 1-1.06 1.06l-4.25-4.25a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd" fill-rule="evenodd" />
+                            </svg>
+                        </a>
+                    @endif
+
+                    {{-- Page Number --}}
+                    @foreach ($developers->getUrlRange(1, $developers->lastPage()) as $page => $url)
+                        <!-- Current: "z-10 bg-indigo-600 text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600", Default: "text-gray-900 inset-ring inset-ring-gray-300 hover:bg-gray-50 focus:outline-offset-0" -->
+                        <a href="{{ $url }}" {!! $page == $developers->currentPage()
+                            ? 'aria-current="page" class="relative z-10 inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-blue-700 focus:z-20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"'
+                            : 'class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 inset-ring inset-ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"' !!}>
+                        {{ $page }}
+                        </a>
+                    @endforeach
+                   
+                    {{-- Next --}}
+                    @if ( $developers->hasMorePages() )
+                        <a href="{{ $developers->nextPageUrl() }}" class="relative inline-flex items-center px-2 py-2 text-gray-400 rounded-r-md inset-ring inset-ring-gray-300 hover:text-gray-700 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                            <span class="sr-only">{{ __('Next') }}</span>
+                            <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="size-5">
+                                <path d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
+                            </svg>
+                        </a>
+                    @else
+                        <div class="relative inline-flex items-center px-2 py-2 text-gray-400 rounded-l-md inset-ring inset-ring-gray-300">
+                            <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="size-5">
+                                <path d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
+                            </svg>
+                        </div>
+                    @endif
+                </nav>
             </div>
         </div>
     </div>
 
 <script>
     const avatarColors = ['#CD7100', '#00A552', '#DCB601', '#009ACD', '#EB5736', '#226E34', '#692DE7', '#D52828', '#AC7DAD'];
-
-    const developers = [
-        { name: 'Leo Davis', email: 'leo@dev.com', mobile: '4234524534634', contactOwner: 'Hazel', primaryCompany: '3KM group', lastStatus: '01/01/0001 00:00:00' },
-        { name: 'Lorris Jacob', email: 'lorris@dev.com', mobile: '4234524534634', contactOwner: 'Jasmine', primaryCompany: 'A-House', lastStatus: '01/01/0001 00:00:00' },
-        { name: 'Rue Benneth', email: 'rue@dev.com', mobile: '4234524534634', contactOwner: 'Abby', primaryCompany: '5 Queens', lastStatus: '01/01/0001 00:00:00' },
-        { name: 'Cassie Ventura', email: 'cassie@dev.com', mobile: '4234524534634', contactOwner: 'Hazel', primaryCompany: 'A&M Pittakas Developers', lastStatus: '01/01/0001 00:00:00' },
-        { name: 'Maddie Perez', email: 'maddie@dev.com', mobile: '4234524534634', contactOwner: 'Yulya', primaryCompany: 'Develta Group', lastStatus: '01/01/0001 00:00:00' },
-        { name: 'Alamo Brown', email: 'alamo@dev.com', mobile: '4234524534634', contactOwner: 'Yulya', primaryCompany: 'A.C Priority Homes', lastStatus: '01/01/0001 00:00:00' },
-        { name: 'Fez Frazco', email: 'fez@dev.com', mobile: '4234524534634', contactOwner: 'Jasmine', primaryCompany: 'AGG Luxury Homes', lastStatus: '01/01/0001 00:00:00' },
-        { name: 'Hilda Coronel', email: 'hilda@dev.com', mobile: '4234524534634', contactOwner: 'Hazel', primaryCompany: 'Aphroditehills realty', lastStatus: '01/01/0001 00:00:00' },
-        { name: 'Meng Smith', email: 'meng@dev.com', mobile: '4234524534634', contactOwner: 'Abby', primaryCompany: 'Cyprus Dream Homes', lastStatus: '01/01/0001 00:00:00' },
-        { name: 'Randel Jackson', email: 'randel@dev.com', mobile: '4234524534634', contactOwner: 'Hazel', primaryCompany: 'D.Zavos Group', lastStatus: '01/01/0001 00:00:00' },
-    ];
-
+    const developers = <?=  json_encode($developers->toArray()['data']); ?>;
+   
     function getInitials(name) {
         const parts = name.trim().split(' ');
         const first = parts[0]?.charAt(0) || '';
@@ -179,16 +188,19 @@
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td class="flex px-6 py-3 people-identity">
-                    <div class="slv-avatar" style="background: ${developer.avatarColor};">${getInitials(developer.name)}</div>
-                    <span class="font-bold text-blue-500">${developer.name}</span>
+                    <div class="flex items-center gap-3">
+                        <div class="slv-avatar" style="background: ${developer.avatarColor};">${getInitials(developer.full_name)}</div>
+                        <span class="font-bold text-blue-500">${developer.full_name}</span>
+                    </div>
                 </td>
                 <td class="px-6 py-3">
                     <a class="font-bold text-blue-500 text-hover-link-amber" href="mailto:${developer.email}" target="_blank">${developer.email}</a>
                 </td>
-                <td class="px-6 py-3">${developer.mobile}</td>
-                <td class="px-6 py-3">${developer.contactOwner}</td>
-                <td class="px-6 py-3"><span class="font-bold">${developer.primaryCompany}</span></td>
-                <td class="px-6 py-3">${developer.lastStatus}</td>
+                <td class="px-6 py-3">${developer.email}</td>
+                <td class="px-6 py-3">${developer.phone_number}</td>
+                <td class="px-6 py-3"><span class="font-bold">${developer.mobile_number}</span></td>
+
+                <td class="px-6 py-3">${developer.created_at}</td>
             `;
             tbody.appendChild(row);
         });

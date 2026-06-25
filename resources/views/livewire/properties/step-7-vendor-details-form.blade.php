@@ -10,9 +10,16 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Vendor;
+use App\Models\Agent;
+use App\Models\Developer;
+use App\Models\Bank;
 
 new class extends Component
 {
+    #[Validate('required|string')]
+    public string $category = 'Vendor';
+
     #[Validate('required|string')]
     public string $first_name;
 
@@ -84,9 +91,17 @@ new class extends Component
 
     public ?Property $property;
 
-    public ?PropertyBank $bank;
+    public string $bank;
 
     public ?PropertyContactDetail $contact;
+
+    /**** Variables for autocomplete */
+    public array $peopleParts = [];
+
+    public int $selectedPeopleId = 0;
+    /*** // */
+
+    public object $banks;
 
     public $vendorFiles = [];
 
@@ -102,7 +117,6 @@ new class extends Component
 
     public function mount(Property $property, $isEdit = false): void
     {
-        
         $this->property = $property;
         $this->isEdit   = $isEdit;
         $this->user     = Auth::user();
@@ -110,9 +124,9 @@ new class extends Component
 
         if ($property && $property->contact()->exists()) {
             $this->vendorFiles = PropertyFile::where([
-                        'property_id' => $property->id,
-                        'type' => 'document'
-                    ]);
+                    'property_id' => $property->id,
+                    'type' => 'document'
+                ]);
         }
 
         if ($isEdit) {
@@ -123,7 +137,7 @@ new class extends Component
 
             if ($bank) { 
 
-                // $this->bank_name = ' '
+                $this->bank             = $bank->bank;
                 $this->branch           = $bank->branch;
                 $this->account_ref      = $bank->account_ref;
                 $this->sort_code        = $bank->sort_code;
@@ -140,7 +154,7 @@ new class extends Component
                                 ])->first();
 
             if ($vendorDetail) {
-
+                $this->category              = $vendorDetail->category;
                 $this->first_name            = $vendorDetail->first_name;
                 $this->last_name             = $vendorDetail->last_name;
                 $this->phone_number          = $vendorDetail->phone_number;
@@ -156,18 +170,83 @@ new class extends Component
 
             $this->refreshVendorFileList();
         }
+
+        $this->banks = Bank::all('name');
         
+    }
+
+    /********************************************************************
+     * This method is for searching or autocomplete function on category 
+     ********************************************************************/
+    public function updatedFirstName()
+    {
+         if (strlen($this->first_name) < 2) {
+            empty($this->peopleParts);
+            return;
+        }
+
+        switch ($this->category) {
+            case 'Vendor':
+                $this->peopleParts = Vendor::where('first_name', 'like', '%' . $this->first_name . '%')
+                        ->take(5)
+                        ->get()
+                        ->toArray();
+                break;
+            case 'Agent':
+                $this->peopleParts = Agent::where('first_name', 'like', '%' . $this->first_name . '%')
+                        ->take(5)
+                        ->get()
+                        ->toArray();
+                break;
+            case 'Developer':
+                $this->peopleParts = Developer::where('first_name', 'like', '%' . $this->first_name . '%')
+                        ->take(5)
+                        ->get()
+                        ->toArray();
+                break;
+        }
+    }
+
+    /********************************
+     * Current selected people
+     */
+    public function selectPeople(int $people_id)
+    {
+        $this->selectedPeopleId = $people_id;
+        $queryPeople = null;
+
+        switch ($this->category) {
+            case 'Vendor':
+                $queryPeople = Vendor::findOrFail($people_id);
+                break;
+            case 'Agent':
+                $queryPeople = Agent::findOrFail($people_id);
+                break;
+            case 'Developer':
+                $queryPeople = Developer::findOrFail($people_id);
+                break;
+        }
+        
+        $this->first_name   = $queryPeople->first_name;
+        $this->last_name    = $queryPeople->last_name;
+        $this->email        = $queryPeople->email;
+        $this->mobile_number= $queryPeople->mobile_number ?? '';
+        $this->phone_number = $queryPeople->phone_number ?? '';
+
     }
 
     #[On('parentNextStepButtonTriggered')]
     public function hundleNextStepButtonTriggered()
     {
+        $this->banks = Bank::all('name');
+
         try {
+            
             $validatedData = $this->validate();
 
             $bankData = [
                 'property_id' => $this->property->id,                
-                'bank_id' => 1,
+                'bank' => $validatedData['bank'], 
                 'branch' => $validatedData['branch'], 
                 'contact_email' => $validatedData['contact_email'], 
                 'sort_code' => $validatedData['sort_code'], 
@@ -203,15 +282,18 @@ new class extends Component
      */
     #[On('parentUpdateButtonTriggered')]
     public function handleUpdateProperty()
-    {   
+    {
+        $this->banks = Bank::all('name');
+
         try {
+
             $validatedData = $this->validate();
 
             $validatedData['property_id'] = $this->property->id; 
 
             $bankData = [
                 'property_id' => $this->property->id,                
-                'bank_id' => 1,
+                'bank' => $validatedData['bank'],
                 'branch' => $validatedData['branch'], 
                 'contact_email' => $validatedData['contact_email'], 
                 'sort_code' => $validatedData['sort_code'], 
@@ -239,8 +321,7 @@ new class extends Component
          } catch (ValidationException $e) {
             Log::info('Property validation error. Please double check.' . $e );
             throw $e;
-        }
-        
+        }        
     }
     /**
      * Summary of refresh vendor files list
@@ -388,16 +469,42 @@ Basic location info
                     <div class="">
                         <h4>{{ __('Category')  }}</h4>
                         <div class="pt-3 pb-5 text-sm">
-                            <label class="mr-2"><input type="radio" name="category" value="Vendor" checked/>&nbsp;&nbsp;{{ __('Vendor') }}</label>
-                            <label class="mr-2"></label><input type="radio" name="category" value="Agent" />&nbsp;&nbsp;{{ __('Agent') }}</label>
-                            <label class="mr-2"></label><input type="radio" name="category" value="Developer" />&nbsp;&nbsp;{{ __('Developer') }}</label>
+                            <label class="mr-2 cursor-pointer"><input type="radio" wire:model.live="category" value="Vendor" />&nbsp;&nbsp;{{ __('Vendor') }}</label>
+                            <label class="mr-2 cursor-pointer"><input type="radio" wire:model.live="category" value="Agent" />&nbsp;&nbsp;{{ __('Agent') }}</label>
+                            <label class="mr-2 cursor-pointer"><input type="radio" wire:model.live="category" value="Developer" />&nbsp;&nbsp;{{ __('Developer') }}</label>
                         </div>
                     </div>
                     <div class="grid grid-cols-2 md:grid-cols-2 gap-5 mb-4 mt-3">
-                       <div>
+                       <div x-data="{ open: true }" @click.outside="open = false" class="relative">
                             <label for="firstName" class="required-field block text-black text-sm mb-1">{{ __('First Name') }}</label>
-                            <input type="text" wire:model.live.debounce.500ms="first_name" id="firstName" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                            <input 
+                                type="text"
+                                id="firstName"
+                                wire:model.live.debounce.300ms="first_name"
+                                class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                required
+                                @focus="open = true"
+                                @keydown.escape.window="open = false"
+                            />
                             @error('first_name') <span class="text-red-500 text-shadow-sm">{{ $message }}</span> @enderror
+                            @if (!empty($peopleParts))
+                                <div x-show="open" class="absolute z-10 w-full mt-1 bg-gray-50 border rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                                    <ul>
+                                        @foreach($peopleParts as $people)
+                                            <li>
+                                                <button 
+                                                    type="button"
+                                                    class="w-full text-left px-4 py-2 hover:bg-gray-200 transition-colors"
+                                                    wire:click="selectPeople({{ $people['id'] }})"
+                                                    @click="open = false"
+                                                >
+                                                    {{ $people['full_name'] }}
+                                                </button>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
                         </div>
                         <div>
                             <label for="lastName" class="required-field block text-black text-sm mb-1">{{ __('Last Name') }}</label>
@@ -426,8 +533,8 @@ Basic location info
                     <div class="flex">
                         <div class="w-1/3">
                             <h5 class="text-sm mb-2">{{ __('Type') }}</h5>
-                            <label class="mr-3"><input type="radio" name="type" value="vendor" checked/>&nbsp;&nbsp;{{ __('Vendor') }}</label>
-                            <label class=""><input type="radio" name="type" value="landlord"/>&nbsp;&nbsp;{{ __('Landlord') }}</label>
+                            <label class="mr-3 cursor-pointer"><input type="radio" name="type" value="vendor" checked/>&nbsp;&nbsp;{{ __('Vendor') }}</label>
+                            <label class="cursor-pointer"><input type="radio" name="type" value="landlord"/>&nbsp;&nbsp;{{ __('Landlord') }}</label>
                         </div>
                         <!-- <div class="w-full">
                             <label for="" class="block text-black text-sm mb-1">{{ __('Source') }}</label>
@@ -563,8 +670,13 @@ Basic location info
                     <div class="grid grid-cols-3 md:grid-cols-3 gap-5 mb-4">
                         <div>
                             <label for="bank_name" class="required-field block text-black text-sm mb-1">{{ __('Bank Name') }}</label>
-                            <input type="text" wire:model.live.debounce.500ms="bank_name" id="bank_name" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
-                            @error('bank_name') <span class="text-red-500 text-shadow-sm">{{ $message }}</span> @enderror        
+                            <select wire:model="bank" id="bank_name" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                <option value="" selected>{{ __('--Select Bank--') }}</option>
+                                @foreach ($banks as $theBank) 
+                                <option value="{{ $theBank->name }}">{{ $theBank->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('bank') <span class="text-red-500 text-shadow-sm">{{ $message }}</span> @enderror        
                         </div>
                         <div>
                             <label for="branch" class="required-field block text-black text-sm mb-1">{{ __('Bank Branch') }}</label>

@@ -44,11 +44,31 @@
                 Agents
             </a>
             <a href="#" class="nav-link">
-                <svg fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 6l9-4 9 4M3 6v14a1 1 0 001 1h16a1 1 0 001-1V6M3 6h18M9 10v8M15 10v8M12 10v8"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" x2="21" y1="22" y2="22"/>
+                <line x1="6" x2="6" y1="18" y2="11"/>
+                <line x1="10" x2="10" y1="18" y2="11"/>
+                <line x1="14" x2="14" y1="18" y2="11"/>
+                <line x1="18" x2="18" y1="18" y2="11"/>
+                <polygon points="12 2 20 7 4 7"/>
+                </svg>
                 Banks
             </a>
+            <a href="{{ route('clients') }}" class="nav-link {{ request()->routeIs('clients') ? 'active' : '' }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <circle cx="12" cy="10" r="4"/>
+                <path d="M6.2 19a6 6 0 0 1 11.6 0"/>
+                </svg>
+                Clients
+            </a>
             <a href="{{ route('vendors') }}" class="nav-link {{ request()->routeIs('vendors') ? 'active' : '' }}">
-                <svg fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 6l9-4 9 4M3 6v14a1 1 0 001 1h16a1 1 0 001-1V6M3 6h18M9 10v8M15 10v8M12 10v8"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/>
+                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+                <path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/>
+                <path d="M2 7h20"/>
+                </svg>
                 Vendors
             </a>
             <div class="nav-section">Business</div>

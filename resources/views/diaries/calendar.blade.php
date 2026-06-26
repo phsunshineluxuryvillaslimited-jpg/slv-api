@@ -59,7 +59,7 @@
                                     wire:click="viewEvent({{ $event->id }})"
                                     class="flex w-full cursor-pointer items-center justify-between gap-1 truncate rounded-md px-2 py-1 text-xs font-medium transition hover:opacity-80 {{ \App\Models\Diary::badgeClasses($event->event_type) }}">
                                     <span class="truncate">{{ $event->event_type }}</span>
-                                    <span class="opacity-70">{{ Carbon::parse($event->event_time)->format('g:iA') }}</span>
+                                    <span>{{ Carbon::parse($event->event_time)->format('g:iA') }}</span>
                                 </button>
                             @endforeach
                         </div>

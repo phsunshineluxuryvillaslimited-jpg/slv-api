@@ -44,7 +44,7 @@ class Diary extends Model
     public static function badgeClasses(string $eventType): string
     {
         return match ($eventType) {
-            'Viewing' => 'bg-red-100 text-red-600',
+            'Viewing' => 'bg-yellow-100 text-yellow-700',
             'Take-on' => 'bg-blue-100 text-blue-600',
             'Miscellaneous' => 'bg-green-100 text-green-700',
             default => 'bg-gray-100 text-gray-700',

@@ -195,7 +195,7 @@
                 <td class="px-6 py-3">${bank.phone_number ?? '-'}</td>
                 <td class="px-6 py-3"><span class="font-bold">${bank.mobile_number ?? '-'}</span></td>
 
-                <td class="px-6 py-3 text-center">${bank.created_at}</td>
+                <td class="px-6 py-3 text-center">${bank.updated_at}</td>
             `;
             tbody.appendChild(row);
         });

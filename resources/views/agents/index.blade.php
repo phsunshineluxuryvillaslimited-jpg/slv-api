@@ -206,7 +206,7 @@
                 <td class="px-6 py-3">${agent.mobile_number}</td>
                 <td class="px-6 py-3">${agent.phone_number ?? '-'}</td>
                 <td class="px-6 py-3"><span class="font-bold">${agent.company ?? '-'}</span></td>
-                <td class="px-6 py-3 text-center">${agent.created_at}</td>
+                <td class="px-6 py-3 text-center">${agent.updated_at}</td>
             `;
             tbody.appendChild(row);
         });

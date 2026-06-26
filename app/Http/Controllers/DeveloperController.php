@@ -37,7 +37,8 @@ class DeveloperController extends Controller
 
         Developer::create($data);
 
-        return redirect()->route('developer.index');
+        return redirect()->route('developer.index')
+                    ->with('success', 'The developer has been successfully saved!');
     }
 
     /**
@@ -65,7 +66,8 @@ class DeveloperController extends Controller
         
         $developer->update($data);
 
-        return redirect()->route('developer.index');
+        return redirect()->route('developer.index')
+                    ->with('success', 'The developer has been successfully updated!');;
     }
 
     /**

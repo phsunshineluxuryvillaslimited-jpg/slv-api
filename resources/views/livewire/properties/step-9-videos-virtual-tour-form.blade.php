@@ -8,13 +8,13 @@ use Illuminate\Support\Facades\Log;
 
 new class extends Component
 {
-    #[Validate('nullable')]
+    #[Validate('nullable|url|max:255')]
     public string $embed_url_1;
 
-    #[Validate('nullable')]
+    #[Validate('nullable|url|max:255')]
     public string $embed_url_2;
 
-    #[Validate('nullable')]
+    #[Validate('nullable|url|max:255')]
     public string $virtual_tour_link;
 
     public ?Property $property;
@@ -90,25 +90,35 @@ Basic location info
                     <p class="mb-5 text-sm text-gray-600">{{ __('If you are unsure on how to get the YouTube embedded link, ') }} <a href="https://support.google.com/youtube/answer/171780?hl=en" target="_blank" class="text-blue-500">{{ __('click this link for help.') }}</a></p>
                     <div class="">
                         <div class="p-4 sm:p-8 bg-gray-50 border-t border-gray-200">
-                            <label for="embed_url_1" class="block text-black text-sm mb-1">{{ __('YouTube Embedded Link 1:') }}</label>
+                            <label for="embed_url_1" class="block text-black text-sm mb-1">{{ __('YouTube Link 1:') }}</label>
                             <input type="text" 
                                     wire:model.live="embed_url_1" 
                                     id="embed_url_1" 
-                                    class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="" required />
+                                    class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" 
+                                    placeholder="https://youtu.be/RXeBCZ10gQg?si=sAyXJUUUeTxiV1j9"
+                                    />
+                            @error('embed_url_1') <span class="text-red-500 text-shadow-sm">{{ $message }}</span> @enderror
                         </div>
                         <div class="p-4 sm:p-8 bg-gray-50 border-t border-gray-200">
-                            <label for="embed_url_2" class="block text-black text-sm mb-1">{{ __('YouTube Embedded Link 2:') }}</label>
+                            <label for="embed_url_2" class="block text-black text-sm mb-1">{{ __('YouTube Link 2:') }}</label>
                             <input type="text" 
                                     wire:model.live="embed_url_2" 
                                     id="embed_url_2" 
-                                    class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="" required />
+                                    class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                    placeholder="https://youtu.be/RXeBCZ10gQg?si=sAyXJUUUeTxiV1j9"
+                            />
+                            @error('embed_url_2') <span class="text-red-500 text-shadow-sm">{{ $message }}</span> @enderror
                         </div>
                         <div class="p-4 sm:p-8 bg-gray-50 border-t border-gray-200">
                             <label for="virtual_tour_link" class="block text-black text-sm mb-1 ">{{ __('Virtual Tour Link (Kuula etc.):') }}</label>
                             <input type="text" 
                                     wire:model.live="virtual_tour_link" 
                                     id="virtual_tour_link" 
-                                    class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="" required />
+                                    class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                    
+
+                            />
+                            @error('virtual_tour_link') <span class="text-red-500 text-shadow-sm">{{ $message }}</span> @enderror
                         </div>
                     </div>
                 </div>  

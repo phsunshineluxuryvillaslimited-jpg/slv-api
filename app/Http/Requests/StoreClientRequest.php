@@ -12,7 +12,7 @@ class StoreClientRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,9 +23,9 @@ class StoreClientRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'first_name'    => 'required|string|max:45',
-            'last_name'     => 'required|string|max:45',
-            'email'         => 'required|string|email|max:255|unique:developers,email',
+            'first_name'    => 'required|string|max:200',
+            'last_name'     => 'required|string|max:200',
+            'email'         => 'required|string|email|max:255|unique:clients,email',
             'mobile_number' => 'nullable|string',
             'phone_number'  =>  'nullable|string',
             'address'       =>  'nullable|string',
@@ -33,7 +33,7 @@ class StoreClientRequest extends FormRequest
             'nationality'   =>  'nullable|string',
             'id_card_number'=>  'nullable|string',
             'passport_number'=>  'nullable|string',
-            'preferred_language'=>  'nullable|string',
+            'preferred_language' => 'nullable|string',
         ];
     }
 }

@@ -25,8 +25,8 @@ class StoreBankRequest extends FormRequest
         return [
             'name'          =>  'required|string|max:225',
             'address'       =>  'required|string|max:225',
-            'phone_number'  =>  'required|string|max:225',
-            'mobile_number' =>  'required|string|max:225',
+            'phone_number'  =>  'nullable|string|max:225',
+            'mobile_number' =>  'nullable|string|max:225',
         ];
 
     }

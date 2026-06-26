@@ -3,62 +3,62 @@
     <!-- Step 1 -->
     @if ( $currentStep == 1 )
         <livewire:dotted-steps :step="$currentStep" :isEdit="$isEdit" />
-        <livewire:property.step-1-reference-form :property="$property" />
+        <livewire:properties.step-1-reference-form :property="$property" />
     @endif
 
      <!-- Step 2 -->
     @if ( $currentStep == 2 )
         <livewire:dotted-steps :step="$currentStep" :isEdit="$isEdit" />
-        <livewire:property.step-2-location-form :property="$property" :isEdit="$isEdit" />
+        <livewire:properties.step-2-location-form :property="$property" :isEdit="$isEdit" />
     @endif
 
      <!-- Step 3 -->
     @if ( $currentStep == 3 )
         <livewire:dotted-steps :step="$currentStep" :isEdit="$isEdit" />
-        <livewire:property.step-3-photos-form :property="$property" :isEdit="$isEdit" />
+        <livewire:properties.step-3-photos-form :property="$property" :isEdit="$isEdit" />
     @endif
 
      <!-- Step 4 -->
     @if ( $currentStep == 4 )
         <livewire:dotted-steps :step="$currentStep" :isEdit="$isEdit" />
-        <livewire:property.step-4-floor-plan-form :property="$property" :isEdit="$isEdit"/>
+        <livewire:properties.step-4-floor-plan-form :property="$property" :isEdit="$isEdit"/>
     @endif
 
      <!-- Step 5 -->
     @if ( $currentStep == 5 )
         <livewire:dotted-steps :step="$currentStep" :isEdit="$isEdit" />
-        <livewire:property.step-5-amenities-form :property="$property" :isEdit="$isEdit" />
+        <livewire:properties.step-5-amenities-form :property="$property" :isEdit="$isEdit" />
     @endif
 
      <!-- Step 6 -->
     @if ( $currentStep == 6 )
         <livewire:dotted-steps :step="$currentStep" :isEdit="$isEdit" />
-        <livewire:property.step-6-channel-manager-form :property="$property" :isEdit="$isEdit" />
+        <livewire:properties.step-6-channel-manager-form :property="$property" :isEdit="$isEdit" />
     @endif 
 
      <!-- Step 7 -->
     
     @if ( $currentStep == 7 )
         <livewire:dotted-steps :step="$currentStep" :isEdit="$isEdit" />
-        <livewire:property.step-7-vendor-details-form :property="$property" :isEdit="$isEdit" />
+        <livewire:properties.step-7-vendor-details-form :property="$property" :isEdit="$isEdit" />
     @endif
 
      <!-- Step 8 -->
     @if ( $currentStep == 8 )
         <livewire:dotted-steps :step="$currentStep" :isEdit="$isEdit" />
-        <livewire:property.step-8-key-features-form :property="$property" :isEdit="$isEdit" />
+        <livewire:properties.step-8-key-features-form :property="$property" :isEdit="$isEdit" />
     @endif
 
      <!-- Step 9 -->
     @if ( $currentStep == 9 )
         <livewire:dotted-steps :step="$currentStep" :isEdit="$isEdit" />
-        <livewire:property.step-9-videos-virtual-tour-form :property="$property" :isEdit="$isEdit" />
+        <livewire:properties.step-9-videos-virtual-tour-form :property="$property" :isEdit="$isEdit" />
     @endif
 
      <!-- Step 10 -->
     @if ( $currentStep == 10 )
         <livewire:dotted-steps :step="$currentStep" :isEdit="$isEdit" />
-        <livewire:property.step-10-title-description-form :property="$property" :isEdit="$isEdit" />
+        <livewire:properties.step-10-title-description-form :property="$property" :isEdit="$isEdit" />
     @endif
 
     <div class="py-3">
@@ -120,7 +120,7 @@
 </section>
 
 @push('scripts')
-    <!-- @vite(['resources/js/Sortable.min.js']) -->
+    @vite(['resources/js/Sortable.min.js'])
      
     <!-- <script>
         window.Sortable = window.Sortable

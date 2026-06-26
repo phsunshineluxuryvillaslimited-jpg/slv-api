@@ -1,4 +1,3 @@
-
 <x-app-layout>
     <x-slot name="header">
         <h2 class="text-xl font-semibold leading-tight text-gray-800">
@@ -6,15 +5,21 @@
         </h2>
     </x-slot>
 
+   @if (session()->has('success'))
+        <div id="messageSession" class="fixed top-15 right-5 bg-green-500 text-white px-4 py-3 rounded shadow-lg z-50" >
+            {{ session('success') }}
+        </div>
+    @endif
+    
     <div class="flex items-center justify-end w-full gap-4 py-2 my-2 action-tabs">
         <div class="flex items-center gap-2 text-sm text-gray-600">
             <label for="showCount">Show</label>
             <div class="relative">
                 <select id="showCount" class="appearance-none border border-gray-300 rounded-md pl-3 pr-8 py-1.5 text-sm text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer">
-                    <option value="10">10</option>
-                    <option value="20">20</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
+                    <option value="10">{{ __('10') }}</option>
+                    <option value="20">{{ __('20') }}</option>
+                    <option value="50">{{ __('50') }}</option>
+                    <option value="100">{{ __('100') }}</option>
                 </select>
                 <svg class="absolute w-4 h-4 text-gray-400 -translate-y-1/2 pointer-events-none right-2 top-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -23,7 +28,7 @@
         </div>
 
         <a href="{{ route('bank.create') }}" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700">
-            Add Bank 
+            {{ __('+ Add Bank') }}
         </a>
     </div>
 
@@ -34,7 +39,7 @@
                 <tr>
                     <th class="px-6 py-3">
                         <span class="flex items-center gap-1">
-                            DEVELOPERS NAME
+                            NAME
                             <svg class="w-3 h-3 text-gray-400" viewBox="0 0 10 12" fill="currentColor">
                                 <path d="M5 0L8 4H2L5 0Z"/>
                                 <path d="M5 12L2 8H8L5 12Z"/>
@@ -43,7 +48,7 @@
                     </th>
                     <th class="px-6 py-3">
                         <span class="flex items-center gap-1">
-                            EMAIL
+                            ADDRESS
                             <svg class="w-3 h-3 text-gray-400" viewBox="0 0 10 12" fill="currentColor">
                                 <path d="M5 0L8 4H2L5 0Z"/>
                                 <path d="M5 12L2 8H8L5 12Z"/>
@@ -52,7 +57,7 @@
                     </th>
                     <th class="px-6 py-3">
                         <span class="flex items-center gap-1">
-                            Mobile
+                            MOBILE
                             <svg class="w-3 h-3 text-gray-400" viewBox="0 0 10 12" fill="currentColor">
                                 <path d="M5 0L8 4H2L5 0Z"/>
                                 <path d="M5 12L2 8H8L5 12Z"/>
@@ -68,17 +73,8 @@
                             </svg>
                         </span>
                     </th>
-                    <th class="px-6 py-3">
-                        <span class="flex items-center gap-1">
-                            PRIMARY COMPANY
-                            <svg class="w-3 h-3 text-gray-400" viewBox="0 0 10 12" fill="currentColor">
-                                <path d="M5 0L8 4H2L5 0Z"/>
-                                <path d="M5 12L2 8H8L5 12Z"/>
-                            </svg>
-                        </span>
-                    </th>
-                    <th class="px-6 py-3">
-                        <span class="flex items-center gap-1">
+                    <th class="px-6 py-3 text-center">
+                        <span class="inline-flex items-center gap-1 mx-auto block">
                             LAST STATUS
                             <svg class="w-3 h-3 text-gray-400" viewBox="0 0 10 12" fill="currentColor">
                                 <path d="M5 0L8 4H2L5 0Z"/>
@@ -89,7 +85,7 @@
                 </tr>
             </thead>
 
-            <tbody id="developersTableBody" class="text-gray-600 divide-y">
+            <tbody id="banksTableBody" class="text-gray-600 divide-y">
             </tbody>
             
         </table>
@@ -103,58 +99,69 @@
         </div>
         <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
             <div>
-            <p class="text-sm text-gray-700">
-                Showing
-                <span class="font-medium">10</span>
-                to
-                <span class="font-medium">10</span>
-                of
-                <span class="font-medium">97</span>
-                results
-            </p>
+               @if ( $banks->count() )
+                    Showing {{ $banks->firstItem() }} to {{ $banks->lastItem() }} of {{ $banks->total() }} entries
+                @else
+                    Showing 0 entries
+                @endif
             </div>
+            
+            <!----------------------------------
+                Pagination
+             ----------------------------------> 
             <div>
-            <nav aria-label="Pagination" class="inline-flex -space-x-px rounded-md shadow-xs isolate">
-                <a href="#" class="relative inline-flex items-center px-2 py-2 text-gray-400 rounded-l-md inset-ring inset-ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
-                <span class="sr-only">Previous</span>
-                <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="size-5">
-                    <path d="M11.78 5.22a.75.75 0 0 1 0 1.06L8.06 10l3.72 3.72a.75.75 0 1 1-1.06 1.06l-4.25-4.25a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd" fill-rule="evenodd" />
-                </svg>
-                </a>
-                <!-- Current: "z-10 bg-indigo-600 text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600", Default: "text-gray-900 inset-ring inset-ring-gray-300 hover:bg-gray-50 focus:outline-offset-0" -->
-                <a href="#" aria-current="page" class="relative z-10 inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-blue-700 focus:z-20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">1</a>
-                <a href="#" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 inset-ring inset-ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">2</a>
-                <a href="#" class="relative items-center hidden px-4 py-2 text-sm font-semibold text-gray-900 inset-ring inset-ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex">3</a>
-                <span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 inset-ring inset-ring-gray-300 focus:outline-offset-0">...</span>
-                <a href="#" class="relative items-center hidden px-4 py-2 text-sm font-semibold text-gray-900 inset-ring inset-ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex">8</a>
-                <a href="#" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 inset-ring inset-ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">9</a>
-                <a href="#" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 inset-ring inset-ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">10</a>
-                <a href="#" class="relative inline-flex items-center px-2 py-2 text-gray-400 rounded-r-md inset-ring inset-ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
-                <span class="sr-only">Next</span>
-                <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="size-5">
-                    <path d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
-                </svg>
-                </a>
-            </nav>
+                <nav aria-label="Pagination" class="inline-flex -space-x-px rounded-md shadow-xs isolate">
+                    {{-- Previous --}}
+                    @if ( $banks->onFirstPage())
+                        <div class="relative inline-flex items-center px-2 py-2 text-gray-400 rounded-l-md inset-ring inset-ring-gray-300">
+                            <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="size-5">
+                                <path d="M11.78 5.22a.75.75 0 0 1 0 1.06L8.06 10l3.72 3.72a.75.75 0 1 1-1.06 1.06l-4.25-4.25a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd" fill-rule="evenodd" />
+                            </svg>
+                        </div>
+                    @else
+                        <a href="{{ $banks->previousPageUrl() }}" class="relative inline-flex items-center px-2 py-2 text-gray-400 rounded-l-md inset-ring inset-ring-gray-300 hover:text-gray-700 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                            <span class="sr-only">{{ __('Previous') }}</span>
+                            <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="size-5">
+                                <path d="M11.78 5.22a.75.75 0 0 1 0 1.06L8.06 10l3.72 3.72a.75.75 0 1 1-1.06 1.06l-4.25-4.25a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd" fill-rule="evenodd" />
+                            </svg>
+                        </a>
+                    @endif
+
+                    {{-- Page Number --}}
+                    @foreach ($banks->getUrlRange(1, $banks->lastPage()) as $page => $url)
+                        <!-- Current: "z-10 bg-indigo-600 text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600", Default: "text-gray-900 inset-ring inset-ring-gray-300 hover:bg-gray-50 focus:outline-offset-0" -->
+                        <a href="{{ $url }}" {!! $page == $banks->currentPage()
+                            ? 'aria-current="page" class="relative z-10 inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-blue-700 focus:z-20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"'
+                            : 'class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 inset-ring inset-ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"' !!}>
+                        {{ $page }}
+                        </a>
+                    @endforeach
+                   
+                    {{-- Next --}}
+                    @if ( $banks->hasMorePages() )
+                        <a href="{{ $banks->nextPageUrl() }}" class="relative inline-flex items-center px-2 py-2 text-gray-400 rounded-r-md inset-ring inset-ring-gray-300 hover:text-gray-700 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                            <span class="sr-only">{{ __('Next') }}</span>
+                            <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="size-5">
+                                <path d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
+                            </svg>
+                        </a>
+                    @else
+                        <div class="relative inline-flex items-center px-2 py-2 text-gray-400 rounded-l-md inset-ring inset-ring-gray-300">
+                            <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="size-5">
+                                <path d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
+                            </svg>
+                        </div>
+                    @endif
+                </nav>
             </div>
         </div>
     </div>
 
+@push('scripts')
 <script>
     const avatarColors = ['#CD7100', '#00A552', '#DCB601', '#009ACD', '#EB5736', '#226E34', '#692DE7', '#D52828', '#AC7DAD'];
 
-    const developers = [
-        { name: 'Leo Davis', email: 'leo@dev.com', mobile: '4234524534634', contactOwner: 'Hazel', primaryCompany: '3KM group', lastStatus: '01/01/0001 00:00:00' },
-        { name: 'Lorris Jacob', email: 'lorris@dev.com', mobile: '4234524534634', contactOwner: 'Jasmine', primaryCompany: 'A-House', lastStatus: '01/01/0001 00:00:00' },
-        { name: 'Rue Benneth', email: 'rue@dev.com', mobile: '4234524534634', contactOwner: 'Abby', primaryCompany: '5 Queens', lastStatus: '01/01/0001 00:00:00' },
-        { name: 'Cassie Ventura', email: 'cassie@dev.com', mobile: '4234524534634', contactOwner: 'Hazel', primaryCompany: 'A&M Pittakas Developers', lastStatus: '01/01/0001 00:00:00' },
-        { name: 'Maddie Perez', email: 'maddie@dev.com', mobile: '4234524534634', contactOwner: 'Yulya', primaryCompany: 'Develta Group', lastStatus: '01/01/0001 00:00:00' },
-        { name: 'Alamo Brown', email: 'alamo@dev.com', mobile: '4234524534634', contactOwner: 'Yulya', primaryCompany: 'A.C Priority Homes', lastStatus: '01/01/0001 00:00:00' },
-        { name: 'Fez Frazco', email: 'fez@dev.com', mobile: '4234524534634', contactOwner: 'Jasmine', primaryCompany: 'AGG Luxury Homes', lastStatus: '01/01/0001 00:00:00' },
-        { name: 'Hilda Coronel', email: 'hilda@dev.com', mobile: '4234524534634', contactOwner: 'Hazel', primaryCompany: 'Aphroditehills realty', lastStatus: '01/01/0001 00:00:00' },
-        { name: 'Meng Smith', email: 'meng@dev.com', mobile: '4234524534634', contactOwner: 'Abby', primaryCompany: 'Cyprus Dream Homes', lastStatus: '01/01/0001 00:00:00' },
-        { name: 'Randel Jackson', email: 'randel@dev.com', mobile: '4234524534634', contactOwner: 'Hazel', primaryCompany: 'D.Zavos Group', lastStatus: '01/01/0001 00:00:00' },
-    ];
+    const banks = @json($banks->items() ?? []);
 
     function getInitials(name) {
         const parts = name.trim().split(' ');
@@ -167,38 +174,58 @@
         return avatarColors[Math.floor(Math.random() * avatarColors.length)];
     }
 
-    function renderDevelopers(limit) {
-        const tbody = document.getElementById('developersTableBody');
+    function renderBanks(limit) {
+        const tbody = document.getElementById('banksTableBody');
         tbody.innerHTML = '';
 
-        developers.slice(0, limit).forEach(developer => {
-            if (!developer.avatarColor) {
-                developer.avatarColor = getRandomColor();
+        banks.slice(0, limit).forEach(bank => {
+            if (!bank.avatarColor) {
+                bank.avatarColor = getRandomColor();
             }
 
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td class="flex px-6 py-3 people-identity">
-                    <div class="slv-avatar" style="background: ${developer.avatarColor};">${getInitials(developer.name)}</div>
-                    <span class="font-bold text-blue-500">${developer.name}</span>
+                    <div class="flex items-center gap-3">
+                        <div class="slv-avatar" style="background: ${bank.avatarColor};">${getInitials(bank.name)}</div>
+                        <span class="font-bold text-blue-500">${bank.name}</span>
+                    </div>
                 </td>
-                <td class="px-6 py-3">
-                    <a class="font-bold text-blue-500 text-hover-link-amber" href="mailto:${developer.email}" target="_blank">${developer.email}</a>
-                </td>
-                <td class="px-6 py-3">${developer.mobile}</td>
-                <td class="px-6 py-3">${developer.contactOwner}</td>
-                <td class="px-6 py-3"><span class="font-bold">${developer.primaryCompany}</span></td>
-                <td class="px-6 py-3">${developer.lastStatus}</td>
+                <td class="px-6 py-3">${bank.address ?? '-'}</td>
+                <td class="px-6 py-3">${bank.phone_number ?? '-'}</td>
+                <td class="px-6 py-3"><span class="font-bold">${bank.mobile_number ?? '-'}</span></td>
+
+                <td class="px-6 py-3 text-center">${bank.created_at}</td>
             `;
             tbody.appendChild(row);
         });
     }
 
     document.getElementById('showCount').addEventListener('change', (e) => {
-        renderDevelopers(parseInt(e.target.value, 10));
+        renderBanks(parseInt(e.target.value, 10));
     });
 
-    renderDevelopers(10); // initial render
+    renderBanks(10); // initial render
+
+    /******************************************
+     *  Removing success message element 
+     ****************************************/
+    document.addEventListener('DOMContentLoaded', function() {
+        const messageBox = document.getElementById('messageSession');
+        
+        if (messageBox) {
+            setTimeout(function() {
+                messageBox.style.transition = 'opacity 0.5s ease';
+                messageBox.style.opacity = '0';
+                
+                // Remove from DOM after fade out transition
+                setTimeout(function() {
+                    messageBox.remove();
+                }, 5000); 
+            }, 3000); // Wait 3 seconds before starting the fade
+        }
+    });
 </script>
+@endpush
 
 </x-app-layout>

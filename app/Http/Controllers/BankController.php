@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Bank;
 use Illuminate\Http\Request;
 use App\Http\Resources\BankResource;
+use App\Http\Requests\StoreBankRequest;
 
 class BankController extends Controller
 {
@@ -29,13 +30,14 @@ class BankController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreBankRequest $request)
     {
         $data = $request->validated();
 
         Bank::create($data);
 
-        return redirect()->route('bank.index');
+        return redirect()->route('bank.index')
+            ->with('success', 'The bank has been successfully saved!');
     }
 
     /**
@@ -57,13 +59,14 @@ class BankController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Bank $bank)
+    public function update(StoreBankRequest $request, Bank $bank)
     {
         $data = $request->all();
         
         $bank->update($data);
 
-        return redirect()->route('bank.index');
+        return redirect()->route('bank.index')
+                    ->with('success', 'The bank has been successfully saved!');
     }
 
     /**

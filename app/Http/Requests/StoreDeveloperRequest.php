@@ -23,9 +23,10 @@ class StoreDeveloperRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'first_name'    => 'required|string|max:45',
-            'last_name'     => 'required|string|max:45',
+            'first_name'    => 'required|string|max:150',
+            'last_name'     => 'required|string|max:150',
             'email'         => 'required|string|email|max:255|unique:developers,email',
+            'company'       => 'required|string|max:255',
             'mobile_number' => 'nullable|string',
             'phone_number'  =>  'nullable|string',
         ];

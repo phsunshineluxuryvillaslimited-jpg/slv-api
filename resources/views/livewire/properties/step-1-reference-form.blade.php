@@ -148,7 +148,7 @@ new class extends Component
             $this->plot_description     = $property->plot_description;
             $this->managing_agent_user_id = $property->managing_agent_user_id;
             $this->year_of_construction = $property->year_of_construction;
-            $this->pool_description     = $property->pool_description;
+            $this->pool_description     = $property->pool_description ?? '';
             $this->property_type_id     = $property->property_type_id;
             $this->commission           = $property->price->commission ?? 0;
             $this->listing_type         = $property->listing_type;
@@ -304,8 +304,8 @@ Basic information about the property
                         <div>
                             <label for="poa" class="block text-black text-sm mb-1">&nbsp;</label>
                             <div class="flex items-center pt-2">
-                                <input type="checkbox" wire:model.live.debounce.500ms="is_poa" id="poa" class="border-gray-300 text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
-                                <label class="text-gray-700 ml-2">{{ __('POA (hide price)') }}</label>
+                                <input type="checkbox" wire:model.live.debounce.500ms="is_poa" id="poa" class="cursor-pointer border-gray-300 text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
+                                <label for="poa" class="cursor-pointer text-gray-700 ml-2">{{ __('POA (hide price)') }}</label>
                             </div>
                         </div>
                     </div>
@@ -344,12 +344,12 @@ Basic information about the property
                                 <label for="description" class="block text-black text-sm mb-1">{{ __('Has Title Deeds') }}</label>
                                 <div class="flex items-center pt-2">
                                     <div class="flex items-center">
-                                        <input type="radio" name="title_deeds_group" wire:model.live="title_deeds" id="title_deeds_available" value="available" class="border-gray-300 text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" checked required />
-                                        <label for="title_deeds_available" class="text-gray-700 ml-2 text-sm">{{ __('Available') }}</label>
+                                        <input type="radio" name="title_deeds_group" wire:model.live="title_deeds" id="title_deeds_available" value="available" class="cursor-pointer border-gray-300 text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" checked required />
+                                        <label for="title_deeds_available" class="cursor-pointer text-gray-700 ml-2 text-sm">{{ __('Available') }}</label>
                                     </div>
                                     <div class="flex items-center ml-5">
-                                        <input type="radio" name="title_deeds_group" wire:model.live="title_deeds" id="title_deeds_not_available" value="not-available" class="border-gray-300 text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
-                                        <label for="title_deeds_not_available" class="text-gray-700 ml-2 text-sm">{{ __('Not Available') }}</label>
+                                        <input type="radio" name="title_deeds_group" wire:model.live="title_deeds" id="title_deeds_not_available" value="not-available" class="cursor-pointer border-gray-300 text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
+                                        <label for="title_deeds_not_available" class="cursor-pointer text-gray-700 ml-2 text-sm">{{ __('Not Available') }}</label>
                                     </div>
                                 </div>
                             </div>
@@ -357,12 +357,12 @@ Basic information about the property
                                 <label for="description" class="block text-black text-sm mb-1">{{ __('Leasehold Property') }}</label>
                                 <div class="flex items-center pt-2">
                                     <div class="flex items-center">
-                                        <input type="radio" name="leasehold_property_group" wire:model.live="leasehold" id="leasehold_property_yes" value="yes" class="border-gray-300 text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" checked required />
-                                        <label for="leasehold_property_yes" class="text-gray-700 ml-2 text-sm">{{ __('Yes') }}</label>
+                                        <input type="radio" name="leasehold_property_group" wire:model.live="leasehold" id="leasehold_property_yes" value="yes" class="cursor-pointer border-gray-300 text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" checked required />
+                                        <label for="leasehold_property_yes" class="cursor-pointer text-gray-700 ml-2 text-sm">{{ __('Yes') }}</label>
                                     </div>
                                     <div class="flex items-center ml-5">
-                                        <input type="radio" name="leasehold_property_group" wire:model.live="leasehold" id="leasehold_property_no" value="no" class="border-gray-300 text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
-                                        <label for="leasehold_property_no" class="text-gray-700 ml-2 text-sm">{{ __('No') }}</label>
+                                        <input type="radio" name="leasehold_property_group" wire:model.live="leasehold" id="leasehold_property_no" value="no" class="cursor-pointer border-gray-300 text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
+                                        <label for="leasehold_property_no" class="cursor-pointer text-gray-700 ml-2 text-sm">{{ __('No') }}</label>
                                     </div>
                                 </div>
                             </div>
@@ -418,19 +418,18 @@ Basic information about the property
                             <label for="pool" class="block text-black text-sm mb-1">{{ __('Pool') }}</label>
                             <div class="flex items-center pt-2">
                                 <div class="flex items-center">
-                                    <input type="radio" name="pool_group" wire:model.live="pool" id="pool_yes" value="yes" class="border-gray-300 text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" checked />
-                                    <label for="pool_yes" class="text-gray-700 ml-2 text-sm">{{ __('Yes') }}</label>
+                                    <input type="radio" name="pool_group" wire:model.live="pool" id="pool_yes" value="yes" class="cursor-pointer border-gray-300 text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" checked />
+                                    <label for="pool_yes" class="cursor-pointer text-gray-700 ml-2 text-sm">{{ __('Yes') }}</label>
                                 </div>
                                 <div class="flex items-center ml-4">
-                                    <input type="radio" name="pool_group" wire:model.live="pool" id="pool_no" value="no" class="border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
-                                    <label for="pool_no" class="text-gray-700 ml-2 text-sm">{{ __('No') }}</label>
+                                    <input type="radio" name="pool_group" wire:model.live="pool" id="pool_no" value="no" class="cursor-pointer border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
+                                    <label for="pool_no" class="cursor-pointer text-gray-700 ml-2 text-sm">{{ __('No') }}</label>
                                 </div>
                             </div>
                         </div>
                         <div class="flex-1">
                             <label for="pool_description" class="block text-black text-sm mb-1">{{ __('Pool Description') }}</label>
-                            <input type="text" wire:model.live.debounce.500ms="pool_description" id="pool_description" class="w-full border-gray-300 text-sm rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="Enter pool details (e.g. Infinity, Heated, Shared)" required />
-                            @error('pool_description') <span class="text-red-500 text-shadow-sm">{{ $message }}</span> @enderror
+                            <input type="text" wire:model.live.debounce.500ms="pool_description" id="pool_description" class="w-full border-gray-300 text-sm rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="Enter pool details (e.g. Infinity, Heated, Shared)" />
                         </div>
                     </div>
                 </div>
@@ -479,12 +478,12 @@ Basic information about the property
                             <label class="block text-gray-700 text-sm">{{ __('Listing Type') }}</label>
                             <div class="flex items-center pt-2">
                                 <div class="flex items-center">
-                                    <input type="radio" name="listing_type_group" wire:model.live="listing_type" id="listing_type_resale" value="resale" class="border-gray-300 text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" checked />
-                                    <label for="listing_type_resale" class="text-gray-700 ml-2 text-sm ">{{ __('Resale') }}</label>
+                                    <input type="radio" name="listing_type_group" wire:model.live="listing_type" id="listing_type_resale" value="resale" class="cursor-pointer border-gray-300 text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" checked />
+                                    <label for="listing_type_resale" class="cursor-pointer text-gray-700 ml-2 text-sm ">{{ __('Resale') }}</label>
                                 </div>
                                 <div class="flex items-center ml-4">
-                                    <input type="radio" name="listing_type_group" wire:model.live="listing_type" id="listing_type_new_build" value="new_build" class="border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
-                                    <label for="listing_type_new_build" class="text-gray-700 ml-2 text-sm">{{ __('New Build') }}</label>
+                                    <input type="radio" name="listing_type_group" wire:model.live="listing_type" id="listing_type_new_build" value="new_build" class="cursor-pointer border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
+                                    <label for="listing_type_new_build" class="cursor-pointer text-gray-700 ml-2 text-sm">{{ __('New Build') }}</label>
                                 </div>
                             </div>
                         </div>
@@ -492,16 +491,16 @@ Basic information about the property
                             <label class="block text-gray-700 text-sm">{{ __('Plan Zone') }}</label>
                             <div class="flex items-center pt-2">
                                 <div class="flex items-center">
-                                    <input type="radio" name="plan_zone_group" wire:model.live="plan_zone" id="plan_zone_a" value="A" class="border-gray-300 text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" checked />
-                                    <label for="plan_zone_a" class="text-gray-700 ml-2 text-sm ">{{ __('A') }}</label>
+                                    <input type="radio" name="plan_zone_group" wire:model.live="plan_zone" id="plan_zone_a" value="A" class="cursor-pointer border-gray-300 text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" checked />
+                                    <label for="plan_zone_a" class="cursor-pointer text-gray-700 ml-2 text-sm ">{{ __('A') }}</label>
                                 </div>
                                 <div class="flex items-center ml-4">
-                                    <input type="radio" name="plan_zone_group" wire:model.live="plan_zone" id="plan_zone_b" value="B" class="border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
-                                    <label for="plan_zone_b" class="text-gray-700 ml-2 text-sm">{{ __('B') }}</label>
+                                    <input type="radio" name="plan_zone_group" wire:model.live="plan_zone" id="plan_zone_b" value="B" class="cursor-pointer border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
+                                    <label for="plan_zone_b" class="cursor-pointer text-gray-700 ml-2 text-sm">{{ __('B') }}</label>
                                 </div>
                                 <div class="flex items-center ml-4">
-                                    <input type="radio" name="plan_zone_group" wire:model.live="plan_zone" id="plan_zone_c" value="C" class="border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
-                                    <label for="plan_zone_c" class="text-gray-700 ml-2 text-sm">{{ __('C') }}</label>
+                                    <input type="radio" name="plan_zone_group" wire:model.live="plan_zone" id="plan_zone_c" value="C" class="cursor-pointer border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
+                                    <label for="plan_zone_c" class="cursor-pointer text-gray-700 ml-2 text-sm">{{ __('C') }}</label>
                                 </div>
                             </div>
                         </div>
@@ -509,12 +508,12 @@ Basic information about the property
                             <label for="description" class="block text-gray-700 text-sm">{{ __('Sea View') }}</label>
                             <div class="flex items-center pt-2">
                                 <div class="flex items-center">
-                                    <input type="radio" name="sea_view_group" wire:model.live="sea_view" id="sea_view_yes" value="yes" class="border-gray-300 text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" checked />
-                                    <label for="sea_view_yes" class="text-gray-700 ml-2 text-sm ">{{ __('Yes') }}</label>
+                                    <input type="radio" name="sea_view_group" wire:model.live="sea_view" id="sea_view_yes" value="yes" class="cursor-pointer border-gray-300 text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" checked />
+                                    <label for="sea_view_yes" class="cursor-pointer cursor-pointer text-gray-700 ml-2 text-sm ">{{ __('Yes') }}</label>
                                 </div>
                                 <div class="flex items-center ml-4">
-                                    <input type="radio" name="sea_view_group" wire:model.live="sea_view" id="sea_view_no" value="no" class="border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
-                                    <label for="sea_view_no" class="text-gray-700 ml-2 text-sm">{{ __('No') }}</label>
+                                    <input type="radio" name="sea_view_group" wire:model.live="sea_view" id="sea_view_no" value="no" class="cursor-pointer border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
+                                    <label for="sea_view_no" class="cursor-pointer text-gray-700 ml-2 text-sm">{{ __('No') }}</label>
                                 </div>
                             </div>
                         </div>
@@ -522,12 +521,12 @@ Basic information about the property
                             <label for="description" class="block text-gray-700 text-sm">{{ __('For Sale Board') }}</label>
                             <div class="flex items-center pt-2">
                                 <div class="flex items-center">
-                                    <input type="radio"  name="for_sale_board_group" wire:model.live="for_sale_board" id="for_sale_board_yes" value="yes" class="border-gray-300 text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" checked />
-                                    <label for="for_sale_board_yes" class="text-gray-700 ml-2 text-sm ">{{ __('Yes') }}</label>
+                                    <input type="radio"  name="for_sale_board_group" wire:model.live="for_sale_board" id="for_sale_board_yes" value="yes" class="cursor-pointer border-gray-300 text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" checked />
+                                    <label for="for_sale_board_yes" class="cursor-pointer text-gray-700 ml-2 text-sm ">{{ __('Yes') }}</label>
                                 </div>
                                 <div class="flex items-center ml-4">
-                                    <input type="radio" name="for_sale_board_group" wire:model.live="for_sale_board" id="for_sale_board_no" value="no" class="border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
-                                    <label for="for_sale_board_no" class="text-gray-700 ml-2 text-sm">{{ __('No') }}</label>
+                                    <input type="radio" name="for_sale_board_group" wire:model.live="for_sale_board" id="for_sale_board_no" value="no" class="cursor-pointer border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
+                                    <label for="for_sale_board_no" class="cursor-pointer text-gray-700 ml-2 text-sm">{{ __('No') }}</label>
                                 </div>
                             </div>
                         </div>

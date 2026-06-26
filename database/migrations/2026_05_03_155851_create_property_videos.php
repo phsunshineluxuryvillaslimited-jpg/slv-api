@@ -19,9 +19,9 @@ return new class extends Migration
                 ->on('properties')
                 ->onDelete('cascade');
             $table->string('embed_url_1')
-                ->comment('The URL to retrieve the embeddable video from');
+                ->comment('Youtube URL');
             $table->string('embed_url_2')
-                ->comment('The URL to retrieve the embeddable video from')
+                ->comment('Youtube URL')
                 ->nullable();
             $table->string('virtual_tour_link')
                 ->comment('The URL to retrieve the virtual tour from')

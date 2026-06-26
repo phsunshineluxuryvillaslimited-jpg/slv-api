@@ -36,25 +36,41 @@
                 Diaries
             </a>
             <div class="nav-section">People</div>
-            <a href="{{ route('developer.index') }}" class="nav-link {{ request()->routeIs('developer') ? 'active' : '' }}">
+            <a href="{{ route('developer.index') }}" class="nav-link {{ request()->routeIs('developer.*') ? 'active' : '' }}">
                 <svg fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16M3 21h18M9 21V10.5M15 21V10.5M9 7.5h6M12 3v4.5"/></svg>
                 Developers
             </a>
-            <a href="{{ route('agent.index') }}" class="nav-link {{request()->routeIs('agent') ? 'active' : '' }}">
+            <a href="{{ route('agent.index') }}" class="nav-link {{request()->routeIs('agent.*') ? 'active' : '' }}">
                 <svg fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                 Agents
             </a>
-            <a href="{{ route('bank.index') }}" class="nav-link {{request()->routeIs('bank') ? 'active' : '' }}">
-                <svg fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 6l9-4 9 4M3 6v14a1 1 0 001 1h16a1 1 0 001-1V6M3 6h18M9 10v8M15 10v8M12 10v8"/></svg>
+            <a href="{{ route('bank.index') }}" class="nav-link {{request()->routeIs('bank.*') ? 'active' : '' }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" x2="21" y1="22" y2="22"/>
+                    <line x1="6" x2="6" y1="18" y2="11"/>
+                    <line x1="10" x2="10" y1="18" y2="11"/>
+                    <line x1="14" x2="14" y1="18" y2="11"/>
+                    <line x1="18" x2="18" y1="18" y2="11"/>
+                    <polygon points="12 2 20 7 4 7"/>
+                </svg>
                 Banks
             </a>
-            <a href="{{ route('vendor.index') }}" class="nav-link {{ request()->routeIs('vendor') ? 'active' : '' }}">
-                <svg fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 6l9-4 9 4M3 6v14a1 1 0 001 1h16a1 1 0 001-1V6M3 6h18M9 10v8M15 10v8M12 10v8"/></svg>
+            <a href="{{ route('vendor.index') }}" class="nav-link {{ request()->routeIs('vendor.*') ? 'active' : '' }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/>
+                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+                <path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/>
+                <path d="M2 7h20"/>
+                </svg>
                 Vendors
             </a>
-            <a href="{{ route('client.index') }}" class="nav-link {{ request()->routeIs('client') ? 'active' : '' }}">
-                <svg fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 6l9-4 9 4M3 6v14a1 1 0 001 1h16a1 1 0 001-1V6M3 6h18M9 10v8M15 10v8M12 10v8"/></svg>
-                Client
+            <a href="{{ route('client.index') }}" class="nav-link {{ request()->routeIs('client.*') ? 'active' : '' }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <circle cx="12" cy="10" r="4"/>
+                <path d="M6.2 19a6 6 0 0 1 11.6 0"/>
+                </svg>
+                Clients
             </a>
             <div class="nav-section">Business</div>
             <a href="#" class="nav-link">
@@ -96,8 +112,8 @@
     <div class="main-area">
         <header class="header">
             <div class="page-title">
-                <h3 class="font-semibold leading-tight text-gray-800 text-l">
-                    {{ str_replace('.', ' > ', Route::currentRouteName() ?? '') }}
+                <h3 class="font-semibold leading-tight text-gray-800 text-l font-custom">
+                    <span class="uppercase">{{ str_replace('.', ' > ', str_replace('.index', '', Route::currentRouteName()) ?? '') }}</span>
                 </h3>
             </div>
             <div class="header-right">

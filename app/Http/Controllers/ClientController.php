@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Client;
 use Illuminate\Http\Request;
 use App\Http\Resources\ClientResource;
+use App\Http\Requests\StoreClientRequest;
 
 class ClientController extends Controller
 {
@@ -29,13 +30,14 @@ class ClientController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreClientRequest $request)
     {
         $data = $request->validated();
 
         Client::create($data);
 
-        return redirect()->route('bank.index');
+        return redirect()->route('client.index')
+                ->with('success', 'The client has been successfully saved!');
     }
 
     /**
@@ -43,7 +45,7 @@ class ClientController extends Controller
      */
     public function show(Client $client)
     {
-        //
+        return view('clients.show', compact('client'));
     }
 
     /**
@@ -57,13 +59,14 @@ class ClientController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Client $client)
+    public function update(StoreClientRequest $request, Client $client)
     {
         $data = $request->all();
         
         $client->update($data);
 
-        return redirect()->route('bank.index');
+        return redirect()->route('clients.index')
+                    ->with('success', 'The client has been successfully updated!');
     }
 
     /**

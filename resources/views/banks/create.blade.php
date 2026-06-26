@@ -29,13 +29,13 @@
                 </div>
                 <div class="grid grid-cols-2 md:grid-cols-2 gap-5 mb-4">
                     <div>
-                        <label for="telephone" class="required-field block text-black text-sm mb-1">{{ __('Telephone') }}</label>
-                        <input type="text" name="phone_number" id="telephone" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required placeholder="Enter bank telephone number">
+                        <label for="telephone" class="block text-black text-sm mb-1">{{ __('Telephone') }}</label>
+                        <input type="text" name="phone_number" id="telephone" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="Enter bank telephone number">
                     </div>
 
                     <div>
-                        <label for="mobile" class="required-field block text-black text-sm mb-1">{{ __('Mobile') }}</label>
-                        <input type="text"  name="mobile_number" id="mobile" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required placeholder="Enter bank mobile number">
+                        <label for="mobile" class="block text-black text-sm mb-1">{{ __('Mobile') }}</label>
+                        <input type="text"  name="mobile_number" id="mobile" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="Enter bank mobile number">
                     </div>
                 </div>
                 <div class="py-5 flex gap-3">

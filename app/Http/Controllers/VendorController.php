@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Vendor;
 use App\Http\Resources\VendorResource;
+use App\Http\Requests\StoreVendorRequest;
 use Illuminate\Http\Request;
 
 class VendorController extends Controller
@@ -29,13 +30,14 @@ class VendorController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreVendorRequest $request)
     {
         $data = $request->validated();
 
         Vendor::create($data);
 
-        return redirect()->route('vendor.index');
+        return redirect()->route('vendor.index')
+                    ->with('success', 'The vendor has been successfully saved!');
     }
 
     /**
@@ -63,7 +65,8 @@ class VendorController extends Controller
         
         $vendor->update($data);
 
-        return redirect()->route('vendor.index');
+        return redirect()->route('vendor.index')
+                    ->with('success', 'The vendor has been successfully updated!');
     }
 
     /**

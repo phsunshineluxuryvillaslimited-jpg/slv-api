@@ -120,7 +120,7 @@
 </section>
 
 @push('scripts')
-    <!-- @vite(['resources/js/Sortable.min.js']) -->
+    @vite(['resources/js/Sortable.min.js'])
      
     <!-- <script>
         window.Sortable = window.Sortable

@@ -90,7 +90,7 @@ Basic location info
                     <p class="mb-5 text-sm text-gray-600">{{ __('If you are unsure on how to get the YouTube embedded link, ') }} <a href="https://support.google.com/youtube/answer/171780?hl=en" target="_blank" class="text-blue-500">{{ __('click this link for help.') }}</a></p>
                     <div class="">
                         <div class="p-4 sm:p-8 bg-gray-50 border-t border-gray-200">
-                            <label for="embed_url_1" class="block text-black text-sm mb-1">{{ __('YouTube Embedded Link 1:') }}</label>
+                            <label for="embed_url_1" class="block text-black text-sm mb-1">{{ __('YouTube Link 1:') }}</label>
                             <input type="text" 
                                     wire:model.live="embed_url_1" 
                                     id="embed_url_1" 
@@ -100,7 +100,7 @@ Basic location info
                             @error('embed_url_1') <span class="text-red-500 text-shadow-sm">{{ $message }}</span> @enderror
                         </div>
                         <div class="p-4 sm:p-8 bg-gray-50 border-t border-gray-200">
-                            <label for="embed_url_2" class="block text-black text-sm mb-1">{{ __('YouTube Embedded Link 2:') }}</label>
+                            <label for="embed_url_2" class="block text-black text-sm mb-1">{{ __('YouTube Link 2:') }}</label>
                             <input type="text" 
                                     wire:model.live="embed_url_2" 
                                     id="embed_url_2" 

@@ -121,8 +121,6 @@
 
 @push('scripts')
     @vite(['resources/js/Sortable.min.js'])
-     
-    <!-- <script>
-        window.Sortable = window.Sortable
-    </script> -->
+    <script src="{{ asset('js/tinymce/tinymce.min.js') }}" referrerpolicy="origin" crossorigin="anonymous"></script>
+    
 @endpush

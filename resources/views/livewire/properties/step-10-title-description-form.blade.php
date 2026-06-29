@@ -11,6 +11,15 @@ new class extends Component
     #[Validate('required|string')]
     public string $description;
 
+    #[Validate('boolean')]
+    public bool $published = false;
+
+    #[Validate('nullable')]
+    public string $published_at;
+
+    #[Validate('nullable')]
+    public string $status;
+
     public ?Property $property = null;
 
     public bool $isEdit = false;
@@ -21,6 +30,7 @@ new class extends Component
         $this->property = $property;
         $this->isEdit = $isEdit;
         $this->description = $property->description ?? '';
+        $this->published = $property->published_at ? true : false;
     }
 
     /****************************************
@@ -32,6 +42,14 @@ new class extends Component
         try {
 
             $validatedData = $this->validate();
+
+            if ($validatedData['published']) {
+                $validatedData['published_at'] = now()->toDateTimeString();
+                $validatedData['status'] = 'published';
+            } else {
+                $validatedData['published_at'] = null;
+                $validatedData['status'] = null;
+            }
             
             $this->property->address()->updateOrCreate([
                     'property_id' => $this->property->id,
@@ -58,7 +76,17 @@ new class extends Component
 
         if ($this->property && $this->property->exists) {
 
-            $this->property->update($validatedData);
+            if ($validatedData['published']) {
+                $validatedData['published_at'] = now()->toDateTimeString();
+                $validatedData['status'] = 'published';
+            } else {
+                $validatedData['published_at'] = null;
+                $validatedData['status'] = null;
+            }
+            $this->property->description  = $validatedData['description'];
+            $this->property->published_at = $validatedData['published_at'];
+            $this->property->status       = $validatedData['status'];
+            $this->property->save();
 
             session()->flash('success', 'Property has been successfully updated!');
         }
@@ -70,7 +98,7 @@ new class extends Component
 Basic location info
 ----------------------------------------->
 <div>
-    <div class="max-w-7xl mt-3 mx-auto sm:px-6 lg:px-8">
+    <div class="flex max-w-7xl mt-3 mx-auto sm:px-6 lg:px-8">
         <span class="required-field"></span> <span class="text-sm text-gray-800">{{ __('Required fields') }}</span>
         <div class="ml-auto text-blue-900 font-semibold font-custom pr-3">{{ $property->reference }}</div>
     </div>
@@ -93,7 +121,7 @@ Basic location info
                        <div
                             wire:ignore
                             x-data="tinymceComponent()"
-                            x-init="value=`{!! addslashes($description ?? '') !!}`; init()"
+                            x-init="init()"
                             class="w-full"
                         >
                             <textarea x-ref="textarea" name="description"></textarea>
@@ -129,7 +157,14 @@ Basic location info
                             }
                         </script>
                         @endscript
+                        </div>
                     </div>
+                    <div class="flex">
+                        <label class="inline-flex ml-auto items-center cursor-pointer">
+                            <input type="checkbox" wire:model="published" value="" class="sr-only peer">
+                            <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
+                            <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">{{ __('Publish this prorperty') }}</span>
+                        </label>
                     </div>
                 </div>  
             </div>

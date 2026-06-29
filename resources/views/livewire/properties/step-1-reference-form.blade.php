@@ -213,7 +213,8 @@ new class extends Component
     //Update
     #[On('parentUpdateButtonTriggered')]
     public function handleUpdateProperty()
-    {   try {
+    {   
+        try {
 
             $validatedData = $this->validate();
             
@@ -233,6 +234,7 @@ new class extends Component
 
                 session()->flash('success', 'Property has been successfully updated!');
             }
+            
         } catch (ValidationException $e) {
             Log::info('Property validation error. Please double check.' . $e);
             throw $e;

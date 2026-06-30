@@ -202,13 +202,16 @@
                 vendor.avatarColor = getRandomColor();
             }
 
-            const row = document.createElement('tr');
+            const row         = document.createElement('tr');
+            const baseURL     = "{{ route('vendor.show', ':id') }}";
+            const finalUrl    = baseURL.replace(':id', vendor.id);
+
             row.innerHTML = `
                 <td class="flex px-6 py-3 people-identity">
-                    <div class="flex items-center gap-3">
+                    <a class="flex items-center gap-3" href="${finalUrl}">
                         <div class="slv-avatar" style="background: ${vendor.avatarColor};">${getInitials(vendor.full_name)}</div>
                         <span class="font-bold text-blue-500">${vendor.full_name}</span>
-                    </div>
+                    </a>
                 </td>
                 <td class="px-6 py-3">
                     <a class="font-bold text-blue-500 text-hover-link-amber" href="mailto:${vendor.email}" target="_blank">${vendor.email}</a>

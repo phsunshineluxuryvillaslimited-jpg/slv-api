@@ -45,6 +45,7 @@ class ClientController extends Controller
      */
     public function show(Client $client)
     {
+        
         return view('clients.show', compact('client'));
     }
 
@@ -59,14 +60,15 @@ class ClientController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(StoreClientRequest $request, Client $client)
+    public function update(Request $request, Client $client)
     {
-        $data = $request->all();
-        
+        $getData = $request->all();
+
+        $data[$getData['column']] = $getData['value'];
+
         $client->update($data);
 
-        return redirect()->route('clients.index')
-                    ->with('success', 'The client has been successfully updated!');
+        return ClientResource::make($client);
     }
 
     /**

@@ -46,7 +46,7 @@ class DeveloperController extends Controller
      */
     public function show(Developer $developer)
     {
-        //
+        return view('developers.show', compact('developer'));
     }
 
     /**
@@ -62,12 +62,13 @@ class DeveloperController extends Controller
      */
     public function update(Request $request, Developer $developer)
     {
-        $data = $request->all();
-        
+        $getData = $request->all();
+
+        $data[$getData['column']] = $getData['value'];
+
         $developer->update($data);
 
-        return redirect()->route('developer.index')
-                    ->with('success', 'The developer has been successfully updated!');;
+        return DeveloperResource::make($developer);
     }
 
     /**

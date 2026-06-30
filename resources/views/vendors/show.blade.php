@@ -8,12 +8,12 @@
         <aside class="w-full lg:w-[320px] shrink-0 bg-white border-r border-slate-200">
             {{-- Back + actions --}}
             <div class="flex items-center justify-between px-5 py-3 border-b border-slate-100">
-                <a href="{{ url('/clients') }}"
+                <a href="{{ url('/vendor') }}"
                    class="flex items-center gap-1 text-sm font-medium text-slate-600 hover:text-blue-600">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
                     </svg>
-                    Clients
+                    Vendors
                 </a>
                 <button class="flex items-center gap-1 text-sm font-medium text-blue-600 hover:text-blue-700">
                     Actions
@@ -27,7 +27,7 @@
                     <div class="flex items-center justify-center w-12 h-12 text-lg font-semibold text-white bg-red-600 rounded-full shrink-0">BH</div>
                     <div>
                         <h1 class="text-xl font-semibold leading-tight text-slate-900">Cristiano Ronaldo</h1>
-                        <p class="text-sm text-slate-500">Client</p>
+                        <p class="text-sm text-slate-500">Vendor</p>
                         <a href="mailto:cr7@samplemail.com" class="text-sm text-blue-600 break-all hover:underline">cr7@samplemail.com</a>
                     </div>
                 </div>
@@ -87,7 +87,7 @@
                     <div>
                         <dt class="text-xs text-slate-500">Email</dt>
                         <dd class="flex gap-3 group relative text-sm break-words text-slate-800">
-                            <input type="text" name="email" id="email" data-field="email" data-id="{{ $client->id }}" value="{{ $client->email }}" class="text-sm p-1 border-white" disabled/>
+                            <input type="text" name="email" id="email" data-field="email" data-id="{{ $vendor->id }}" value="{{ $vendor->email }}" class="text-sm p-1 border-white" disabled/>
                             <button
                                 id="emailEditBtn"
                                 class="hidden rounded-xs text-sm bg-white p-1 shadow hover:bg-gray-100 group-hover:block"
@@ -124,7 +124,7 @@
                     </div>
                     <div><dt class="text-xs text-slate-500">Mobile</dt>
                         <dd class="flex gap-3 group relative text-sm break-words text-slate-800">
-                            <input type="text" name="mobile" id="mobile" data-field="mobile_number" data-id="{{ $client->id }}" value="{{ $client->mobile_number }}" class="text-sm p-1 border-white" disabled/>
+                            <input type="text" name="mobile" id="mobile" data-field="mobile_number" data-id="{{ $vendor->id }}" value="{{ $vendor->mobile_number }}" class="text-sm p-1 border-white" disabled/>
                             <button
                                 id="mobileEditBtn"
                                 class="hidden rounded-xs text-sm bg-white p-1 shadow hover:bg-gray-100 group-hover:block"
@@ -161,7 +161,7 @@
                     </div>
                     <div><dt class="text-xs text-slate-500">{{ __('Contact owner') }}</dt>
                         <dd class="flex gap-3 group relative text-sm break-words text-slate-800">
-                            <input type="text" name="phone_number" id="phone" data-field="phone_number" data-id="{{ $client->id }}" value="{{ $client->phone_number }}" class="text-sm p-1 border-white" disabled/>
+                            <input type="text" name="phone_number" id="phone" data-field="phone_number" data-id="{{ $vendor->id }}" value="{{ $vendor->phone_number }}" class="text-sm p-1 border-white" disabled/>
                             <button
                                 id="phoneEditBtn"
                                 class="hidden rounded-xs text-sm bg-white p-1 shadow hover:bg-gray-100 group-hover:block"
@@ -177,7 +177,7 @@
                                 <button 
                                     class="rounded-xs text-sm bg-white p-2 shadow hover:bg-gray-100"
                                     title="Save"
-                                    onClick="savingMode(this, 'phoneActionBtn', 'phoneEditBtn', 'firstName')"
+                                    onClick="savingMode(this, 'phoneActionBtn', 'phoneEditBtn', 'phone')"
                                 >   
                                     <svg class="w-3 h-3 text-gray-500 hover:text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
@@ -187,7 +187,7 @@
                                 <button 
                                     class="rounded-xs text-sm bg-white p-2 shadow hover:bg-gray-100"
                                     title="Cancel"
-                                    onClick="cancelMode(this, 'phoneActionBtn', 'phoneEditBtn', 'firstName')"
+                                    onClick="cancelMode(this, 'phoneActionBtn', 'phoneEditBtn', 'phone')"
                                 >   
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3 text-gray-600 hover:text-red-600">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
@@ -195,121 +195,10 @@
                                 </button>
                             </div>
                         </dd>
-                    </div>
-                    <div><dt class="text-xs text-slate-500">{{ __('Client status') }}</dt>
-                        <dd class="flex gap-3 group relative text-sm break-words text-slate-800">
-                            <input type="text" name="client_status" id="clientStatus" data-field="client_status" data-id="{{ $client->id }}" value="{{ ucfirst($client->client_status) }}" class="text-sm p-1 border-white" disabled/>
-                            <button
-                                id="clientStatusEditBtn"
-                                class="hidden rounded-xs text-sm bg-white p-1 shadow hover:bg-gray-100 group-hover:block"
-                                title="Edit"
-                                onClick="editMode(this, 'clientStatus', 'clientStatusActionBtn')"                                
-                            >
-                                <svg class="w-3 h-3 text-gray-500 hover:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M11 5h2m-1-1v2m6.586 2.586a2 2 0 010 2.828l-8.172 8.172a4 4 0 01-1.414.943L5 20l.471-3.999a4 4 0 01.943-1.414l8.172-8.172a2 2 0 012.828 0z"/>
-                                </svg>
-                            </button>
-                            <div id="clientStatusActionBtn" style="display: none">
-                                <button 
-                                    class="rounded-xs text-sm bg-white p-2 shadow hover:bg-gray-100"
-                                    title="Save"
-                                    onClick="savingMode(this, 'clientStatusActionBtn', 'clientStatusEditBtn', 'client_status')"
-                                >   
-                                    <svg class="w-3 h-3 text-gray-500 hover:text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3.75M12 12H12m-3 0h6" />    
-                                    </svg>
-                                </button>
-                                <button 
-                                    class="rounded-xs text-sm bg-white p-2 shadow hover:bg-gray-100"
-                                    title="Cancel"
-                                    onClick="cancelMode(this, 'clientStatusActionBtn', 'clientStatusEditBtn', 'client_status')"
-                                >   
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3 text-gray-600 hover:text-red-600">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                                    </svg>
-                                </button>
-                            </div>
-                        </dd>
-                    </div>
-                    <div><dt class="text-xs text-slate-500">{{ __('Lead status') }}</dt>
-                        <dd class="flex gap-3 group relative text-sm break-words text-slate-800">
-                            <input type="text" name="lead_status" id="leadStatus" data-field="lead_status" data-id="{{ $client->id }}" value="{{ ucfirst($client->lead_status) }}" class="text-sm p-1 border-white" disabled/>
-                            <button
-                                id="leadStatusEditBtn"
-                                class="hidden rounded-xs text-sm bg-white p-1 shadow hover:bg-gray-100 group-hover:block"
-                                title="Edit"
-                                onClick="editMode(this, 'leadStatus', 'leadStatusActionBtn')"                                
-                            >
-                                <svg class="w-3 h-3 text-gray-500 hover:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M11 5h2m-1-1v2m6.586 2.586a2 2 0 010 2.828l-8.172 8.172a4 4 0 01-1.414.943L5 20l.471-3.999a4 4 0 01.943-1.414l8.172-8.172a2 2 0 012.828 0z"/>
-                                </svg>
-                            </button>
-                            <div id="leadStatusActionBtn" style="display: none">
-                                <button 
-                                    class="rounded-xs text-sm bg-white p-2 shadow hover:bg-gray-100"
-                                    title="Save"
-                                    onClick="savingMode(this, 'leadStatusActionBtn', 'leadStatusEditBtn', 'lead_status')"
-                                >   
-                                    <svg class="w-3 h-3 text-gray-500 hover:text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3.75M12 12H12m-3 0h6" />    
-                                    </svg>
-                                </button>
-                                <button 
-                                    class="rounded-xs text-sm bg-white p-2 shadow hover:bg-gray-100"
-                                    title="Cancel"
-                                    onClick="cancelMode(this, 'leadStatusActionBtn', 'leadStatusEditBtn', 'lead_status')"
-                                >   
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3 text-gray-600 hover:text-red-600">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                                    </svg>
-                                </button>
-                            </div>
-                        </dd>
-                    </div>
+                    </div>                    
                     <div><dt class="text-xs text-slate-500">Last status</dt>
                         <dd class="text-sm break-words text-slate-800">
-                            {{ $client->updated_at }}
-                        </dd>
-                    </div>
-                    <div><dt class="text-xs text-slate-500">Record source</dt>
-                        <dd class="flex gap-3 group relative text-sm break-words text-slate-800">                   
-                            <input type="text" name="record_source" id="recordSource" data-field="record_source" data-id="{{ $client->id }}" value="{{ ucwords($client->record_source) }}" class="text-sm p-1 border-white" disabled/>
-                            <button
-                                id="recordResourceEditBtn"
-                                class="hidden rounded-xs text-sm bg-white p-1 shadow hover:bg-gray-100 group-hover:block"
-                                title="Edit"
-                                onClick="editMode(this, 'recordSource', 'recordResourceActionBtn')"                                
-                            >
-                                <svg class="w-3 h-3 text-gray-500 hover:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M11 5h2m-1-1v2m6.586 2.586a2 2 0 010 2.828l-8.172 8.172a4 4 0 01-1.414.943L5 20l.471-3.999a4 4 0 01.943-1.414l8.172-8.172a2 2 0 012.828 0z"/>
-                                </svg>
-                            </button>
-                            <div id="recordResourceActionBtn" style="display: none">
-                                <button 
-                                    class="rounded-xs text-sm bg-white p-2 shadow hover:bg-gray-100"
-                                    title="Save"
-                                    onClick="savingMode(this, 'recordResourceActionBtn', 'recordResourceEditBtn', 'record_source')"
-                                >   
-                                    <svg class="w-3 h-3 text-gray-500 hover:text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3.75M12 12H12m-3 0h6" />    
-                                    </svg>
-                                </button>
-                                <button 
-                                    class="rounded-xs text-sm bg-white p-2 shadow hover:bg-gray-100"
-                                    title="Cancel"
-                                    onClick="cancelMode(this, 'recordResourceActionBtn', 'recordResourceEditBtn', 'record_source')"
-                                >   
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3 text-gray-600 hover:text-red-600">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                                    </svg>
-                                </button>
-                            </div>
+                            {{ $vendor->updated_at }}
                         </dd>
                     </div>
                 </dl>
@@ -484,7 +373,6 @@
 <script>
 
     let defaultValue = '';
-
     function editMode($this, elementId, actionButtons) {
         const el = document.getElementById(elementId);
         const actbtn = document.getElementById(actionButtons);
@@ -524,7 +412,7 @@
 
         const xhr = new XMLHttpRequest();
 
-        xhr.open("PUT", "/client/" + id, true);
+        xhr.open("PUT", "/vendor/" + id, true);
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.setRequestHeader("X-CSRF-TOKEN",  document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
 

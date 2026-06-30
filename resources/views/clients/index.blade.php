@@ -189,8 +189,8 @@
 
             const row = document.createElement('tr');
             
-            let baseURL     = "{{ route('client.show', ':id') }}";
-            let finalUrl    = baseURL.replace(':id', client.id);
+            const baseURL     = "{{ route('client.show', ':id') }}";
+            const finalUrl    = baseURL.replace(':id', client.id);
             
             row.innerHTML = `
                 <td class="flex px-6 py-3 people-identity">

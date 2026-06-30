@@ -64,6 +64,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::resource('properties', PropertiesController::class);
 
+    Route::post('properties/{property}/generate-description', [\App\Http\Controllers\PropertyDescriptionController::class, '__invoke'])->name('properties.generate-description');
+
     // Route::view('properties', 'properties.index')->name('properties');
 
     Route::get('/properties-xml/feed', [PropertiesXmlController::class, 'feed'])->name('property.xml-feed');

@@ -40,5 +40,9 @@ return [
 
     'slv_website' => [
         'url' => env('WEBSITE_URL')
+    ],
+
+    'claude' => [
+        'key' => env('CLAUDE_API_KEY')
     ]
 ];

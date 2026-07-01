@@ -139,9 +139,9 @@ class ClaudeClient
 
         *Output:*
         > Transform your home with our **professional house cleaning service** in Seattle—designed for busy professionals who deserve a spotless space. We offer fully customizable cleaning packages, from deep cleans to weekly maintenance, all using eco-friendly products safe for your family and pets. Book same-day appointments through our online platform for ultimate convenience. Whether you need move-in/move-out cleaning or regular upkeep, our experienced team delivers meticulous results. Reclaim your weekends. Schedule your clean today!
-
-        > **Key SEO Keywords:** professional house cleaning Seattle, eco-friendly cleaning service, same-day cleaning, customizable house cleaning  
-        > **Rationale:** Targets local SEO + service-specific intent; emphasizes convenience and values (eco-friendly).
+        > Please remove all em dash and other shortcodes when generating the prompt
+        > Please do not include rationale when generating the prompt
+        > Please do not include Key SEO Keywords Identified when generating the prompt
         EOD;
     }
 }

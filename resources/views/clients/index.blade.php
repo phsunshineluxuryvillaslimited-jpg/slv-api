@@ -189,8 +189,8 @@
 
             const row = document.createElement('tr');
             
-            let baseURL     = "{{ route('client.show', ':id') }}";
-            let finalUrl    = baseURL.replace(':id', client.id);
+            const baseURL     = "{{ route('client.show', ':id') }}";
+            const finalUrl    = baseURL.replace(':id', client.id);
             
             row.innerHTML = `
                 <td class="flex px-6 py-3 people-identity">
@@ -205,7 +205,7 @@
                 <td class="px-6 py-3">${client.mobile_number}</td>
                 <td class="px-6 py-3">${client.phone_number ?? '-'}</td>
                 <td class="px-6 py-3"><span class="font-bold">${client.nationality ?? '-'}</span></td>
-                <td class="px-6 py-3 text-center">${client.created_at}</td>
+                <td class="px-6 py-3 text-center">${client.updated_at}</td>
             `;
             tbody.appendChild(row);
         });

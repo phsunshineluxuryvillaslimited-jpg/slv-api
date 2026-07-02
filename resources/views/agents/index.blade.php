@@ -193,9 +193,13 @@
             }
 
             const row = document.createElement('tr');
+
+            const baseURL     = "{{ route('agent.show', ':id') }}";
+            const finalUrl    = baseURL.replace(':id', agent.id);
+
             row.innerHTML = `
                 <td class="flex px-6 py-3 people-identity">
-                    <a class="flex items-center gap-3" href="{{ route('agent-info') }}">
+                    <a class="flex items-center gap-3" href="${finalUrl}">
                         <div class="slv-avatar" style="background: ${agent.avatarColor};">${getInitials(agent.full_name)}</div>
                         <span class="font-bold text-blue-500">${agent.full_name}</span>
                     </a>
@@ -206,7 +210,7 @@
                 <td class="px-6 py-3">${agent.mobile_number}</td>
                 <td class="px-6 py-3">${agent.phone_number ?? '-'}</td>
                 <td class="px-6 py-3"><span class="font-bold">${agent.company ?? '-'}</span></td>
-                <td class="px-6 py-3 text-center">${agent.created_at}</td>
+                <td class="px-6 py-3 text-center">${agent.updated_at}</td>
             `;
             tbody.appendChild(row);
         });

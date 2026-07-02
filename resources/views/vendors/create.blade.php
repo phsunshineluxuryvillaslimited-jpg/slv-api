@@ -32,12 +32,12 @@
                         @error('email') <span class="text-red-500 text-shadow-sm">{{ $message }}</span> @enderror
                     </div>
                     <div>
-                        <label for="telephone" class="required-field block text-black text-sm mb-1">{{ __('Telephone') }}</label>
+                        <label for="telephone" class="block text-black text-sm mb-1">{{ __('Telephone') }}</label>
                         <input type="text" name="phone_number" id="telephone" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="Enter vendor telephone number">
                     </div>
 
                     <div>
-                        <label for="mobile" class="required-field block text-black text-sm mb-1">{{ __('Mobile') }}</label>
+                        <label for="mobile" class="block text-black text-sm mb-1">{{ __('Mobile') }}</label>
                         <input type="text"  name="mobile_number" id="mobile" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="Enter vendor mobile number">
                     </div>
                 </div>

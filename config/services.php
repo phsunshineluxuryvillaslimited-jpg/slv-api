@@ -39,6 +39,15 @@ return [
     ],
 
     'slv_website' => [
-        'url' => env('WEBSITE_URL')
+        'url' => env('APP_URL')
+    ],
+
+    'claude' => [
+        'endpoint' => env('ANTHROPIC_API_URL', 'https://api.anthropic.com/v1/complete'),
+        'key' => env('ANTHROPIC_API_KEY'),
+        'model' => env('ANTHROPIC_MODEL', 'claude-v1'),
+        'timeout' => (int) env('ANTHROPIC_TIMEOUT', 30),
+        'max_tokens' => (int) env('ANTHROPIC_MAX_TOKENS', 1024),
+        'anthropic-version' => env('ANTHROPIC_VERSION', '2023-06-01'),
     ]
 ];

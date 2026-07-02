@@ -24,6 +24,9 @@ return new class extends Migration
             $table->string('id_card_number')->nullable();
             $table->string('passport_number')->nullable();
             $table->string('preferred_language')->nullable();
+            $table->string('client_status')->nullable()->default('active');
+            $table->string('lead_status')->nullable()->default('new');
+            $table->string('record_source')->nullable();
             $table->timestamps();
         });
     }

@@ -1,6 +1,6 @@
 <div class="space-y-2">
 
-    @foreach($keyFeatures as $item)
+    @foreach($fields as $item)
         @continue (!isset($item['id']))
         <div wire:ignore.self class="border rounded">
             <button

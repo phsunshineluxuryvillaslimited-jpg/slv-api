@@ -452,9 +452,9 @@ new class extends Component
 Basic location info
 ----------------------------------------->
 <div>
-    <div class="max-w-7xl mt-3 mx-auto sm:px-6 lg:px-8">
+    <div class="flex max-w-7xl mt-3 mx-auto sm:px-6 lg:px-8">
         <span class="required-field"></span> <span class="text-sm text-gray-800">{{ __('Required fields') }}</span>
-        <?php /* <div class="ml-auto text-blue-900 font-semibold font-custom pr-3">{{ $property->reference }}</div> */ ?>
+        <div class="ml-auto text-blue-900 font-semibold font-custom pr-3">{{ $property->reference }}</div>
     </div>
     <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
@@ -520,7 +520,7 @@ Basic location info
                         </div>
 
                         <div>
-                            <label for="mobile" class="required-field block text-black text-sm mb-1">{{ __('Mobile') }}</label>
+                            <label for="mobile" class="block text-black text-sm mb-1">{{ __('Mobile') }}</label>
                             <input type="text"  wire:model.live.debounce.500ms="mobile_number" id="mobile" class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
                             @error('mobile_number') <span class="text-red-500 text-shadow-sm">{{ $message }}</span> @enderror
                         </div>

@@ -63,8 +63,10 @@ Deployment Workflow
 4. Database Seeding: run to seed the requied data
     php artisan db:seed --class=AgentSeeder 
     php artisan db:seed --class=BankSeeder
+    php artisan db:seed --class=DatabaseSeeder
     php artisan db:seed --class=PropertyTypesSeeder
     php artisan db:seed --class=RoleSeeder
+    php artisan db:seed --class=TempUserSeeder
 5. Caching: 
     php artisan optimize
 6. Frontend: (if using Vite/Mix).

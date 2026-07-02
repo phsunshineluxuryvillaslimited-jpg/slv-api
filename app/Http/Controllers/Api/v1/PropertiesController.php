@@ -19,7 +19,7 @@ class PropertiesController extends Controller
     {
         $query = Property::query()
             ->with(['networks'])
-            // ->where('status', 'published')
+            ->where('status', 'published')
             ->whereHas('networks', fn ($query) => $query->where('external_feeds', 'like', '%slv%'));
         
         if ($request->filled('include')) {

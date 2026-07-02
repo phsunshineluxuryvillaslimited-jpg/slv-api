@@ -45,7 +45,7 @@ class VendorController extends Controller
      */
     public function show(Vendor $vendor)
     {
-        //
+        return view('vendors.show', compact('vendor'));
     }
 
     /**
@@ -61,12 +61,13 @@ class VendorController extends Controller
      */
     public function update(Request $request, Vendor $vendor)
     {
-        $data = $request->all();
-        
+        $getData = $request->all();
+
+        $data[$getData['column']] = $getData['value'];
+
         $vendor->update($data);
 
-        return redirect()->route('vendor.index')
-                    ->with('success', 'The vendor has been successfully updated!');
+        return VendorResource::make($vendor);
     }
 
     /**

@@ -25,17 +25,17 @@ Route::middleware(['auth:sanctum'])->group(function () {
     //     ->middleware(['verified'])
     //     ->name('developers');
 
-    Route::view('agents', 'agents.index')
-        ->middleware(['verified'])
-        ->name('agents');
+    // Route::view('agents', 'agents.index')
+    //     ->middleware(['verified'])
+    //     ->name('agents');
 
-    Route::view('agent-info', 'agents.agent')
-        ->middleware(['verified'])
-        ->name('agent-info');
+    // Route::view('agent-info', 'agents.agent')
+    //     ->middleware(['verified'])
+    //     ->name('agent-info');
 
-    Route::view('vendors', 'suppliers.index')
-        ->middleware(['verified'])
-        ->name('vendors');
+    // Route::view('vendors', 'suppliers.index')
+    //     ->middleware(['verified'])
+    //     ->name('vendors');
 
     // Route::view('clients', 'clients.index')
     //     ->middleware(['verified'])
@@ -63,6 +63,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::resource('developer', DeveloperController::class);
 
     Route::resource('properties', PropertiesController::class);
+
+    Route::post('properties/{property}/generate-description', [\App\Http\Controllers\PropertyDescriptionController::class, '__invoke'])->name('properties.generate-description');
 
     // Route::view('properties', 'properties.index')->name('properties');
 

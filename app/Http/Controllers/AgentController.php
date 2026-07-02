@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreAgentRequest;
+use App\Http\Resources\AgentResource;
 use App\Models\Agent;
 use Illuminate\Http\Request;
 
@@ -45,7 +46,7 @@ class AgentController extends Controller
      */
     public function show(Agent $agent)
     {
-        //
+        return view('agents.show', compact('agent'));
     }
 
     /**
@@ -61,12 +62,13 @@ class AgentController extends Controller
      */
     public function update(Request $request, Agent $agent)
     {
-        $data = $request->all();
-        
+        $getData = $request->all();
+
+        $data[$getData['column']] = $getData['value'];
+
         $agent->update($data);
 
-        return redirect()->route('agent.index')
-                    ->with('success', 'The agent has been successfully saved!');
+        return AgentResource::make($agent);
     }
 
     /**
